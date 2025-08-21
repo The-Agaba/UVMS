@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base Dark Theme -->
+    <style name="Base.Theme.UVMS" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Colors -->
+        <item name="colorPrimary">@color/uvmsBluePrimary</item>
+        <item name="colorPrimaryVariant">@color/uvmsBlueDark</item>
+        <item name="colorSecondary">@color/uvmsBlueLight</item>
+        <item name="android:colorBackground">@color/uvmsBackgroundLight</item>
+        <item name="colorSurface">@color/uvmsSurfaceDark</item>
+        <item name="colorError">@color/uvmsErrorRed</item>
+        <item name="colorOnPrimary">@color/uvmsTextPrimaryDark</item>
+        <item name="colorOnBackground">@color/uvmsTextPrimaryDark</item>
+        <item name="colorOnSurface">@color/uvmsTextPrimaryDark</item>
+        <item name="colorOnError">@color/uvmsTextPrimaryDark</item>
+
+        <!-- Typography -->
+
+
+        <!-- Shapes -->
+
+    </style>
+</resources>
