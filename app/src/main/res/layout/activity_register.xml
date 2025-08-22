@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main"
     android:background="@drawable/gradient_background"
     tools:context=".activities.RegisterActivity">
 
@@ -17,7 +17,6 @@
         android:orientation="horizontal"
         android:padding="16dp"
         android:gravity="center_vertical"
-
         android:elevation="2dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +28,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/uvmsTextSecondaryLight"
-            />
+            app:tint="@color/uvmsTextSecondaryLight"/>
 
         <TextView
             android:id="@+id/tvTitle"
@@ -72,21 +70,35 @@
                 android:lineSpacingExtra="4dp"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Full Name -->
+            <!-- First Name -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameInputLayout"
+                android:id="@+id/firstNameInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:startIconDrawable="@drawable/ic_person">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etName"
+                    android:id="@+id/etFirstName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_full_name"
-                    android:inputType="textPersonName"/>
+                    android:hint="@string/hint_first_name"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Last Name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lastNameInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:startIconDrawable="@drawable/ic_person">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_last_name"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email -->
@@ -96,25 +108,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-
                 app:startIconDrawable="@drawable/ic_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Phone -->
+            <!-- Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:startIconDrawable="@drawable/ic_lock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_password"
+                    android:inputType="textPassword"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Phone Number -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phoneInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="16dp"
                 app:startIconDrawable="@drawable/ic_phone">
 
@@ -126,25 +152,60 @@
                     android:inputType="phone"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Business Name -->
+            <!-- Company Name -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/businessNameInputLayout"
+                android:id="@+id/companyNameInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_business_name"
                 android:layout_marginTop="16dp"
                 app:startIconDrawable="@drawable/ic_business">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBusinessName"
+                    android:id="@+id/etCompanyName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:inputType="textCapWords"/>
+                    android:hint="@string/hint_company_name"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Business Type -->
+            <!-- TIN Number -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tinInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:startIconDrawable="@drawable/ic_id">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_tin"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Business Address -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addressInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:startIconDrawable="@drawable/ic_location"
+                app:hintEnabled="true"
+                android:hint="@string/hint_business_address"
+                app:boxBackgroundMode="outline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:inputType="textMultiLine"
+                    android:gravity="top|start"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Business Type Dropdown -->
             <TextView
                 android:id="@+id/tvBusinessTypeLabel"
                 android:layout_width="wrap_content"
@@ -155,57 +216,24 @@
                 android:textColor="@color/uvmsTextPrimaryLight"
                 android:layout_marginTop="20dp"/>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupBusinessType"
+            <Spinner
+                android:id="@+id/spinnerBusinessType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"
                 android:layout_marginTop="8dp"/>
-
-            <!-- Info Box -->
-            <LinearLayout
-                android:id="@+id/infoBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/statusPendingYellow"
-                android:padding="16dp"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="@color/uvmsBlueLight">
-
-                <TextView
-                    android:id="@+id/infoTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_title"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/uvmsBackgroundLight"/>
-
-                <TextView
-                    android:id="@+id/infoText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/info_text"
-                    android:textSize="14sp"
-                    android:textColor="@color/uvmsBackgroundDark"
-                    android:lineSpacingExtra="4dp"
-                    android:layout_marginTop="8dp"/>
-            </LinearLayout>
 
             <!-- Register Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_create_vendor_account"
-                android:textColor="@color/uvmsBackgroundLight"
-                android:layout_marginTop="32dp"
-                style="@style/Widget.MaterialComponents.Button"
-                app:cornerRadius="12dp"
-                app:rippleColor="@color/uvmsAccentCyan"
-                app:backgroundTint="@color/uvmsBlueDark"/>
+                android:text="@string/btn_register"
+
+                android:backgroundTint="@color/uvmsAccentCyan"
+                android:elevation="8dp"
+                android:layout_marginTop="24dp"
+                app:icon="@drawable/ic_register"
+                app:cornerRadius="12dp"/>
 
             <!-- Login Link -->
             <TextView

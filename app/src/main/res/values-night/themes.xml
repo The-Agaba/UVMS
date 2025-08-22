@@ -2,22 +2,36 @@
 
     <!-- Base Dark Theme -->
     <style name="Base.Theme.UVMS" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Colors -->
-        <item name="colorPrimary">@color/uvmsBluePrimary</item>
-        <item name="colorPrimaryVariant">@color/uvmsBlueDark</item>
-        <item name="colorSecondary">@color/uvmsBlueLight</item>
-        <item name="android:colorBackground">@color/uvmsBackgroundLight</item>
+        <!-- Branding -->
+        <item name="colorPrimary">@color/uvmsBlueLight</item>
+        <item name="colorPrimaryContainer">@color/uvmsBlueDark</item>
+        <item name="colorSecondary">@color/uvmsBluePrimary</item>
+        <item name="colorSecondaryContainer">@color/uvmsBlueDark</item>
+
+        <!-- Background & Surface -->
+        <item name="android:colorBackground">@color/uvmsBackgroundDark</item>
         <item name="colorSurface">@color/uvmsSurfaceDark</item>
-        <item name="colorError">@color/uvmsErrorRed</item>
-        <item name="colorOnPrimary">@color/uvmsTextPrimaryDark</item>
-        <item name="colorOnBackground">@color/uvmsTextPrimaryDark</item>
         <item name="colorOnSurface">@color/uvmsTextPrimaryDark</item>
+
+        <!-- App-specific colors -->
+
+        <item name="android:fontFamily">@font/share_tech_regular</item>
+
+        <!-- Optional: Override for MaterialComponents widgets -->
+        <item name="fontFamily">@font/roboto_black</item>
+
+        <!-- Text & Icons -->
+        <item name="colorOnPrimary">@color/uvmsTextPrimaryDark</item>
+        <item name="colorOnSecondary">@color/uvmsTextPrimaryDark</item>
         <item name="colorOnError">@color/uvmsTextPrimaryDark</item>
 
-        <!-- Typography -->
+        <!-- Error -->
+        <item name="colorError">@color/uvmsErrorRed</item>
 
-
-        <!-- Shapes -->
-
+        <!-- Divider -->
+        <item name="dividerColor">@color/uvmsDivider</item>
     </style>
+
+    <!-- Dark Theme -->
+    <style name="Theme.UVMS" parent="Base.Theme.UVMS" />
 </resources>

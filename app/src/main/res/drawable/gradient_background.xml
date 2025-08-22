@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Gradient Background -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#007CF4"
-                android:centerColor="#A7BAC8"
-                android:endColor="@color/uvmsBackgroundLight"
+                android:startColor="@color/uvmsGradientStart"
+                android:centerColor="@color/uvmsGradientCenter"
+                android:endColor="@color/uvmsGradientEnd"
                 android:angle="135"/>
         </shape>
     </item>
+
+    <!-- Overlay (transparent dark layer for better contrast) -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#14000000"/>
+            <solid android:color="@color/uvmsOverlayTransparent"/>
         </shape>
     </item>
 

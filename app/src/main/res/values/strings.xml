@@ -101,4 +101,51 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <string name="license_id_placeholder">UDM-2024-001</string>
+    <string name="license_status_active">Active</string>
+    <string name="issued_date">Issued Date</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="date_placeholder">YYYY-MM-DD</string>
+    <string name="request_renewal">Request Renewal</string>
+    <string name="action_title">Title</string>
+    <string name="action_subtitle">Subtitle</string>"
+
+
+    <string name="license_status">License Status</string>
+    <string name="your_licenses">Your Licenses</string>
+    <string name="quick_actions">Quick Actions</string>
+
+    <string name="icon_desc">description</string>
+
+
+
+        <!-- Register Activity Titles -->
+
+        <!-- Input Hints -->
+        <string name="hint_first_name">First Name</string>
+        <string name="hint_last_name">Last Name</string>
+
+        <string name="hint_password">Password</string>
+
+        <string name="hint_company_name">Company Name</string>
+        <string name="hint_tin">TIN Number</string>
+        <string name="hint_business_address">Business Address</string>
+
+        <!-- Buttons -->
+        <string name="btn_register">Register</string>
+
+        <!-- Info / Error Messages -->
+        <string name="msg_fill_required_fields">Please fill in all required fields</string>
+        <string name="msg_registration_success">Registered successfully</string>
+        <string name="msg_registration_failed">Registration failed</string>
+        <string name="msg_registration_error">Error occurred during registration</string>
+
+        <!-- Login Link -->
+
+        <!-- Profile / Optional Info -->
+        <string name="profile_picture_hint">Upload Profile Picture (Optional)</string>
+
+
+
+
 </resources>

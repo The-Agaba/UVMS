@@ -29,11 +29,19 @@
     <color name="uvmsErrorRed">#B00020</color>
     <color name="uvmsWarningYellow">#FBC02D</color>
     <color name="uvmsSuccessGreen">#43A047</color>
+    <color name="uvmsCoolGradient">#90D8E0</color>
+
 
     <!-- Optional Accent Colors -->
     <color name="uvmsAccentCyan">#00ACC1</color>
     <color name="uvmsAccentLightBlue">#90CAF9</color>
     <color name="uvmsAccentPurple">#8E24AA</color>
+
+    <!-- colors.xml -->
+    <color name="uvmsGradientStart">#1E88E5</color>
+    <color name="uvmsGradientCenter">#64B5F6</color>
+    <color name="uvmsGradientEnd">#FFFFFF</color>
+    <color name="uvmsOverlayTransparent">#14000000</color>
 
 
 

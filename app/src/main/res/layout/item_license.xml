@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginVertical="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@android:color/transparent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- License ID -->
+        <TextView
+            android:id="@+id/tv_license_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/license_id_placeholder"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_license_status" />
+
+        <!-- License Status -->
+        <TextView
+            android:id="@+id/tv_license_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/status_background"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/license_status_active"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_license_id" />
+
+        <!-- Issued Date Label -->
+        <TextView
+            android:id="@+id/label_issued_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/issued_date"
+            android:textColor="@color/uvmsTextSecondaryLight"
+            android:textSize="12sp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_license_id" />
+
+        <!-- Issued Date Value -->
+        <TextView
+            android:id="@+id/tv_issued_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_placeholder"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/label_issued_date"
+            app:layout_constraintTop_toBottomOf="@id/label_issued_date" />
+
+        <!-- Expiry Date Label -->
+        <TextView
+            android:id="@+id/label_expiry_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expiry_date"
+            android:textColor="@color/uvmsTextSecondaryLight"
+            android:textSize="12sp"
+            android:layout_marginStart="48dp"
+            app:layout_constraintStart_toEndOf="@id/tv_issued_date"
+            app:layout_constraintTop_toTopOf="@id/label_issued_date" />
+
+        <!-- Expiry Date Value -->
+        <TextView
+            android:id="@+id/tv_expiry_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_placeholder"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/label_expiry_date"
+            app:layout_constraintTop_toBottomOf="@id/label_expiry_date" />
+
+        <!-- Renewal Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_request_renewal"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/request_renewal"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            app:icon="@drawable/ic_contract_renewal"
+            app:iconGravity="textEnd"
+            app:iconPadding="4dp"
+            app:iconTint="@color/uvmsTextPrimaryLight"
+            app:backgroundTint="@color/uvmsAccentCyan"
+            app:rippleColor="@color/uvmsSurfaceDark"
+            app:layout_constraintTop_toBottomOf="@id/tv_issued_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

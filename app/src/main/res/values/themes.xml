@@ -1,33 +1,44 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme -->
+    <!-- Base Theme -->
     <style name="Base.Theme.UVMS" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Colors -->
+        <!-- Branding -->
         <item name="colorPrimary">@color/uvmsBluePrimary</item>
-        <item name="colorPrimaryVariant">@color/uvmsBlueDark</item>
+        <item name="colorPrimaryContainer">@color/uvmsBlueLight</item>
         <item name="colorSecondary">@color/uvmsBlueLight</item>
+        <item name="colorSecondaryContainer">@color/uvmsBlueDark</item>
+
+        <!-- Background & Surface -->
         <item name="android:colorBackground">@color/uvmsBackgroundLight</item>
         <item name="colorSurface">@color/uvmsSurfaceLight</item>
-        <item name="colorError">@color/uvmsErrorRed</item>
-        <item name="colorOnPrimary">@color/uvmsTextPrimaryLight</item>
-        <item name="colorOnBackground">@color/uvmsTextPrimaryLight</item>
         <item name="colorOnSurface">@color/uvmsTextPrimaryLight</item>
+
+        <!-- Text & Icons -->
+        <item name="colorOnPrimary">@color/uvmsTextPrimaryLight</item>
+        <item name="colorOnSecondary">@color/uvmsTextPrimaryLight</item>
         <item name="colorOnError">@color/uvmsTextPrimaryLight</item>
 
-        <!-- Typography (optional, you can customize fonts here) -->
+        <!-- App-specific colors as attributes -->
+        <item name="android:fontFamily">@font/roboto_black</item>
+
+        <!-- Optional: Override for MaterialComponents widgets -->
+        <item name="fontFamily">@font/share_tech_regular</item>
 
 
+        <!-- Error -->
+        <item name="colorError">@color/uvmsErrorRed</item>
+
+        <!-- Divider -->
+        <item name="dividerColor">@color/uvmsDivider</item>
     </style>
 
     <!-- Light Theme -->
     <style name="Theme.UVMS" parent="Base.Theme.UVMS" />
 
+    <!-- No ActionBar Variant -->
     <style name="Theme.UVMS.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.UVMS.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.UVMS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

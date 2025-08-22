@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeFragment"
+        android:id="@+id/businessFragment"
         android:icon="@drawable/ic_business"
         android:title="Business"/>
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/tendersFragment"
         android:icon="@drawable/ic_tenders"
         android:title="Tenders"/>
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/profileActivity"
         android:icon="@drawable/ic_person"
         android:title="Profile"/>
 </menu>
