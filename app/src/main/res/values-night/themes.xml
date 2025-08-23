@@ -26,7 +26,7 @@
         <item name="colorOnError">@color/uvmsTextPrimaryDark</item>
 
         <!-- Error -->
-        <item name="colorError">@color/uvmsErrorRed</item>
+        <item name="colorError">@color/ErrorRed</item>
 
         <!-- Divider -->
         <item name="dividerColor">@color/uvmsDivider</item>

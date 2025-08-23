@@ -1,15 +1,33 @@
 package com.example.uvms.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class License {
+    @SerializedName("license_id")
     private int licenseId;
+
+    @SerializedName("application_id")
     private int applicationId;
+
+    @SerializedName("vendor_id")
     private int vendorId;
+
+    @SerializedName("license_number")
     private String licenseNumber;
+
+    @SerializedName("issue_date")
     private String issueDate;
+
+    @SerializedName("expiry_date")
     private String expiryDate;
+
+    @SerializedName("license_file_path")
     private String licenseFilePath;
 
+    @SerializedName("status")
     private String status;
+
+    @SerializedName("is_active")
     private boolean isActive;
 
     public License(int licenseId, int applicationId, int vendorId, String licenseNumber, String issueDate, String expiryDate, String licenseFilePath, String status, boolean isActive) {

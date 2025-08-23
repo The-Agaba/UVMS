@@ -2,6 +2,8 @@ package com.example.uvms.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,17 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        ImageView notificationIcon = findViewById(R.id.navNotificationIcon);
+        TextView navTitle = findViewById(R.id.navTitle); //  i will use it later
+        TextView badge = findViewById(R.id.badge);
+
+        //to later activate by java
+        notificationIcon.setOnClickListener(v -> {
+            //i will later add notification activity here
+        });
+        badge.setText("1");
+        badge.setVisibility(TextView.VISIBLE);
+
 
         // Set default fragment on launch
         getSupportFragmentManager().beginTransaction()

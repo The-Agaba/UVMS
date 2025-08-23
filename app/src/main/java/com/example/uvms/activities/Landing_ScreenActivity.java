@@ -40,7 +40,14 @@ public class Landing_ScreenActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainConstraint), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            int originalLeft = v.getPaddingLeft();
+            int originalTop = v.getPaddingTop();
+            int originalRight = v.getPaddingRight();
+            int originalBottom = v.getPaddingBottom();
+            v.setPadding( systemBars.left + originalLeft,
+                    systemBars.top + originalTop,
+                    systemBars.right + originalRight,
+                    systemBars.bottom + originalBottom);
             return insets;
         });
 

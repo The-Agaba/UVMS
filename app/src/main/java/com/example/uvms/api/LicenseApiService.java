@@ -8,6 +8,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface LicenseApiService {
-    @GET("LicenseStatus") // your mock API endpoint
+    @GET("news") // your mock API endpoint
     Call<List<License>> getLicenses();
 }

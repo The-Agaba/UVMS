@@ -26,7 +26,7 @@
     <color name="statusExpiredGray">#757575</color>
 
     <!-- Error / Alerts -->
-    <color name="uvmsErrorRed">#B00020</color>
+    <color name="ErrorRed">#B00020</color>
     <color name="uvmsWarningYellow">#FBC02D</color>
     <color name="uvmsSuccessGreen">#43A047</color>
     <color name="uvmsCoolGradient">#90D8E0</color>

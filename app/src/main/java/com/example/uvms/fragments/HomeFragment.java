@@ -1,6 +1,7 @@
 package com.example.uvms.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uvms.R;
 import com.example.uvms.adapters.LicenseAdapter;
 import com.example.uvms.api.LicenseApiService;
-import com.example.uvms.models.License;
-import com.example.uvms.R;
 import com.example.uvms.clients.RetrofitClient;
+import com.example.uvms.models.License;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
         recyclerLicense.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        // ✅ Set an empty adapter to avoid RecyclerView warning
+        // ✅ Initialize adapter with empty list (avoid warnings)
         licenseAdapter = new LicenseAdapter(getContext(), new ArrayList<>());
         recyclerLicense.setAdapter(licenseAdapter);
 
@@ -103,16 +104,26 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<License>> call, Response<List<License>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // ✅ Update adapter data
-                    licenseAdapter.updateData(response.body());
+                    List<License> licenses = response.body();
+                    licenseAdapter.updateData(licenses);
+
+                    Log.d("API_RESPONSE", "Licenses loaded: " + licenses.size());
                 } else {
                     Toast.makeText(getContext(), "Failed to load licenses", Toast.LENGTH_SHORT).show();
+
+                    // ✅ Avoid NPE
+                    if (response.body() != null) {
+                        Log.d("API_RESPONSE", "Licenses (failed): " + response.body().size());
+                    } else {
+                        Log.d("API_RESPONSE", "Licenses response body is NULL");
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<License>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("API_ERROR", "Error: " + t.getMessage(), t);
             }
         });
     }

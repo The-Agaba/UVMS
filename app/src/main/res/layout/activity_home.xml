@@ -48,14 +48,37 @@
                     android:textSize="15sp"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/navRightIcon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_notification"
-                app:tint="@color/uvmsBlueDark" />
+                android:contentDescription="notification_icon"
+                >
+
+                <!-- Your main ImageView -->
+                <ImageView
+                    android:id="@+id/navNotificationIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_notification"
+                    app:tint="@color/nav_item_color" />
+
+                <!-- Badge TextView -->
+                <TextView
+                    android:id="@+id/badge"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="top|end"
+                    android:background="@drawable/badge_color"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:gravity="center"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+
+
         </RelativeLayout>
 
 

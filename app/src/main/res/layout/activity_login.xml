@@ -98,7 +98,8 @@
                 android:textColor="@color/uvmsBackgroundDark"
                 app:icon="@drawable/ic_login"
                 app:iconGravity="end"
-                app:iconTint="@color/uvmsBackgroundDark"
+                android:backgroundTint="@color/uvmsAccentCyan"
+                app:iconTint="@color/statusPendingYellow"
                 app:iconPadding="8dp"
                 app:cornerRadius="12dp"
                 android:layout_marginTop="24dp"/>
