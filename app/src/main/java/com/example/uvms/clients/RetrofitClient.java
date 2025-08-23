@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://68927a46c49d24bce867a0f5.mockapi.io/api/properties/properties/"; // Replace with your API
+    private static final String BASE_URL = "https://68927a46c49d24bce867a0f5.mockapi.io/api/properties/"; // this was my mock api
     private static Retrofit retrofit;
 
     public static Retrofit getInstance() {

@@ -15,10 +15,10 @@
 
         <!-- App-specific colors -->
 
-        <item name="android:fontFamily">@font/share_tech_regular</item>
+        <item name="android:fontFamily">@font/roboto_black</item>
 
         <!-- Optional: Override for MaterialComponents widgets -->
-        <item name="fontFamily">@font/roboto_black</item>
+        <item name="fontFamily">@font/space_mono_regular</item>
 
         <!-- Text & Icons -->
         <item name="colorOnPrimary">@color/uvmsTextPrimaryDark</item>
