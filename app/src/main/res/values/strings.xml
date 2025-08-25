@@ -7,6 +7,13 @@
     <string name="slide_title_5">Secure &amp; Role-Based Access</string>
     <string name="slide_title_6">Coming Soon</string>
 
+    <string name="desc_view_policies">Guidelines</string>
+    <string name="desc_my_profile">Update information</string>
+    <string name="desc_documents">View all documents</string>
+    <string name="desc_tenders">View your Tenders</string>
+    <string name="desc_settings">App preferences</string>
+    <string name="desc_help_support">Get assistance</string>
+
     <!-- Slide Descriptions -->
     <string name="slide_desc_1">Manage vendors efficiently within the University environment. Simplifying registration, licensing, and policy awareness.</string>
     <string name="slide_desc_2">Register new vendors, store profiles, manage login credentials, and monitor activity.</string>
@@ -71,7 +78,7 @@
 
     <!-- Buttons -->
     <string name="btn_create_vendor_account">Create Vendor Account</string>
-    <string name="btn_creating_account">Creating Account...</string>
+    <string name="btn_creating_account">Creating Account&#8230;</string>
 
     <!-- Links -->
     <string name="login_link">Already have an account?<font color="#FBC02D"> Login here</font></string>
@@ -101,7 +108,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <string name="license_id_placeholder">UDM-2024-001</string>
+    <string name="license_id_placeholder">UDM&#8211;2024&#8211;001</string>
     <string name="license_status_active">Active</string>
     <string name="issued_date">Issued Date</string>
     <string name="expiry_date">Expiry Date</string>
@@ -118,34 +125,55 @@
     <string name="icon_desc">description</string>
 
 
+    <!-- Register Activity Titles -->
 
-        <!-- Register Activity Titles -->
+    <!-- Input Hints -->
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
 
-        <!-- Input Hints -->
-        <string name="hint_first_name">First Name</string>
-        <string name="hint_last_name">Last Name</string>
+    <string name="hint_password">Password</string>
 
-        <string name="hint_password">Password</string>
+    <string name="hint_company_name">Company Name</string>
+    <string name="hint_tin">TIN Number</string>
+    <string name="hint_business_address">Business Address</string>
 
-        <string name="hint_company_name">Company Name</string>
-        <string name="hint_tin">TIN Number</string>
-        <string name="hint_business_address">Business Address</string>
+    <!-- Buttons -->
+    <string name="btn_register">Register</string>
 
-        <!-- Buttons -->
-        <string name="btn_register">Register</string>
+    <!-- Info / Error Messages -->
+    <string name="msg_fill_required_fields">Please fill in all required fields</string>
+    <string name="msg_registration_success">Registered successfully</string>
+    <string name="msg_registration_failed">Registration failed</string>
+    <string name="msg_registration_error">Error occurred during registration</string>
 
-        <!-- Info / Error Messages -->
-        <string name="msg_fill_required_fields">Please fill in all required fields</string>
-        <string name="msg_registration_success">Registered successfully</string>
-        <string name="msg_registration_failed">Registration failed</string>
-        <string name="msg_registration_error">Error occurred during registration</string>
+    <!-- Login Link -->
 
-        <!-- Login Link -->
-
-        <!-- Profile / Optional Info -->
-        <string name="profile_picture_hint">Upload Profile Picture (Optional)</string>
-
+    <!-- Profile / Optional Info -->
+    <string name="profile_picture_hint">Upload Profile Picture (Optional)</string>
 
 
+    <string name="notification_title">Notification</string>
+    <string name="home_title">Name</string>
+    <string name="tenders_title">Tenders</string>
+    <string name="profile_title">Profile</string>
+
+    <string name="mark_read">Mark as Read</string>
+    <string name="delete">Delete</string>
+
+
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+    <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="other_settings">Other Settings</string>
+    <string name="about_app">About App</string>
+
+    <string name="lang_english">English</string>
+    <string name="lang_swahili">Swahili</string>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Swahili</item>
+    </string-array>
 
 </resources>

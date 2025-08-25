@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="12dp"
-    android:foreground="@drawable/ripple_card"
+
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="@string/action_subtitle"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/uvmsBluePrimary" />
 

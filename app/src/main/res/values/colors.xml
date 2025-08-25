@@ -7,11 +7,11 @@
     <color name="uvmsBlueLight">#64B5F6</color>
 
     <!-- Background / Surface -->
-    <color name="uvmsBackgroundLight">#FFFFFF</color>
+    <color name="uvmsBackgroundLight">#F8F0F0</color>
     <color name="uvmsBackgroundDark">#121212</color>
-    <color name="uvmsSurfaceLight">#F5F5F5</color>
+    <color name="uvmsSurfaceLight">#EBEBEB</color>
     <color name="uvmsSurfaceDark">#1E1E1E</color>
-    <color name="uvmsDivider">#BDBDBD</color>
+    <color name="uvmsDivider">#E6E4E4</color>
 
     <!-- Text / Icons -->
     <color name="uvmsTextPrimaryLight">#000000</color>
@@ -40,8 +40,9 @@
     <!-- colors.xml -->
     <color name="uvmsGradientStart">#1E88E5</color>
     <color name="uvmsGradientCenter">#64B5F6</color>
-    <color name="uvmsGradientEnd">#FFFFFF</color>
+    <color name="uvmsGradientEnd">#E0E0E0</color>
     <color name="uvmsOverlayTransparent">#14000000</color>
+
 
 
 
