@@ -6,13 +6,15 @@
     android:layout_marginStart="12dp"
     android:layout_marginEnd="4dp"
     android:layout_marginVertical="8dp"
-    app:cardElevation="4dp"
+    app:cardElevation="8dp"
+    android:background="@color/uvmsGradientEnd"
     app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="@color/uvmsSurfaceLight">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/uvmsSurfaceLight"
         android:padding="16dp">
 
         <!-- License ID -->
@@ -37,8 +39,9 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
             android:text="@string/license_status_active"
-            android:textColor="@color/uvmsTextPrimaryDark"
+            android:textColor="@color/uvmsSurfaceLight"
             android:textSize="11sp"
+
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/tv_license_id" />

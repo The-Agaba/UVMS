@@ -3,7 +3,7 @@
     <gradient
         android:endColor="@color/uvmsBlueLight"
          android:centerColor="@color/uvmsCoolGradient"
-        android:startColor="@color/uvmsBackgroundLight"
+        android:startColor="#B7D8DC"
         android:angle="135"/>
     <corners
         android:topRightRadius="8dp"

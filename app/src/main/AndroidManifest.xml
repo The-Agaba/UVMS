@@ -19,7 +19,7 @@
         tools:targetApi="33">
 
         <activity android:name=".activities.ProfileActivity" android:exported="false" />
-        <activity android:name=".activities.HomeActivity" android:exported="false" />
+        <activity android:name=".activities.HomeActivity" android:exported="false"  android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activities.RegisterActivity" android:exported="false" />
         <activity android:name=".activities.LoginActivity" android:exported="false" />
         <activity android:name=".activities.Landing_ScreenActivity" android:exported="false" />

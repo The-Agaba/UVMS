@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Ring 1 -->
+    <group
+        android:name="ring1"
+        android:pivotX="50"
+        android:pivotY="50"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:alpha="1">
+        <path
+            android:name="ring1Path"
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#e90c59"
+            android:strokeWidth="2"
+            android:pathData="M50,50 m -40,0 a 40,40 0 1,0 80,0 a 40,40 0 1,0 -80,0" />
+    </group>
+
+    <!-- Ring 2 -->
+    <group
+        android:name="ring2"
+        android:pivotX="50"
+        android:pivotY="50"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:alpha="1">
+        <path
+            android:name="ring2Path"
+            android:fillColor="@android:color/transparent"
+            android:strokeColor="#46dff0"
+            android:strokeWidth="2"
+            android:pathData="M50,50 m -40,0 a 40,40 0 1,0 80,0 a 40,40 0 1,0 -80,0" />
+    </group>
+</vector>
