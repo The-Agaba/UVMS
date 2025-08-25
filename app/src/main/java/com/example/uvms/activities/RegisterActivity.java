@@ -1,13 +1,16 @@
 package com.example.uvms.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,11 +18,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uvms.R;
 import com.example.uvms.clients.RetrofitClient;
-import com.example.uvms.api.ApiService;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import com.example.uvms.api.RegisterService;
+import com.example.uvms.models.Vendor;
+import com.example.uvms.request_response.RegisterRequest;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,13 +33,16 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private ChipGroup chipGroupBusinessType; // if using chips
-    private Spinner spinnerBusinessType;      // if using dropdown
-    private ApiService apiService;
-
-    private Button registerButton;
+    private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, passwordLayout,
+            phoneLayout, companyLayout, tinLayout, addressLayout;
+    private TextInputEditText etFirstName, etLastName, etEmail, etPassword,
+            etPhone, etCompanyName, etTin, etAddress;
+    private Spinner spinnerBusinessType;
+    private MaterialButton btnRegister;
     private ImageButton btnBack;
     private TextView loginLink;
+
+    private RegisterService registerService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,102 +57,135 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // Initialize views
-        registerButton = findViewById(R.id.btnRegister);
+        firstNameLayout = findViewById(R.id.firstNameInputLayout);
+        lastNameLayout = findViewById(R.id.lastNameInputLayout);
+        emailLayout = findViewById(R.id.emailInputLayout);
+        passwordLayout = findViewById(R.id.passwordInputLayout);
+        phoneLayout = findViewById(R.id.phoneInputLayout);
+        companyLayout = findViewById(R.id.companyNameInputLayout);
+        tinLayout = findViewById(R.id.tinInputLayout);
+        addressLayout = findViewById(R.id.addressInputLayout);
+
+        etFirstName = findViewById(R.id.etFirstName);
+        etLastName = findViewById(R.id.etLastName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        etPhone = findViewById(R.id.etPhone);
+        etCompanyName = findViewById(R.id.etCompanyName);
+        etTin = findViewById(R.id.etTin);
+        etAddress = findViewById(R.id.etAddress);
+
+        spinnerBusinessType = findViewById(R.id.spinnerBusinessType);
+        btnRegister = findViewById(R.id.btnRegister);
         btnBack = findViewById(R.id.btnBack);
         loginLink = findViewById(R.id.tvLoginLink);
-        spinnerBusinessType = findViewById(R.id.spinnerBusinessType);       // if using spinner
 
-        // Initialize Retrofit API
-        apiService = RetrofitClient.getInstance().create(ApiService.class);
+        passwordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
 
-        // Load business types
-        loadBusinessTypes();
+        // Spinner setup
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.business_types, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBusinessType.setAdapter(adapter);
 
-        // Register button click
-        registerButton.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        // Retrofit service
+        registerService = RetrofitClient.getInstance().create(RegisterService.class);
 
-        // Back button click
+        // Button clicks
+        btnRegister.setOnClickListener(v -> submitRegistration());
         btnBack.setOnClickListener(v -> finish());
-
-        // Login link click
-        loginLink.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        loginLink.setOnClickListener(v -> navigateToLogin());
     }
 
-    private void loadBusinessTypes() {
-        apiService.getBusinessType().enqueue(new Callback<List<String>>() {
+    private void submitRegistration() {
+        String firstName = Objects.requireNonNull(etFirstName.getText()).toString().trim();
+        String lastName = Objects.requireNonNull(etLastName.getText()).toString();
+        String email = Objects.requireNonNull(etEmail.getText()).toString();
+        String password = Objects.requireNonNull(etPassword.getText()).toString();
+        String phone = Objects.requireNonNull(etPhone.getText()).toString();
+        String companyName = Objects.requireNonNull(etCompanyName.getText()).toString();
+        String tin = Objects.requireNonNull(etTin.getText()).toString();
+        String address = Objects.requireNonNull(etAddress.getText()).toString();
+        String businessType = spinnerBusinessType.getSelectedItem().toString();
+
+        if (!validateForm(firstName, lastName, email, password, phone, companyName, tin, address, businessType)) {
+            return;
+        }
+
+        RegisterRequest request = new RegisterRequest(firstName, lastName, email, password, phone, companyName, tin, address, businessType);
+
+        registerService.registerVendor(request).enqueue(new Callback<Vendor>() {
+
+
             @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<String> businessTypes = response.body();
-                    // Uncomment one depending on your layout
-
-                    // Option 1: Populate ChipGroup
-                    if (chipGroupBusinessType != null) {
-                        populateChipGroup(businessTypes);
-                    }
-
-                    // Option 2: Populate Spinner
-                    if (spinnerBusinessType != null) {
-                        populateSpinner(businessTypes);
-                    }
-
+            public void onResponse(Call<Vendor> call, Response<Vendor> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                    navigateToLogin();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Failed to load business types", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(RegisterActivity.this)
+                            .setTitle("Registration Failed")
+                            .setMessage("Please try again.")
+                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            .show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Vendor> call, Throwable t) {
+                new AlertDialog.Builder(RegisterActivity.this)
+                        .setTitle(" ⚠️⚠️Error⚠️⚠️")
+                        .setMessage("An error occurred. Please try again.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton("Retry", (dialog, which) -> submitRegistration())
+                        .show();
+
                 t.printStackTrace();
-                Toast.makeText(RegisterActivity.this, "Error fetching business types", Toast.LENGTH_SHORT).show();
+                Log.e("RegistrationActivity", "Error: " + t);
+
             }
         });
+
+
+
     }
 
-    private void populateChipGroup(List<String> businessTypes) {
-        chipGroupBusinessType.removeAllViews();
-        for (String type : businessTypes) {
-            Chip chip = new Chip(this);
-            chip.setText(type);
-            chip.setCheckable(true);
-            chipGroupBusinessType.addView(chip);
+    private boolean validateForm(String firstName, String lastName, String email, String password,
+                                 String phone, String companyName, String tin, String address, String businessType) {
+
+        boolean isValid = true;
+        firstNameLayout.setError(null);
+        lastNameLayout.setError(null);
+        emailLayout.setError(null);
+        passwordLayout.setError(null);
+        phoneLayout.setError(null);
+        companyLayout.setError(null);
+        tinLayout.setError(null);
+        addressLayout.setError(null);
+
+        if (firstName.isEmpty()) { firstNameLayout.setError("First name is required"); isValid = false; }
+        if (lastName.isEmpty()) { lastNameLayout.setError("Last name is required"); isValid = false; }
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { emailLayout.setError("Valid Email is required"); isValid = false; }
+        if (password.isEmpty()) { passwordLayout.setError("Password is required"); isValid = false; }
+        else if (password.length() < 8) { passwordLayout.setError("Password must be at least 8 characters"); isValid = false; }
+        else if (!password.matches(".*[a-zA-Z].*")) { passwordLayout.setError("Password must contain at least one letter"); isValid = false; }
+        else if (!password.matches(".*\\d.*")) { passwordLayout.setError("Password must contain at least one number"); isValid = false; }
+
+        if (phone.isEmpty()) { phoneLayout.setError("Phone number is required"); isValid = false; }
+        if (companyName.isEmpty()) { companyLayout.setError("Company name is required"); isValid = false; }
+        if (tin.isEmpty()) { tinLayout.setError("TIN is required"); isValid = false; }
+        if (address.isEmpty()) { addressLayout.setError("Address is required"); isValid = false; }
+
+        if (businessType.equals("Select type")) {
+            Toast.makeText(this, "Select business type", Toast.LENGTH_SHORT).show();
+            isValid = false;
         }
+
+        return isValid;
     }
 
-    private void populateSpinner(List<String> businessTypes) {
-        // Simple ArrayAdapter for spinner
-        android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                businessTypes
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerBusinessType.setAdapter(adapter);
-    }
-
-    // Optional: Get selected business type from ChipGroup
-    public String getSelectedBusinessTypeFromChips() {
-        if (chipGroupBusinessType == null) return null;
-        int selectedId = chipGroupBusinessType.getCheckedChipId();
-        if (selectedId != -1) {
-            Chip selectedChip = findViewById(selectedId);
-            return selectedChip.getText().toString();
-        }
-        return null;
-    }
-
-    // Optional: Get selected business type from Spinner
-    public String getSelectedBusinessTypeFromSpinner() {
-        if (spinnerBusinessType == null) return null;
-        return spinnerBusinessType.getSelectedItem() != null ?
-                spinnerBusinessType.getSelectedItem().toString() : null;
+    private void navigateToLogin() {
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
     }
 }

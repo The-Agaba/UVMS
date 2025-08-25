@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ripple_vector">
+
+    <!-- Ring 1 anims (no delay) -->
+    <target android:name="ring1" android:animation="@animator/ring1_scale_x" />
+    <target android:name="ring1" android:animation="@animator/ring1_scale_y" />
+    <target android:name="ring1" android:animation="@animator/ring1_alpha" />
+
+    <!-- Ring 2 anims (500ms offset) -->
+    <target android:name="ring2" android:animation="@animator/ring1_scale_y" />
+    <target android:name="ring2" android:animation="@animator/ring2_scale_y" />
+    <target android:name="ring2" android:animation="@animator/ring2_alpha" />
+</animated-vector>

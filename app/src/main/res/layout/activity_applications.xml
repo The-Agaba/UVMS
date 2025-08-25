@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/backgroundLight"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarApplications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="My Applications"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        android:titleTextColor="@color/uvmsTextPrimaryLight"
+        android:background="@drawable/bottom_round_borders"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerApplications"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="12dp"
+        android:clipToPadding="false"/>
+</LinearLayout>

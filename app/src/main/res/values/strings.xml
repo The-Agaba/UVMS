@@ -1,4 +1,7 @@
 <resources>
+    <!-- App Name -->
+    <string name="app_name">UVMS</string>
+
     <!-- Slide Titles -->
     <string name="slide_title_1">Welcome to UVMS</string>
     <string name="slide_title_2">Vendor Management</string>
@@ -6,13 +9,6 @@
     <string name="slide_title_4">Policy Access</string>
     <string name="slide_title_5">Secure &amp; Role-Based Access</string>
     <string name="slide_title_6">Coming Soon</string>
-
-    <string name="desc_view_policies">Guidelines</string>
-    <string name="desc_my_profile">Update information</string>
-    <string name="desc_documents">View all documents</string>
-    <string name="desc_tenders">View your Tenders</string>
-    <string name="desc_settings">App preferences</string>
-    <string name="desc_help_support">Get assistance</string>
 
     <!-- Slide Descriptions -->
     <string name="slide_desc_1">Manage vendors efficiently within the University environment. Simplifying registration, licensing, and policy awareness.</string>
@@ -22,43 +18,41 @@
     <string name="slide_desc_5">Vendor login/logout, hashed passwords, role-based access for vendors and admins.</string>
     <string name="slide_desc_6">Online payments, SMS/Email reminders, and vendor performance analytics dashboard.</string>
 
-    <!-- Slide Image Content Description -->
-
-    <string name="app_name">UVMS</string>
-
-
-    <string name="slide_title">Welcome to UVMS</string>
-    <string name="slide_description">Description of the slide</string>
-
-
+    <!-- Onboarding -->
     <string name="onboarding_header">Welcome to UVMS</string>
     <string name="onboarding_tagline">Manage your vendors efficiently and effortlessly</string>
     <string name="onboarding_get_started">Get Started</string>
+
+    <!-- Login -->
     <string name="login_header">Login to UVMS</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login">Login</string>
     <string name="register_text">Don’t have an account? <font color="#FBC02D">Register</font></string>
+    <string name="login_link">Already have an account? <font color="#FBC02D">Login here</font></string>
 
-
-    <!-- Auth / Registration -->
+    <!-- Registration -->
     <string name="vendor_registration_title">Vendor Registration</string>
     <string name="vendor_registration_subtitle">Create your vendor account to start operating within the university</string>
 
-    <!-- Input labels -->
+    <!-- Input Labels & Hints -->
     <string name="label_full_name">Full Name *</string>
     <string name="label_email">Email Address *</string>
     <string name="label_phone">Phone Number *</string>
     <string name="label_business_name">Business Name *</string>
     <string name="label_business_type">Business Type *</string>
-
-    <!-- Input hints -->
     <string name="hint_full_name">Enter your full name</string>
     <string name="hint_email">Enter your email address</string>
     <string name="hint_phone">Enter your phone number</string>
     <string name="hint_business_name">Enter your business name</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_company_name">Company Name</string>
+    <string name="hint_tin">TIN Number</string>
+    <string name="hint_business_address">Business Address</string>
 
-    <!-- Business types -->
+    <!-- Business Types -->
     <string-array name="business_types">
         <item>Food Service</item>
         <item>Retail</item>
@@ -68,20 +62,15 @@
         <item>Other</item>
     </string-array>
 
-    <!-- Info box -->
+    <!-- Info Box -->
     <string name="info_title">What happens next?</string>
-    <string name="info_text">
-        • Your application will be reviewed by university administration\n
-        • You\'ll receive an email notification once approved\n
-        • After approval, you can access your license and start operations
-    </string>
+    <string name="info_text">&#8226; Your application will be reviewed by university administration&#10;&#8226; You\'ll receive an email notification once approved&#10;&#8226; After approval, you can access your license and start operations</string>
 
     <!-- Buttons -->
     <string name="btn_create_vendor_account">Create Vendor Account</string>
-    <string name="btn_creating_account">Creating Account&#8230;</string>
-
-    <!-- Links -->
-    <string name="login_link">Already have an account?<font color="#FBC02D"> Login here</font></string>
+    <string name="btn_creating_account">Creating Account...</string>
+    <string name="btn_register">Register</string>
+    <string name="btn_ok">OK</string>
 
     <!-- Alerts -->
     <string name="alert_error">Error</string>
@@ -91,89 +80,106 @@
     <string name="alert_registration_success_msg">Your vendor account has been created and is pending admin approval. You will be notified once approved.</string>
     <string name="alert_registration_failed">Registration failed. Please try again.</string>
     <string name="alert_unexpected_error">An unexpected error occurred. Please try again.</string>
-    <string name="btn_ok">OK</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">University Vendor Management System</string>
-    <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="nav_header">UVMS</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
-    <string name="license_id_placeholder">UDM&#8211;2024&#8211;001</string>
+    <!-- License & Quick Actions -->
+    <string name="license_status">License Status</string>
+    <string name="license_id_placeholder">UDM-2024-001</string>
     <string name="license_status_active">Active</string>
     <string name="issued_date">Issued Date</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="date_placeholder">YYYY-MM-DD</string>
     <string name="request_renewal">Request Renewal</string>
-    <string name="action_title">Title</string>
-    <string name="action_subtitle">Subtitle</string>"
-
-
-    <string name="license_status">License Status</string>
     <string name="your_licenses">Your Licenses</string>
     <string name="quick_actions">Quick Actions</string>
+    <string name="action_title">Title</string>
+    <string name="action_subtitle">Subtitle</string>
 
-    <string name="icon_desc">description</string>
-
-
-    <!-- Register Activity Titles -->
-
-    <!-- Input Hints -->
-    <string name="hint_first_name">First Name</string>
-    <string name="hint_last_name">Last Name</string>
-
-    <string name="hint_password">Password</string>
-
-    <string name="hint_company_name">Company Name</string>
-    <string name="hint_tin">TIN Number</string>
-    <string name="hint_business_address">Business Address</string>
-
-    <!-- Buttons -->
-    <string name="btn_register">Register</string>
-
-    <!-- Info / Error Messages -->
-    <string name="msg_fill_required_fields">Please fill in all required fields</string>
-    <string name="msg_registration_success">Registered successfully</string>
-    <string name="msg_registration_failed">Registration failed</string>
-    <string name="msg_registration_error">Error occurred during registration</string>
-
-    <!-- Login Link -->
-
-    <!-- Profile / Optional Info -->
+    <!-- Profile -->
     <string name="profile_picture_hint">Upload Profile Picture (Optional)</string>
+    <string name="title_profile">Profile</string>
+    <string name="tooltip_profile">Profile</string>
+    <string name="name_placeholder">Name Placeholder</string>
+    <string name="status_placeholder">Status Placeholder</string>
+    <string name="section_personal_info">Personal Information</string>
+    <string name="section_business_info">Business Information</string>
+    <string name="section_account">Account</string>
+    <string name="personal_label_full_name">Full Name</string>
+    <string name="personal_full_name_placeholder">Name Placeholder</string>
+    <string name="personal_label_email">Email</string>
+    <string name="personal_email_placeholder">Email Placeholder</string>
+    <string name="personal_label_phone">Phone</string>
+    <string name="personal_phone_placeholder">Phone Placeholder</string>
 
+    <!-- Business Info -->
+    <string name="business_label_name">Business Name</string>
+    <string name="business_name_placeholder">Business Name Placeholder</string>
+    <string name="business_label_type">Business Type</string>
+    <string name="business_type_placeholder">Business Type Placeholder</string>
+    <string name="business_label_id">Business ID</string>
+    <string name="business_id_placeholder">Business ID Placeholder</string>
 
-    <string name="notification_title">Notification</string>
-    <string name="home_title">Name</string>
-    <string name="tenders_title">Tenders</string>
-    <string name="profile_title">Profile</string>
+    <!-- Account -->
+    <string name="account_btn_edit_profile">Edit Profile</string>
+    <string name="account_btn_logout">Logout</string>
+    <string name="member_since_placeholder">Member since Placeholder</string>
 
-    <string name="mark_read">Mark as Read</string>
-    <string name="delete">Delete</string>
+    <!-- Filters / Policies -->
+    <string name="compliance_filter">Compliance</string>
+    <string name="quality_filter">Quality</string>
+    <string name="safety_filter">Safety</string>
+    <string name="food_filter">Food</string>
+    <string name="all_filter">All</string>
+    <string name="SearchPolicy_hint">Search</string>
+    <string name="policy_welcome">Welcome to our policy review</string>
 
+    <!-- Renew License -->
+    <string name="renew_license">Renew License</string>
+    <string name="license_number">License Number</string>
+    <string name="company_name">Company Name</string>
+    <string name="upload_license_document">Upload License Document</string>
+    <string name="submit_renewal">Submit Renewal</string>
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notification_title">Notifications</string>
+
+    <!-- Settings -->
     <string name="dark_mode">Dark Mode</string>
     <string name="language">Language</string>
     <string name="logout">Logout</string>
     <string name="delete_account">Delete Account</string>
-    <string name="other_settings">Other Settings</string>
     <string name="about_app">About App</string>
 
-    <string name="lang_english">English</string>
-    <string name="lang_swahili">Swahili</string>
+    <!-- Home & Tenders Titles -->
+    <string name="home_title">Home</string>
+    <string name="tenders_title">Tenders</string>
 
     <string-array name="languages">
         <item>English</item>
         <item>Swahili</item>
     </string-array>
+
+
+    <string name="desc_view_policies">Guidelines</string>
+    <string name="desc_my_profile">Update information</string>
+    <string name="desc_documents">View all documents</string>
+    <string name="desc_tenders">View your Tenders</string>
+    <string name="desc_settings">App preferences</string>
+    <string name="desc_help_support">Get assistance</string>
+
+
+    <!-- Slide -->
+    <string name="slide_title">Slide Title</string>
+    <string name="slide_description">Slide Description</string>
+
+    <!-- Quick Action -->
+    <string name="icon_desc">Icon description</string>
+    <string name="license_detail_number">License Number:</string>
+    <string name="licence_detail_id">License ID:</string>
+    <string name="License_detail_application_id">Application ID:</string>
+    <string name="license_detail_vendor_id">Vendor ID:</string>
+    <string name="License_detail_status">Status:</string>
+    <string name="license_detail_issued_date">Issued Date:</string>
+    <string name="license_detail_expiry_date">Expiry Date:</string>
+    <string name="License_detail_file_path">License File Path:</string>
 
 </resources>

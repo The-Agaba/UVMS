@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Branding -->
+    <color name="uvmsBluePrimary">#90CAF9</color>
+    <color name="uvmsBlueDark">#64B5F6</color>
+    <color name="uvmsBlueLight">#0E5E68</color>
+
+    <!-- Background / Surface -->
+    <color name="uvmsBackgroundLight">#161515</color>
+    <color name="uvmsBackgroundDark">#3A3737</color>
+    <color name="uvmsSurfaceLight">#474747</color>
+    <color name="uvmsSurfaceDark">#383636</color>
+    <color name="uvmsDivider">#474747</color>
+
+    <!-- Text / Icons -->
+    <color name="uvmsTextPrimaryLight">#FFFFFF</color>
+    <color name="uvmsTextSecondaryLight">#B0B0B0</color>
+    <color name="uvmsTextPrimaryDark">#FFFFFF</color>
+    <color name="uvmsTextSecondaryDark">#E0E0E0</color>
+
+    <!-- Status Colors -->
+    <color name="statusActiveGreen">#66BB6A</color>
+    <color name="statusPendingYellow">#BFAD0B</color>
+    <color name="statusRejectedRed">#EF5350</color>
+    <color name="statusExpiredGray">#9E9E9E</color>
+
+    <!-- Error / Alerts -->
+    <color name="ErrorRed">#CF6679</color>
+    <color name="uvmsWarningYellow">#A9A04F</color>
+    <color name="uvmsSuccessGreen">#81C784</color>
+    <color name="uvmsCoolGradient">#49B5C5</color>
+
+    <!-- Optional Accent Colors -->
+    <color name="uvmsAccentCyan">#0E5E68</color>
+    <color name="uvmsAccentLightBlue">#3E6476</color>
+    <color name="uvmsAccentPurple">#BA68C8</color>
+
+    <!-- Gradient for Dark Mode -->
+    <color name="uvmsGradientStart">#3893DC</color>
+    <color name="uvmsGradientCenter">#74A5CC</color>
+    <color name="uvmsGradientEnd">#1E1E1E</color>
+    <color name="uvmsOverlayTransparent">#14FFFFFF</color>
+
+</resources>

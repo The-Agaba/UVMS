@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/uvmsSurfaceLight"
+    android:background="@color/uvmsBackgroundLight"
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
@@ -48,6 +48,26 @@
             android:textStyle="bold"
             android:textColor="@color/uvmsTextSecondaryLight"
             android:layout_marginBottom="16dp"/>
+        <ImageView
+            android:contentDescription="Loader"
+            android:id="@+id/loaderView"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ripple_loader"
+            android:background="@drawable/bg_searchview"
+            android:visibility="gone"
+            />
+
+
+        <include
+            layout="@layout/license_card_failed"
+            android:id="@+id/license_card_failed"
+            android:layout_width="300dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerLicense"

@@ -3,6 +3,7 @@ package com.example.uvms.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,8 +27,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_login);
+        EditText emailInput = findViewById(R.id.etEmail);
+        EditText passwordInput = findViewById(R.id.etPassword);
+        registerTextView = findViewById(R.id.tvRegister);
 
-        registerTextView=findViewById(R.id.tvRegister);
+
         loginButton=findViewById(R.id.btnLogin);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -43,6 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginButton.setOnClickListener(v -> {
+            String email=emailInput.getText().toString().trim();
+            String pswd= passwordInput.getText().toString().trim();
+
+
+
+
+
             // Navigate to MainActivity
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);

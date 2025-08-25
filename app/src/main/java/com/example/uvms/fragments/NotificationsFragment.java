@@ -101,7 +101,7 @@ public class NotificationsFragment extends Fragment implements Filterable {
                 return false;
             }
         });
-        fetchNotifications();
+
 
         return view;
     }
@@ -141,7 +141,7 @@ public class NotificationsFragment extends Fragment implements Filterable {
                             notifications.remove(notification);
                             adapter.notifyDataSetChanged();
 
-                            // 🔹 Update badge count in HomeActivity
+                            //  Update badge count in HomeActivity
                             if (listener != null) listener.onNotificationsLoaded(notifications);
                         }
                     });

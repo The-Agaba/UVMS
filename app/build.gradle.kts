@@ -64,9 +64,7 @@ dependencies {
 
 
 
-
     implementation(libs.material)
-
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.material)

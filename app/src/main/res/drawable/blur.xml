@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Semi-transparent overlay (soft blur effect illusion) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#BCFFFFFF" /> <!-- White with transparency -->
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+
+    <!-- Add gradient noise pattern (to mimic blur diffusion) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#99FFFFFF"
+                android:endColor="#34FFFFFF"
+                android:angle="90"/>
+        </shape>
+    </item>
+
+</layer-list>
