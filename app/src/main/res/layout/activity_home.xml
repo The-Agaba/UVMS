@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@color/uvmsBackgroundLight">
+    android:background="@color/uvmsGradientEnd">
 
     <!-- Static Top Bar -->
     <LinearLayout
@@ -61,6 +61,7 @@
                     android:id="@+id/navNotificationIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:contentDescription="Notification_Icon"
                     android:src="@drawable/ic_notification"
                     app:tint="@color/nav_item_color" />
 
@@ -90,18 +91,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="72dp"
-        android:background="@color/uvmsBackgroundLight"/>
+        android:background="@color/uvmsGradientEnd"/>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:layout_margin="12dp"
         android:layout_gravity="bottom"
         android:background="@drawable/wavy"
         app:menu="@menu/bottom_nav"
+        app:labelVisibilityMode="labeled"
+        app:itemIconSize="24dp"
+        app:itemPaddingTop="2dp"
+        app:itemPaddingBottom="3dp"
         app:itemIconTint="@color/nav_item_color"
-        app:itemTextColor="@color/nav_item_color"/>
+        app:itemTextColor="@color/nav_item_selected"/>
 
 </FrameLayout>

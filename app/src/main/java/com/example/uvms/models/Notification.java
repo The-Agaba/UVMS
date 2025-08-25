@@ -1,14 +1,33 @@
 package com.example.uvms.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Notification {
+    @SerializedName("notification_id")
     private int notificationId;
-    private Integer vendorId;
-    private Integer adminId;
+
+    @SerializedName("vendor_id")
+    private Integer vendorId; // nullable
+
+    @SerializedName("admin_id")
+    private Integer adminId; // nullable
+
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("message")
     private String message;
+
+    @SerializedName("is_read")
     private boolean isRead;
+
+    @SerializedName("related_entity")
     private String relatedEntity;
-    private int relatedEntityId;
+
+    @SerializedName("related_entity_id")
+    private Integer relatedEntityId;
+
+    @SerializedName("created_at")
     private String createdAt;
 
     public Notification(int notificationId, Integer vendorId, Integer adminId, String title, String message, boolean isRead, String relatedEntity, int relatedEntityId, String createdAt) {
@@ -94,5 +113,17 @@ public class Notification {
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
+
+
+    private boolean isExpanded = false;
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
 }
 
