@@ -12,10 +12,10 @@ import com.example.uvms.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DocumentFragment#newInstance} factory method to
+ * Use the {@link ContractsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DocumentFragment extends Fragment {
+public class ContractsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class DocumentFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public DocumentFragment() {
+    public ContractsFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class DocumentFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DocumentFragment.
+     * @return A new instance of fragment ContractsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DocumentFragment newInstance(String param1, String param2) {
-        DocumentFragment fragment = new DocumentFragment();
+    public static ContractsFragment newInstance(String param1, String param2) {
+        ContractsFragment fragment = new ContractsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class DocumentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_document, container, false);
+        return inflater.inflate(R.layout.fragment_contracts, container, false);
     }
 }

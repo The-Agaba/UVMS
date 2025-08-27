@@ -1,14 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/uvmsGradientEnd"
     tools:context=".fragments.HelpFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Welcome Text -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/help_welcome"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</FrameLayout>
+    <!-- Search Bar -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:boxStrokeColor="@color/uvmsBluePrimary"
+        app:startIconDrawable="@android:drawable/ic_menu_search"
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_hint"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Grid Menu -->
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridMenu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="124dp"
+        android:padding="8dp"
+        app:alignmentMode="alignMargins"
+        app:columnCount="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchLayout">
+
+        <!-- Cards -->
+        <include
+            android:id="@+id/cardAccount"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/ic_acc_settings"
+            app:cardText="@string/menu_account_settings"
+            app:layout_columnWeight="1" />
+
+        <include
+            android:id="@+id/cardLoginPassword"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/ic_password_reset"
+            app:cardText="@string/menu_login_password"
+            app:layout_columnWeight="1" />
+
+        <include
+            android:id="@+id/cardPrivacy"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/ic_privacy"
+            app:cardText="@string/menu_privacy_security"
+            app:layout_columnWeight="1" />
+
+        <include
+            android:id="@+id/cardMarketplace"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/ic_marketplace"
+            app:cardText="@string/menu_marketplace"
+            app:layout_columnWeight="1" />
+
+        <include
+            android:id="@+id/cardContact"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/calling_icon"
+            app:cardText="@string/menu_contact_us"
+            app:layout_columnWeight="1" />
+
+        <include
+            android:id="@+id/cardReport"
+            layout="@layout/item_help_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardIcon="@drawable/ic_problem"
+            app:cardText="@string/menu_report_issue"
+            app:layout_columnWeight="1" />
+    </androidx.gridlayout.widget.GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

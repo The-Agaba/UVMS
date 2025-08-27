@@ -156,12 +156,7 @@ public class NotificationsFragment extends Fragment implements Filterable {
                                 .setPositiveButton("Retry", (dialog, which) -> fetchNotifications())
                                 .setNegativeButton("Cancel", (dialog, which) -> {
                                     dialog.dismiss();
-                                    if (getActivity() != null) {
-                                        getActivity().getSupportFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.mainContainer, new HomeFragment())
-                                                .commit();
-                                    }
+
                                 })
                                 .setCancelable(false)
                                 .show();

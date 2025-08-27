@@ -25,6 +25,7 @@ import com.example.uvms.adapters.LicenseAdapter;
 import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.models.License;
+import com.example.uvms.activities.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +42,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerLicense;
     private LicenseAdapter licenseAdapter;
     private GridLayout quickActionsGrid;
-
-    CardView failedCard;
+    private CardView failedCard;
 
     @Nullable
     @Override
@@ -56,22 +56,23 @@ public class HomeFragment extends Fragment {
         recyclerLicense = view.findViewById(R.id.recyclerLicense);
         quickActionsGrid = view.findViewById(R.id.quickActionsGrid);
         loader = view.findViewById(R.id.loaderView);
-        failedCard=view.findViewById(R.id.license_card_failed);
-
+        failedCard = view.findViewById(R.id.license_card_failed);
 
         // Setup RecyclerView
-        recyclerLicense.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
-
-        // Initialize adapter with click listener
+        recyclerLicense.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         licenseAdapter = new LicenseAdapter(getContext(), new ArrayList<>(), license -> {
-            // Open LicenseDetailFragment passing the full License object
+            // Open LicenseDetailFragment
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.mainContainer, LicenseDetailFragment.newInstance(license))
-                    .addToBackStack(null)
+                    .addToBackStack("LicenseDetailFragment")
                     .commit();
+
+            // Update HomeActivity title/state
+            if (getActivity() instanceof HomeActivity) {
+                ((HomeActivity) getActivity()).updateNavTitle("LicenseDetailFragment");
+                ((HomeActivity) getActivity()).updateNavState("LicenseDetailFragment");
+            }
         });
         recyclerLicense.setAdapter(licenseAdapter);
 
@@ -84,18 +85,18 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    /** Quick Actions Setup */
+    /** Setup Quick Actions grid */
     private void setupQuickActions() {
-        QuickAction[] quickActions = {
+        QuickAction[] actions = {
                 new QuickAction("View Policies", getString(R.string.desc_view_policies), R.drawable.ic_policy_view),
-                new QuickAction("My Profile", getString(R.string.desc_my_profile), R.drawable.ic_person),
-                new QuickAction("Documents", getString(R.string.desc_documents), R.drawable.ic_document),
+                new QuickAction("Contracts", getString(R.string.desc_my_profile), R.drawable.ic_person),
+                new QuickAction("View Applications", getString(R.string.desc_documents), R.drawable.ic_document),
                 new QuickAction("Tenders", getString(R.string.desc_tenders), R.drawable.ic_tenders),
                 new QuickAction("Settings", getString(R.string.desc_settings), R.drawable.ic_maintanance),
                 new QuickAction("Help & Support", getString(R.string.desc_help_support), R.drawable.ic_help)
         };
 
-        for (QuickAction action : quickActions) {
+        for (QuickAction action : actions) {
             View card = LayoutInflater.from(getContext())
                     .inflate(R.layout.item_quick_action, quickActionsGrid, false);
 
@@ -116,25 +117,27 @@ public class HomeFragment extends Fragment {
     private void handleActionClick(String actionTitle) {
         Map<String, Fragment> actionMap = new HashMap<>();
         actionMap.put("View Policies", new PoliciesFragment());
-
-        actionMap.put("Documents", new DocumentFragment());
+        actionMap.put("Contracts", new ViewApplicationsFragment());
+        actionMap.put("View Applications", new ViewApplicationsFragment());
         actionMap.put("Tenders", new TendersFragment());
         actionMap.put("Settings", new SettingsFragment());
         actionMap.put("Help & Support", new HelpFragment());
 
         Fragment fragment = actionMap.get(actionTitle);
         if (fragment != null && isAdded()) {
-
-            Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.mainContainer);
-
-            if (currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
+            Fragment current = getParentFragmentManager().findFragmentById(R.id.mainContainer);
+            if (current == null || !current.getClass().equals(fragment.getClass())) {
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.mainContainer, fragment)
                         .addToBackStack(fragment.getClass().getSimpleName())
                         .commit();
-            } else {
-                Toast.makeText(getContext(), "No fragment found for: " + actionTitle, Toast.LENGTH_SHORT).show();
+
+                // Update HomeActivity title/state
+                if (getActivity() instanceof HomeActivity) {
+                    ((HomeActivity) getActivity()).updateNavTitle(fragment.getClass().getSimpleName());
+                    ((HomeActivity) getActivity()).updateNavState(fragment.getClass().getSimpleName());
+                }
             }
         }
     }
@@ -155,36 +158,29 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     licenseAdapter.updateData(response.body());
                     Log.d("API_RESPONSE", "Licenses loaded: " + response.body().size());
-                } else if (response.body() ==null) {
-                    failedCard.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "No licenses found", Toast.LENGTH_SHORT).show();
-
                 } else {
                     failedCard.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "Failed to load licenses", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No licenses found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<License>> call, Throwable t) {
                 loader.setVisibility(View.GONE);
-                String errorMessage = t.getMessage();
+                failedCard.setVisibility(View.VISIBLE);
 
                 new AlertDialog.Builder(getContext())
-                        .setTitle("⚠️⚠️Error")
-                        .setMessage("An error occurred: Please check your connection and try again.")
+                        .setTitle("⚠️ Error")
+                        .setMessage("An error occurred. Please check your connection and try again.")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
 
-                failedCard.setVisibility(View.VISIBLE);
-
-
-                Log.e("API_ERROR", errorMessage, t);
+                Log.e("API_ERROR", t.getMessage(), t);
             }
         });
     }
 
-    /** QuickAction Model */
+    /** QuickAction model */
     private static class QuickAction {
         private final String title;
         private final String subtitle;

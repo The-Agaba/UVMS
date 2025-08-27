@@ -17,6 +17,9 @@
         android:theme="@style/Theme.UVMS"
         tools:targetApi="33">
         <activity
+            android:name=".activities.ContactActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ApplicationsActivity"
             android:exported="false" />
         <activity
