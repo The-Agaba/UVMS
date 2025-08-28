@@ -9,6 +9,7 @@
 
     <!-- Top App Bar with Back Button -->
     <com.google.android.material.appbar.MaterialToolbar
+        android:layout_marginTop="2dp"
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

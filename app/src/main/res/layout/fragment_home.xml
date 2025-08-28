@@ -28,26 +28,34 @@
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_margin="3dp"
+            android:padding="8dp"
+            android:background="@color/uvmsBackgroundLight"
+            android:layout_marginBottom="5dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/license_container"
                 android:layout_width="wrap_content"
+                android:padding="2dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
         </HorizontalScrollView>
 
+
         <!-- Your Existing License Title and RecyclerView -->
         <TextView
+
             android:id="@+id/tvHomeTitle"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/your_licenses"
             android:textSize="22sp"
+            android:layout_marginBottom="12dp"
             android:textStyle="bold"
             android:textColor="@color/uvmsTextSecondaryLight"
-            android:layout_marginBottom="16dp"/>
+            />
         <ImageView
             android:contentDescription="Loader"
             android:id="@+id/loaderView"
@@ -88,6 +96,7 @@
             android:textColor="@color/uvmsTextSecondaryLight"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp" />
+
 
         <!-- GridLayout for Quick Actions -->
         <GridLayout

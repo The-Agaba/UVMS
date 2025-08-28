@@ -40,6 +40,6 @@ public class Splash_ScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(Splash_ScreenActivity.this, Landing_ScreenActivity.class);
             startActivity(intent);
             finish();
-        }, 3500); // 3 seconds
+        }, 2000); // 3 seconds
     }
 }

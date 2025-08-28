@@ -7,6 +7,7 @@
     <string name="slide_title_5">Secure &amp; Role-Based Access</string>
     <string name="slide_title_6">Coming Soon</string>
 
+
     <!-- Slide Descriptions -->
     <string name="slide_desc_1">Manage vendors efficiently within the University environment. Simplifying registration, licensing, and policy awareness.</string>
     <string name="slide_desc_2">Register new vendors, store profiles, manage login credentials, and monitor activity.</string>
@@ -203,6 +204,8 @@
     <!-- View Applications Fragment -->
     <string name="no_vendor_applications_view_fragment">No vendor applications found</string>
     <string name="invite_vendor_view_applications">Invite a vendor to apply</string>
+    <string name="active">ACTIVE</string>
+    <string name="_0">0</string>
 
 
 </resources>

@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="140dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginEnd="8dp"
+    android:padding="8dp"
+    android:background="@drawable/status_card_bg"
+    android:gravity="center_vertical"
+    android:layout_margin="8dp"
+    android:elevation="3dp">
+
+    <TextView
+        android:id="@+id/statusCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/uvmsTextPrimaryLight"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/statusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ACTIVE"
+        android:textStyle="bold"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/uvmsBackgroundDark"
+        android:textSize="20sp"
+        android:fontFamily="@font/roboto_bold"/>
+</LinearLayout>
