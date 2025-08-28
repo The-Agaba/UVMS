@@ -57,7 +57,7 @@
                         android:id="@+id/chipClosingSoon"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:checkable="true"
-                        android:text="Closing soon"
+                        android:text="CIVE"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -65,7 +65,7 @@
                         android:id="@+id/chipWorks"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:checkable="true"
-                        android:text="Works"
+                        android:text="CNMS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -73,7 +73,7 @@
                         android:id="@+id/chipGoods"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:checkable="true"
-                        android:text="Goods"
+                        android:text="COBE"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -81,7 +81,7 @@
                         android:id="@+id/chipServices"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:checkable="true"
-                        android:text="Services"
+                        android:text="CHSS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.chip.ChipGroup>

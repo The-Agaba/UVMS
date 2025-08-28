@@ -39,12 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_vendor_applications_view_fragment" />
 
-            <Button
-                android:id="@+id/btn_invite_vendor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/invite_vendor_view_applications"
-                android:layout_marginTop="12dp" />
+
         </LinearLayout>
 
     </FrameLayout>

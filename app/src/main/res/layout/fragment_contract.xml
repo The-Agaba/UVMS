@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ContractFragment">
 
     <!-- simple toolbar (AppCompat) to avoid MaterialTheme crashes if theme not set -->
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_contracts"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/backgroundLight"
-        android:title="Contracts"
-        android:titleTextColor="@android:color/white" />
+        app:title="@string/contracts"
+        app:titleTextColor="@color/uvmsBackgroundDark"/>
+
 
     <EditText
         android:id="@+id/search_contracts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search contracts"
+        android:hint="@string/search_contracts"
         android:imeOptions="actionSearch"
         android:padding="12dp"
         android:inputType="text" />
@@ -49,14 +51,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No contracts yet" />
+                android:text="@string/no_contracts_yet" />
 
-            <Button
-                android:id="@+id/btn_create_contract"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create Contract"
-                android:layout_marginTop="12dp" />
+
         </LinearLayout>
 
     </FrameLayout>

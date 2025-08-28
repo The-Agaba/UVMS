@@ -45,26 +45,26 @@
                     android:id="@+id/chipAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/all_filter"
+                    android:text="@string/license"
                     android:checked="true" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFood"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/food_filter" />
+                    android:text="@string/vendor" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSafety"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/safety_filter" />
+                    android:text="@string/student" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipQuality"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/quality_filter" />
+                    android:text="@string/research" />
             </com.google.android.material.chip.ChipGroup>
 
             <!-- RecyclerView -->

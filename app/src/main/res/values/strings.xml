@@ -204,6 +204,14 @@
     <!-- View Applications Fragment -->
     <string name="no_vendor_applications_view_fragment">No vendor applications found</string>
     <string name="invite_vendor_view_applications">Invite a vendor to apply</string>
+    <string name="contracts">Contracts</string>
+    <string name="search_contracts">Search contracts</string>
+    <string name="no_contracts_yet">No contracts yet</string>
+    <string name="create_contract">Create Contract</string>
+    <string name="research">research</string>
+    <string name="student">student</string>
+    <string name="vendor">vendor</string>
+    <string name="license">license</string>
 
 
 </resources>

@@ -58,7 +58,7 @@ public class ContractFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_contracts);
         emptyView = view.findViewById(R.id.empty_contracts);
-        btnCreateContract = view.findViewById(R.id.btn_create_contract);
+
         searchEditText = view.findViewById(R.id.search_contracts);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,9 +69,6 @@ public class ContractFragment extends Fragment {
         );
         recyclerView.setAdapter(adapter);
 
-        btnCreateContract.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Create Contract Clicked", Toast.LENGTH_SHORT).show()
-        );
 
         setupSearch();
         fetchContracts();

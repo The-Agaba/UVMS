@@ -50,7 +50,7 @@ public class ViewApplicationsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_applications);
         emptyView = view.findViewById(R.id.empty_applications);
-        btnInviteVendor = view.findViewById(R.id.btn_invite_vendor);
+
         tabLayout = view.findViewById(R.id.tab_status);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,9 +61,6 @@ public class ViewApplicationsFragment extends Fragment {
         );
         recyclerView.setAdapter(adapter);
 
-        btnInviteVendor.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Invite Vendor Clicked", Toast.LENGTH_SHORT).show()
-        );
 
         setupTabs();
         fetchApplications();
