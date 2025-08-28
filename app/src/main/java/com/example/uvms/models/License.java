@@ -1,11 +1,8 @@
 package com.example.uvms.models;
 
 import android.graphics.Color;
-
 import androidx.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 public class License implements Serializable {
@@ -42,6 +39,12 @@ public class License implements Serializable {
     @SerializedName("is_active")
     private boolean isActive;
 
+    // --- Related entities (optional if API sends them) ---
+    private Vendor vendor;
+    private College college;
+    private Plot plot;
+    private Tender tender;
+
     // --- Empty constructor for Retrofit/Gson ---
     public License() {}
 
@@ -49,19 +52,19 @@ public class License implements Serializable {
     public int getLicenseId() { return licenseId; }
     public int getApplicationId() { return applicationId; }
     public int getVendorId() { return vendorId; }
-    @Nullable
-    public String getLicenseNumber() { return licenseNumber; }
-    @Nullable
-    public String getIssueDate() { return issueDate; }
-    @Nullable
-    public String getExpiryDate() { return expiryDate; }
-    @Nullable
-    public String getLicenseFilePath() { return licenseFilePath; }
-    @Nullable
-    public String getStatus() { return status; }
+    @Nullable public String getLicenseNumber() { return licenseNumber; }
+    @Nullable public String getIssueDate() { return issueDate; }
+    @Nullable public String getExpiryDate() { return expiryDate; }
+    @Nullable public String getLicenseFilePath() { return licenseFilePath; }
+    @Nullable public String getStatus() { return status; }
     public boolean isActive() { return isActive; }
 
-    // --- Setters (optional, can keep if needed) ---
+    public Vendor getVendor() { return vendor; }
+    public College getCollege() { return college; }
+    public Plot getPlot() { return plot; }
+    public Tender getTender() { return tender; }
+
+    // --- Setters ---
     public void setLicenseId(int licenseId) { this.licenseId = licenseId; }
     public void setApplicationId(int applicationId) { this.applicationId = applicationId; }
     public void setVendorId(int vendorId) { this.vendorId = vendorId; }
@@ -71,32 +74,23 @@ public class License implements Serializable {
     public void setLicenseFilePath(@Nullable String licenseFilePath) { this.licenseFilePath = licenseFilePath; }
     public void setStatus(@Nullable String status) { this.status = status; }
     public void setActive(boolean active) { isActive = active; }
+    public void setVendor(Vendor vendor) { this.vendor = vendor; }
+    public void setCollege(College college) { this.college = college; }
+    public void setPlot(Plot plot) { this.plot = plot; }
+    public void setTender(Tender tender) { this.tender = tender; }
 
     // --- Helper Methods ---
-    /**
-     * Returns a color integer based on the license status.
-     * Null or unknown status defaults to Blue.
-     */
     public int getStatusColor() {
         if (status == null) return Color.parseColor("#2196F3"); // Default Blue
-
         switch (status.toUpperCase()) {
-            case "ACTIVE":
-                return Color.parseColor("#4CAF50"); // Green
-            case "EXPIRED":
-                return Color.parseColor("#F44336"); // Red
-            case "PENDING":
-                return Color.parseColor("#FF9800"); // Orange
-            case "REJECTED":
-                return Color.parseColor("#9E9E9E"); // Gray
-            default:
-                return Color.parseColor("#2196F3"); // Blue
+            case "ACTIVE": return Color.parseColor("#4CAF50"); // Green
+            case "EXPIRED": return Color.parseColor("#F44336"); // Red
+            case "PENDING": return Color.parseColor("#FF9800"); // Orange
+            case "REJECTED": return Color.parseColor("#9E9E9E"); // Gray
+            default: return Color.parseColor("#2196F3"); // Blue
         }
     }
 
-    /**
-     * Returns a safe string for display, avoiding null.
-     */
     public String getSafeString(@Nullable String value, String defaultValue) {
         return value != null ? value : defaultValue;
     }

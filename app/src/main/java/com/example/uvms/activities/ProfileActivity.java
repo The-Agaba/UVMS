@@ -1,19 +1,13 @@
 package com.example.uvms.activities;
 
 import android.content.Intent;
-import android.graphics.Insets;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uvms.R;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -35,24 +29,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        EdgeToEdge.enable(this);
-
-        // Apply insets to your main container
-        View mainContainer = findViewById(R.id.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(mainContainer, (v, insets) -> {
-            Insets systemBars = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars()).toPlatformInsets();
-            }
-
-            // Apply padding so content is not hidden by status/nav bars
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            }
-
-            return insets;
-        });
         // Bind Views
         imgProfile = findViewById(R.id.imgProfile);
         tvName = findViewById(R.id.tvName);
@@ -136,6 +112,6 @@ public class ProfileActivity extends AppCompatActivity {
         tvMemberSince.setText("Member since: Jan 2023");
 
         // Profile picture (keep placeholder for now)
-        imgProfile.setImageResource(R.drawable.ic_building);
+        imgProfile.setImageResource(R.drawable.ic_person);
     }
 }

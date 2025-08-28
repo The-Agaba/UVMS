@@ -1,55 +1,88 @@
 package com.example.uvms.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uvms.R;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 
 public class ApplyTenderActivity extends AppCompatActivity {
 
-    private String tenderId, title, deadline, budget;
+    private static final int REQUEST_CODE_FILE_PICKER = 1001;
+
+    private EditText etCompanyName, etContactPerson, etEmail, etProposal;
+    private Button btnSubmitApplication, btnUploadDoc;
+    private TextView tvSelectedDoc;
+
+    private String tenderId;
+    private Uri selectedFileUri = null; // store selected file URI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_tender);
 
-        tenderId = getIntent().getStringExtra("tender_id");
-        title    = getIntent().getStringExtra("title");
-        deadline = getIntent().getStringExtra("deadline");
-        budget   = getIntent().getStringExtra("budget");
+        // Initialize views
+        etCompanyName = findViewById(R.id.etCompanyName);
+        etContactPerson = findViewById(R.id.etContactPerson);
+        etEmail = findViewById(R.id.etEmail);
+        etProposal = findViewById(R.id.etProposal);
+        btnSubmitApplication = findViewById(R.id.btnSubmitApplication);
+        btnUploadDoc = findViewById(R.id.btnUploadDoc);
+        tvSelectedDoc = findViewById(R.id.tvSelectedDoc);
 
-        TextView tvTitle = findViewById(R.id.tvTenderTitle);
-        TextView chipDeadline = findViewById(R.id.chipTenderDeadline);
-        TextView chipBudget = findViewById(R.id.chipTenderBudget);
-        TextInputEditText editBid = findViewById(R.id.editBidAmount);
-        TextInputEditText editNotes = findViewById(R.id.editProposalNotes);
-        MaterialButton btnAttach = findViewById(R.id.btnAttachDoc);
-        MaterialButton btnSubmit = findViewById(R.id.btnSubmitApplication);
+        tenderId = getIntent().getStringExtra("tenderId");
+        String tenderDocUrl = getIntent().getStringExtra("tenderDocUrl");
 
-        tvTitle.setText(title);
-        chipDeadline.setText("Deadline: " + deadline);
-        chipBudget.setText("Budget: " + budget);
+        // If a document URL was passed, show it as pre-selected
+        if (tenderDocUrl != null && !tenderDocUrl.isEmpty()) {
+            tvSelectedDoc.setText("Document from tender: " + tenderDocUrl);
+            // Optionally, you could download it to local storage or keep URL reference
+            // TODO: Implement automatic attachment of downloaded doc when submitting
+        }
 
-        btnAttach.setOnClickListener(v ->
-                Toast.makeText(this, "Attach flow (TODO)", Toast.LENGTH_SHORT).show()
-        );
-
-        btnSubmit.setOnClickListener(v -> {
-            String bid = editBid.getText() == null ? "" : editBid.getText().toString().trim();
-            String notes = editNotes.getText() == null ? "" : editNotes.getText().toString().trim();
-            if (bid.isEmpty()) {
-                editBid.setError("Enter a bid amount");
-                return;
-            }
-            // TODO: call your API here
-            Toast.makeText(this, "Submitted application for " + title, Toast.LENGTH_LONG).show();
-            finish();
+        btnUploadDoc.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            startActivityForResult(Intent.createChooser(intent, "Select Document"), REQUEST_CODE_FILE_PICKER);
         });
+
+        btnSubmitApplication.setOnClickListener(v -> {
+            String company = etCompanyName.getText().toString().trim();
+            String contact = etContactPerson.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String proposal = etProposal.getText().toString().trim();
+
+            if (company.isEmpty() || contact.isEmpty() || email.isEmpty() || proposal.isEmpty()) {
+                Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            } else if (selectedFileUri == null && (tenderDocUrl == null || tenderDocUrl.isEmpty())) {
+                Toast.makeText(this, "Please upload or use tender document", Toast.LENGTH_SHORT).show();
+            } else {
+                // TODO: API call here
+                // If selectedFileUri != null → upload local file
+                // Else → send tenderDocUrl as reference
+                Toast.makeText(this, "Application submitted for Tender ID: " + tenderId, Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FILE_PICKER && resultCode == RESULT_OK && data != null) {
+            selectedFileUri = data.getData();
+            if (selectedFileUri != null) {
+                tvSelectedDoc.setText("Selected: " + selectedFileUri.getLastPathSegment());
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,16 +21,14 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
 
     private Context context;
     private List<License> licenseList;
-    private OnItemClickListener listener;  // Listener for item clicks
+    private OnItemClickListener listener;
 
-
-
-    // --- Define Interface ---
+    // Listener interface
     public interface OnItemClickListener {
         void onItemClick(License license);
     }
 
-    // --- Constructor ---
+    // Constructor
     public LicenseAdapter(Context context, List<License> licenseList, OnItemClickListener listener) {
         this.context = context;
         this.licenseList = licenseList;
@@ -53,30 +52,25 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         holder.tvIssuedDate.setText(license.getSafeString(license.getIssueDate(), "-"));
         holder.tvExpiryDate.setText(license.getSafeString(license.getExpiryDate(), "-"));
 
-
-        // ✅ Set status text color and rounded background
+        // Set status color and background
         int statusColor = license.getStatusColor();
         holder.tvLicenseStatus.setTextColor(statusColor);
-        holder.statusView.setBackgroundColor(statusColor);
 
-        // Apply rounded background with color
         if (holder.tvLicenseStatus.getBackground() instanceof GradientDrawable) {
             GradientDrawable bg = (GradientDrawable) holder.tvLicenseStatus.getBackground();
             bg.setColor(statusColor);
         }
 
-        // Handle renewal button click
+        // Renewal button
         holder.btnRequestRenewal.setOnClickListener(v ->
-                android.widget.Toast.makeText(context,
+                Toast.makeText(context,
                         "Renewal requested for License ID " + license.getLicenseId(),
-                        android.widget.Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT).show()
         );
 
-        // Handle whole item click → goes to details
+        // Item click
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(license);
-            }
+            if (listener != null) listener.onItemClick(license);
         });
     }
 
@@ -85,16 +79,13 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         return licenseList.size();
     }
 
-    // --- ViewHolder ---
+    // ViewHolder
     public static class LicenseViewHolder extends RecyclerView.ViewHolder {
         TextView tvLicenseId, tvLicenseStatus, tvIssuedDate, tvExpiryDate;
         Button btnRequestRenewal;
 
-        View statusView;
-
         public LicenseViewHolder(@NonNull View itemView) {
             super(itemView);
-            statusView= itemView.findViewById(R.id.status_bubble);
             tvLicenseId = itemView.findViewById(R.id.tv_license_id);
             tvLicenseStatus = itemView.findViewById(R.id.tv_license_status);
             tvIssuedDate = itemView.findViewById(R.id.tv_issued_date);
@@ -103,7 +94,7 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         }
     }
 
-    // --- Update Data ---
+    // Update adapter data
     public void updateData(List<License> newList) {
         licenseList.clear();
         licenseList.addAll(newList);

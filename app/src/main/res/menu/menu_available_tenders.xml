@@ -1,0 +1,19 @@
+
+
+<!-- =========================================================
+  File: res/menu/menu_available_tenders.xml (place under res/menu)
+  Purpose: Actions on the toolbar
+========================================================= -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_toggleView"
+        android:title="Toggle view"
+        android:icon="@drawable/ic_view_list_24"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_saved"
+        android:title="Saved"
+        android:icon="@drawable/ic_bookmark_24"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -1,18 +1,51 @@
 package com.example.uvms.models;
 
-public class Application {
-    private int applicationId;
-    private int vendorId;
-    private int plotId;
-    private String applicationDate;
-    private String status; // "pending", "approved", "denied"
-    private String submittedContractPath;
-    private String approvedContractPath; // Nullable
-    private Integer reviewedBy; // Nullable
-    private String reviewedAt; // Nullable
-    private String feedback; // Nullable
+import android.graphics.Color;
+import androidx.annotation.Nullable;
+import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-    // Getters & Setters
+public class Application implements Serializable {
+
+    @SerializedName("application_id")
+    private int applicationId;
+
+    @SerializedName("vendor_id")
+    private int vendorId;
+
+    @SerializedName("plot_id")
+    private int plotId;
+
+    @SerializedName("application_date")
+    private String applicationDate;
+
+    @SerializedName("status")
+    private String status; // "pending", "approved", "denied"
+
+    @SerializedName("submitted_contract_path")
+    @Nullable
+    private String submittedContractPath;
+
+    @SerializedName("approved_contract_path")
+    @Nullable
+    private String approvedContractPath;
+
+    @SerializedName("reviewed_by")
+    @Nullable
+    private Integer reviewedBy;
+
+    @SerializedName("reviewed_at")
+    @Nullable
+    private String reviewedAt;
+
+    @SerializedName("feedback")
+    @Nullable
+    private String feedback;
+
+    // --- Empty constructor for Retrofit/Gson ---
+    public Application() {}
+
+    // --- Getters & Setters ---
     public int getApplicationId() { return applicationId; }
     public void setApplicationId(int applicationId) { this.applicationId = applicationId; }
 
@@ -28,18 +61,38 @@ public class Application {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+    @Nullable
     public String getSubmittedContractPath() { return submittedContractPath; }
-    public void setSubmittedContractPath(String submittedContractPath) { this.submittedContractPath = submittedContractPath; }
+    public void setSubmittedContractPath(@Nullable String submittedContractPath) { this.submittedContractPath = submittedContractPath; }
 
+    @Nullable
     public String getApprovedContractPath() { return approvedContractPath; }
-    public void setApprovedContractPath(String approvedContractPath) { this.approvedContractPath = approvedContractPath; }
+    public void setApprovedContractPath(@Nullable String approvedContractPath) { this.approvedContractPath = approvedContractPath; }
 
+    @Nullable
     public Integer getReviewedBy() { return reviewedBy; }
-    public void setReviewedBy(Integer reviewedBy) { this.reviewedBy = reviewedBy; }
+    public void setReviewedBy(@Nullable Integer reviewedBy) { this.reviewedBy = reviewedBy; }
 
+    @Nullable
     public String getReviewedAt() { return reviewedAt; }
-    public void setReviewedAt(String reviewedAt) { this.reviewedAt = reviewedAt; }
+    public void setReviewedAt(@Nullable String reviewedAt) { this.reviewedAt = reviewedAt; }
 
+    @Nullable
     public String getFeedback() { return feedback; }
-    public void setFeedback(String feedback) { this.feedback = feedback; }
+    public void setFeedback(@Nullable String feedback) { this.feedback = feedback; }
+
+    // --- Helper Methods ---
+    public String getSafeString(@Nullable String value, String defaultValue) {
+        return value != null ? value : defaultValue;
+    }
+
+    public int getStatusColor() {
+        if (status == null) return Color.parseColor("#2196F3"); // Default Blue
+        switch (status.toLowerCase()) {
+            case "approved": return Color.parseColor("#4CAF50"); // Green
+            case "pending": return Color.parseColor("#FF9800"); // Orange
+            case "denied": return Color.parseColor("#F44336"); // Red
+            default: return Color.parseColor("#2196F3"); // Blue
+        }
+    }
 }
