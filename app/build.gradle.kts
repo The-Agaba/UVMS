@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.gridlayout)
     implementation(libs.play.services.auth)
 
     // Core AndroidX

@@ -22,25 +22,24 @@ public class Splash_ScreenActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
 
-        // Keep your original inset handling
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // 🔹 New: start vector drawable animation
         ImageView logo = findViewById(R.id.logo);
         if (logo != null && logo.getDrawable() instanceof AnimatedVectorDrawable) {
             AnimatedVectorDrawable anim = (AnimatedVectorDrawable) logo.getDrawable();
             anim.start();
         }
 
-        // 🔹 New: delay and navigate to MainActivity
+        // delay and navigate to MainActivity
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(Splash_ScreenActivity.this, Landing_ScreenActivity.class);
             startActivity(intent);
             finish();
-        }, 3000); // 3 seconds
+        }, 3500); // 3 seconds
     }
 }

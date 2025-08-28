@@ -1,7 +1,4 @@
 <resources>
-    <!-- App Name -->
-    <string name="app_name">UVMS</string>
-
     <!-- Slide Titles -->
     <string name="slide_title_1">Welcome to UVMS</string>
     <string name="slide_title_2">Vendor Management</string>
@@ -28,8 +25,7 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login">Login</string>
-    <string name="register_text">Don’t have an account? &lt;font color=&quot;#FBC02D&quot;&gt;Register&lt;/font&gt;</string>
-    <string name="login_link">Already have an account? &lt;font color=&quot;#FBC02D&quot;&gt;Login here&lt;/font&gt;</string>
+    <string name="register_text">Don’t have an account? <font color="#FBC02D">Register</font></string>
 
     <!-- Registration -->
     <string name="vendor_registration_title">Vendor Registration</string>
@@ -157,25 +153,5 @@
         <item>English</item>
         <item>Swahili</item>
     </string-array>
-
-
-    <string name="desc_view_policies">Guidelines</string>
-    <string name="desc_my_profile">Get your contract</string>
-    <string name="desc_documents">View all applications</string>
-    <string name="desc_tenders">View your Tenders</string>
-    <string name="desc_settings">App preferences</string>
-    <string name="desc_help_support">Get assistance</string>
-
-
-    <!-- Slide -->
-    <string name="slide_title">Slide Title</string>
-    <string name="slide_description">Slide Description</string>
-
-    <!-- Quick Action -->
-    <string name="icon_desc">Icon description</string>
-    <string name="no_vendor_applications_view_fragment">No vendor applications</string>
-    <string name="invite_vendor_view_applications">Invite Vendor</string>
-    <string name="no_policies_found_progressbar">No policies found</string>
-    <string name="retry_progressbar">Retry</string>
 
 </resources>

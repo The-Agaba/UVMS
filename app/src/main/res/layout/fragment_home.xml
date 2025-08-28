@@ -58,6 +58,17 @@
             android:background="@drawable/bg_searchview"
             android:visibility="gone"
             />
+
+
+        <include
+            layout="@layout/license_card_failed"
+            android:id="@+id/license_card_failed"
+            android:layout_width="300dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerLicense"
             android:layout_width="match_parent"

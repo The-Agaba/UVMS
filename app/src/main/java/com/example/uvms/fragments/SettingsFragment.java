@@ -32,7 +32,8 @@ public class SettingsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
@@ -43,54 +44,25 @@ public class SettingsFragment extends Fragment {
         btnDeleteAccount = view.findViewById(R.id.btnDeleteAccount);
 
         // SharedPreferences setup
-        sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        // Load saved dark mode
-        boolean isDarkMode = sharedPreferences.getBoolean("isDarkMode", false);
+        // --- Detect and set switch state according to current app theme ---
+        boolean isDarkMode = isDarkThemeActive();
         switchDarkMode.setChecked(isDarkMode);
 
-        // Load saved language
-        String selectedLanguage = sharedPreferences.getString("language", "English");
-
-        // --- Dark Mode Listener ---
+        // --- Dark Mode Switch Listener ---
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("isDarkMode", isChecked);
-            editor.apply();
-
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
+            editor.putBoolean("isDarkMode", isChecked).apply();
+            AppCompatDelegate.setDefaultNightMode(
+                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+            );
         });
 
         // --- Language Spinner setup ---
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.languages,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLanguage.setAdapter(adapter);
+        setupLanguageSpinner();
 
-        int position = adapter.getPosition(selectedLanguage);
-        spinnerLanguage.setSelection(position);
-
-        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                String lang = parent.getItemAtPosition(pos).toString();
-                editor.putString("language", lang);
-                editor.apply();
-                // Optional: update app locale
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-
-        // --- Logout Button
+        // --- Logout Button ---
         btnLogout.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), LoginActivity.class));
             if (getActivity() != null) getActivity().finish();
@@ -110,5 +82,50 @@ public class SettingsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * Checks whether dark mode is currently active
+     */
+    private boolean isDarkThemeActive() {
+        int currentMode = AppCompatDelegate.getDefaultNightMode();
+
+        if (currentMode == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+            int uiMode = getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            return uiMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        } else {
+            return currentMode == AppCompatDelegate.MODE_NIGHT_YES;
+        }
+    }
+
+    /**
+     * Sets up the language spinner with saved preference
+     */
+    private void setupLanguageSpinner() {
+        String savedLanguage = sharedPreferences.getString("language", "English");
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.languages,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLanguage.setAdapter(adapter);
+
+        int position = adapter.getPosition(savedLanguage);
+        spinnerLanguage.setSelection(position);
+
+        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                String lang = parent.getItemAtPosition(pos).toString();
+                editor.putString("language", lang).apply();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
     }
 }

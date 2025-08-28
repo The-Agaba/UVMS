@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/activity_profile"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -16,16 +18,19 @@
         app:title="@string/title_profile"
         app:titleTextColor="@color/uvmsBackgroundDark"
         android:tooltipText="@string/tooltip_profile"
-        app:contentInsetStart="0dp" />
+        app:contentInsetStart="0dp"
+        tools:targetApi="26" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/uvmsSurfaceLight"
+        android:background="@color/uvmsGradientEnd"
         android:padding="16dp"
+        android:scrollbars="none"
         android:textColor="@color/uvmsBackgroundDark">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -42,8 +47,8 @@
                     android:id="@+id/imgProfile"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/ic_person"
-                    android:background="@drawable/circle_background"
+                    android:src="@drawable/ic_building"
+                    android:background="@drawable/badge_color"
                     android:padding="16dp" />
 
                 <TextView
@@ -75,9 +80,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/section_personal_info"
-                android:textColor="@color/uvmsBackgroundDark"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
@@ -86,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/box_background"
                 android:orientation="vertical"
+
                 android:padding="12dp">
 
                 <!-- Full Name Row -->
@@ -122,7 +129,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/personal_full_name_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -161,7 +168,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/personal_email_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -200,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/personal_phone_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -211,9 +218,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/section_business_info"
-                android:textColor="@color/uvmsBackgroundDark"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="20sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
@@ -258,7 +266,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/business_name_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -297,7 +305,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/business_type_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -336,7 +344,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/business_id_placeholder"
                             style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/uvmsBackgroundDark"
+                            android:textColor="@color/uvmsTextPrimaryLight"
                             android:paddingTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -347,9 +355,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/section_account"
-                android:textColor="@color/uvmsTextPrimaryLight"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="20sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
@@ -357,7 +366,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/card_background"
+                android:background="@drawable/box_background"
                 android:padding="12dp">
 
                 <Button
@@ -376,9 +385,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/account_btn_logout"
                     android:drawableLeft="@drawable/ic_logout"
-                    android:drawableTint="@color/statusRejectedRed"
-                    android:backgroundTint="@color/uvmsSurfaceLight"
-                    android:textColor="@color/statusRejectedRed"
+                    android:drawableTint="@color/textDark"
+                    android:backgroundTint="#C3706E"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/uvmsBackgroundDark"
                     android:layout_marginTop="8dp"/>
             </LinearLayout>
 

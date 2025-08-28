@@ -6,8 +6,7 @@
     android:layout_marginStart="12dp"
     android:layout_marginEnd="4dp"
     android:layout_marginVertical="8dp"
-    app:cardElevation="8dp"
-    android:background="@color/uvmsGradientEnd"
+    app:cardElevation="5dp"
     app:cardCornerRadius="16dp"
 
     android:clickable="true"
@@ -38,15 +37,26 @@
             android:id="@+id/tv_license_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/status_background"
+
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
+            android:padding="3dp"
             android:text="@string/license_status_active"
-            android:textColor="@color/uvmsSurfaceLight"
+            android:textColor="@color/uvmsBackgroundDark"
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/tv_license_id" />
+
+        <View
+            android:id="@+id/status_bubble"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/status_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_license_status"
+            />
 
         <!-- Issued Date Label -->
         <TextView
