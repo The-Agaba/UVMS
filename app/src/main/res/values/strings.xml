@@ -201,5 +201,6 @@
     <string name="license_detail_issued_date">Issued Date:</string>
     <string name="license_detail_expiry_date">Expiry Date:</string>
     <string name="License_detail_file_path">License File Path:</string>
+    <string name="description_of_the_slide">Description of the slide</string>
 
 </resources>

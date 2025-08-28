@@ -25,7 +25,7 @@ public class Landing_ScreenActivity extends AppCompatActivity {
     private SlideAdapter slideAdapter;
     private Handler slideHandler = new Handler();
     private Runnable slideRunnable;
-    private int slideDelay = 2000; // 3 seconds
+    private final int slideDelay = 2000; // 2 seconds
 
     Button btnGetStarted;
 

@@ -14,7 +14,7 @@
         android:layout_height="200dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="Description of the slide"/>
+        android:contentDescription="@string/description_of_the_slide"/>
 
     <!-- Slide Title -->
     <com.google.android.material.textview.MaterialTextView
@@ -36,7 +36,7 @@
         android:text="@string/slide_description"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
-        android:textColor="@color/textLight"
+        android:textColor="@color/uvmsTextPrimaryLight"
         style="@style/TextAppearance.Material3.BodyMedium"/>
 
 </LinearLayout>
