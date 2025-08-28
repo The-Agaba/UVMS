@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ContractFragment">
+
+    <!-- simple toolbar (AppCompat) to avoid MaterialTheme crashes if theme not set -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_contracts"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/backgroundLight"
+        android:title="Contracts"
+        android:titleTextColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/search_contracts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search contracts"
+        android:imeOptions="actionSearch"
+        android:padding="12dp"
+        android:inputType="text" />
+
+    <!-- FrameLayout so we can overlay empty state on top of RecyclerView -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_contracts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:clipToPadding="false" />
+
+        <LinearLayout
+            android:id="@+id/empty_contracts"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No contracts yet" />
+
+            <Button
+                android:id="@+id/btn_create_contract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Contract"
+                android:layout_marginTop="12dp" />
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

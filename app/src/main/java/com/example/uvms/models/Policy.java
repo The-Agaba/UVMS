@@ -1,14 +1,35 @@
 package com.example.uvms.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Policy {
+
+    @SerializedName("policy_id")
     private int policyId;
+
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("content")
     private String content;
-    private String scope; // "university" or "college"
-    private Integer collegeId; // Nullable
+
+    @SerializedName("scope")
+    private String scope; // university or college
+
+    @SerializedName("college_id")
+    private Integer collegeId; // nullable
+
+    @SerializedName("posted_by")
     private int postedBy;
+
+    @SerializedName("date_posted")
     private String datePosted;
+
+    @SerializedName("is_active")
     private boolean isActive;
+
+    // Optional: You can still use category for local filtering
+    private String category; // Food, Safety, Quality, Compliance
 
     // Getters & Setters
     public int getPolicyId() { return policyId; }
@@ -34,4 +55,7 @@ public class Policy {
 
     public boolean isActive() { return isActive; }
     public void setActive(boolean active) { isActive = active; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 }

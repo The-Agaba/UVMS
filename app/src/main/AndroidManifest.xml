@@ -6,30 +6,49 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:enableOnBackInvokedCallback="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/Theme.UVMS"
         tools:targetApi="33">
-
-        <activity android:name=".activities.ProfileActivity" android:exported="false" />
-        <activity android:name=".activities.HomeActivity" android:exported="false"  android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activities.RegisterActivity" android:exported="false" />
-        <activity android:name=".activities.LoginActivity" android:exported="false" />
-        <activity android:name=".activities.Landing_ScreenActivity" android:exported="false" />
-        <activity android:name=".activities.Splash_ScreenActivity" android:exported="true">
+        <activity
+            android:name=".activities.TenderDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Landing_ScreenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ApplyTenderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Splash_ScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

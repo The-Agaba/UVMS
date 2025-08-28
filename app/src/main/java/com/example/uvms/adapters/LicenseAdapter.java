@@ -1,8 +1,7 @@
 package com.example.uvms.adapters;
 
-import com.example.uvms.R;
-
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uvms.R;
 import com.example.uvms.models.License;
 
 import java.util.List;
@@ -21,10 +21,18 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
 
     private Context context;
     private List<License> licenseList;
+    private OnItemClickListener listener;
 
-    public LicenseAdapter(Context context, List<License> licenseList) {
+    // Listener interface
+    public interface OnItemClickListener {
+        void onItemClick(License license);
+    }
+
+    // Constructor
+    public LicenseAdapter(Context context, List<License> licenseList, OnItemClickListener listener) {
         this.context = context;
         this.licenseList = licenseList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,18 +46,32 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
     public void onBindViewHolder(@NonNull LicenseViewHolder holder, int position) {
         License license = licenseList.get(position);
 
-        // ✅ Always use String.valueOf() to prevent resource ID crash
+        // Bind data safely
         holder.tvLicenseId.setText(String.valueOf(license.getLicenseId()));
-        holder.tvLicenseStatus.setText(String.valueOf(license.getStatus()));
-        holder.tvIssuedDate.setText(String.valueOf(license.getIssueDate()));
-        holder.tvExpiryDate.setText(String.valueOf(license.getExpiryDate()));
+        holder.tvLicenseStatus.setText(license.getSafeString(license.getStatus(), "N/A"));
+        holder.tvIssuedDate.setText(license.getSafeString(license.getIssueDate(), "-"));
+        holder.tvExpiryDate.setText(license.getSafeString(license.getExpiryDate(), "-"));
 
-        // If your model returns a color int, keep it
-        holder.tvLicenseStatus.setBackgroundColor(license.getStatusColor());
+        // Set status color and background
+        int statusColor = license.getStatusColor();
+        holder.tvLicenseStatus.setTextColor(statusColor);
 
+        if (holder.tvLicenseStatus.getBackground() instanceof GradientDrawable) {
+            GradientDrawable bg = (GradientDrawable) holder.tvLicenseStatus.getBackground();
+            bg.setColor(statusColor);
+        }
+
+        // Renewal button
         holder.btnRequestRenewal.setOnClickListener(v ->
-                Toast.makeText(context, "Renewal requested for " + license.getLicenseId(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                        "Renewal requested for License ID " + license.getLicenseId(),
+                        Toast.LENGTH_SHORT).show()
         );
+
+        // Item click
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(license);
+        });
     }
 
     @Override
@@ -57,6 +79,7 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         return licenseList.size();
     }
 
+    // ViewHolder
     public static class LicenseViewHolder extends RecyclerView.ViewHolder {
         TextView tvLicenseId, tvLicenseStatus, tvIssuedDate, tvExpiryDate;
         Button btnRequestRenewal;
@@ -71,11 +94,10 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         }
     }
 
+    // Update adapter data
     public void updateData(List<License> newList) {
         licenseList.clear();
         licenseList.addAll(newList);
         notifyDataSetChanged();
     }
-
-
 }

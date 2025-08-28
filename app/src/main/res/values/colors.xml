@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Branding -->
     <color name="uvmsBluePrimary">#1E88E5</color>
     <color name="uvmsBlueDark">#1565C0</color>
     <color name="uvmsBlueLight">#64B5F6</color>
 
     <!-- Background / Surface -->
-    <color name="uvmsBackgroundLight">#F8F0F0</color>
+    <color name="uvmsBackgroundLight">#FFFFFF</color>
     <color name="uvmsBackgroundDark">#121212</color>
-    <color name="uvmsSurfaceLight">#EBEBEB</color>
+    <color name="uvmsSurfaceLight">#F5F5F5</color>
     <color name="uvmsSurfaceDark">#1E1E1E</color>
-    <color name="uvmsDivider">#E6E4E4</color>
+    <color name="uvmsDivider">#BDBDBD</color>
 
     <!-- Text / Icons -->
     <color name="uvmsTextPrimaryLight">#000000</color>
@@ -20,30 +18,40 @@
     <color name="uvmsTextSecondaryDark">#B0B0B0</color>
 
     <!-- Status Colors -->
-    <color name="statusActiveGreen">#43A047</color>
+    <color name="statusActiveGreen">#60C365</color>
     <color name="statusPendingYellow">#FBC02D</color>
     <color name="statusRejectedRed">#E53935</color>
     <color name="statusExpiredGray">#757575</color>
 
-    <!-- Error / Alerts -->
+
+
+    <!-- Accent / Alerts -->
     <color name="ErrorRed">#B00020</color>
     <color name="uvmsWarningYellow">#FBC02D</color>
     <color name="uvmsSuccessGreen">#43A047</color>
     <color name="uvmsCoolGradient">#90D8E0</color>
-
 
     <!-- Optional Accent Colors -->
     <color name="uvmsAccentCyan">#00ACC1</color>
     <color name="uvmsAccentLightBlue">#90CAF9</color>
     <color name="uvmsAccentPurple">#8E24AA</color>
 
-    <!-- colors.xml -->
+    <!-- Gradients / Overlays -->
     <color name="uvmsGradientStart">#1E88E5</color>
     <color name="uvmsGradientCenter">#64B5F6</color>
-    <color name="uvmsGradientEnd">#E0E0E0</color>
+    <color name="uvmsGradientEnd">#FFFFFF</color>
     <color name="uvmsOverlayTransparent">#14000000</color>
 
+    <!-- General UI Colors -->
+    <color name="backgroundLight">#FAFAFA</color>
+    <color name="textDark">#212121</color>
+    <color name="textLight">#757575</color>
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="textMid">#616161</color>
+    <color name="chipBg">#FFF3E0</color>
 
-
-
+    <!-- Tender / Theme Colors -->
+    <color name="colorPrimary">#FF6F00</color>
+    <color name="colorPrimaryDark">#E65100</color>
+    <color name="colorAccent">#009688</color>
 </resources>

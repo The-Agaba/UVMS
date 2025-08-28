@@ -1,66 +1,189 @@
 package com.example.uvms.fragments;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uvms.R;
+import com.example.uvms.adapters.PoliciesAdapter;
+import com.example.uvms.api.PoliciesApiService;
+import com.example.uvms.clients.RetrofitClient;
+import com.example.uvms.models.Policy;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PoliciesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PoliciesFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private PoliciesAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
+    private LinearLayout emptyStateLayout;
+    private TextView emptyMessage;
+    private Button btnRetry;
+    private SearchView searchView;
+    private ChipGroup filterChipGroup;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String currentQuery = "";
+    private String currentCategory = "All";
 
-    public PoliciesFragment() {
-        // Required empty public constructor
-    }
+    public PoliciesFragment() { }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PoliciesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PoliciesFragment newInstance(String param1, String param2) {
-        PoliciesFragment fragment = new PoliciesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_policies, container, false);
+
+        recyclerView = view.findViewById(R.id.policiesRecyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+        progressBar = view.findViewById(R.id.progressBar);
+        emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
+        emptyMessage = view.findViewById(R.id.emptyMessage);
+        btnRetry = view.findViewById(R.id.btnRetry);
+        searchView = view.findViewById(R.id.searchView);
+        filterChipGroup = view.findViewById(R.id.filterChipGroup);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new PoliciesAdapter(new ArrayList<>());  // Use your adapter's expected constructor
+        recyclerView.setAdapter(adapter);
+
+        // Swipe-to-refresh
+        swipeRefreshLayout.setOnRefreshListener(this::fetchPolicies);
+
+        // Retry button
+        btnRetry.setOnClickListener(v -> fetchPolicies());
+
+        setupSearchAndFilter();
+
+        fetchPolicies();
+
+        return view;
+    }
+
+    private void setupSearchAndFilter() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                currentQuery = query;
+                adapter.filter(currentQuery, currentCategory);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                currentQuery = newText;
+                adapter.filter(currentQuery, currentCategory);
+                return true;
+            }
+        });
+
+        filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            Chip selectedChip = group.findViewById(checkedId);
+            currentCategory = (selectedChip != null) ? selectedChip.getText().toString() : "All";
+            adapter.filter(currentQuery, currentCategory);
+        });
+    }
+
+    private void fetchPolicies() {
+        showLoading();
+
+        if (!isNetworkAvailable()) {
+            swipeRefreshLayout.setRefreshing(false);
+            showRetryState("No internet connection");
+            return;
         }
+
+        PoliciesApiService service = RetrofitClient.getInstance().create(PoliciesApiService.class);
+        service.getAllPolicies().enqueue(new Callback<List<Policy>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Policy>> call, @NonNull Response<List<Policy>> response) {
+                swipeRefreshLayout.setRefreshing(false);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isEmpty()) {
+                        showEmptyState("No policies found");
+                    } else {
+                        adapter.updateData(response.body());
+                        hideEmptyState();
+                    }
+                } else {
+                    showRetryState("Failed to load policies");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Policy>> call, @NonNull Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                showRetryState("Network error: " + t.getMessage());
+            }
+        });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_policies, container, false);
+    private void showLoading() {
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        emptyMessage.setVisibility(View.GONE);
+        btnRetry.setVisibility(View.GONE);
+    }
+
+    private void showRetryState(String message) {
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        emptyMessage.setVisibility(View.VISIBLE);
+        emptyMessage.setText(message);
+        btnRetry.setVisibility(View.VISIBLE);
+    }
+
+    private void showEmptyState(String message) {
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        emptyMessage.setVisibility(View.VISIBLE);
+        emptyMessage.setText(message);
+        btnRetry.setVisibility(View.GONE);
+    }
+
+    private void hideEmptyState() {
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyStateLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        emptyMessage.setVisibility(View.GONE);
+        btnRetry.setVisibility(View.GONE);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+        return false;
     }
 }

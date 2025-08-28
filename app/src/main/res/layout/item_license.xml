@@ -9,7 +9,10 @@
     app:cardElevation="8dp"
     android:background="@color/uvmsGradientEnd"
     app:cardCornerRadius="16dp"
-    >
+
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -41,7 +44,6 @@
             android:text="@string/license_status_active"
             android:textColor="@color/uvmsSurfaceLight"
             android:textSize="11sp"
-
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/tv_license_id" />
@@ -113,6 +115,8 @@
             app:iconTint="@color/uvmsTextPrimaryLight"
             app:backgroundTint="@color/uvmsAccentCyan"
             app:rippleColor="@color/uvmsSurfaceDark"
+            android:focusable="false"
+            android:clickable="true"
             app:layout_constraintTop_toBottomOf="@id/tv_issued_date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
