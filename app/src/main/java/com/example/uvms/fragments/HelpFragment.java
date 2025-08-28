@@ -1,66 +1,92 @@
 package com.example.uvms.fragments;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.example.uvms.R;
+import com.example.uvms.activities.ContactActivity;
+import com.example.uvms.activities.EditProfileActivity;
+import com.example.uvms.activities.ProfileActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HelpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HelpFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HelpFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HelpFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HelpFragment newInstance(String param1, String param2) {
-        HelpFragment fragment = new HelpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public HelpFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_help, container, false);
+        View view = inflater.inflate(R.layout.fragment_help, container, false);
+
+        // Initialize all cards
+        initCards(view);
+
+        return view;
+    }
+
+    //Initialize cards with icons, text, and actions
+    private void initCards(View root) {
+        setupCard(root, R.id.cardAccount, R.drawable.ic_acc_settings, R.string.menu_account_settings, this::openProfileActivity);
+        setupCard(root, R.id.cardLoginPassword, R.drawable.ic_password_reset, R.string.menu_login_password, this::openEditProfileActivity);
+        setupCard(root, R.id.cardPrivacy, R.drawable.ic_privacy, R.string.menu_privacy_security, this::showPrivacyDialog);
+        setupCard(root, R.id.cardMarketplace, R.drawable.ic_marketplace, R.string.menu_marketplace, this::showComingSoonDialog);
+        setupCard(root, R.id.cardContact, R.drawable.calling_icon, R.string.menu_contact_us, this::openContactActivity);
+        setupCard(root, R.id.cardReport, R.drawable.ic_problem, R.string.menu_report_issue, this::showComingSoonDialog);
+    }
+
+    //Generic card setup method
+    private void setupCard(View root, int cardId, int iconRes, int textRes, Runnable action) {
+        View card = root.findViewById(cardId);
+        ImageView icon = card.findViewById(R.id.cardIcon);
+        TextView text = card.findViewById(R.id.cardText);
+
+        icon.setImageResource(iconRes);
+        text.setText(textRes);
+
+        card.setOnClickListener(v -> action.run());
+    }
+
+    private void openProfileActivity() {
+        startActivity(new Intent(getContext(), ProfileActivity.class));
+    }
+
+    private void openEditProfileActivity() {
+        startActivity(new Intent(getContext(), EditProfileActivity.class));
+    }
+
+    private void openContactActivity() {
+        startActivity(new Intent(getContext(), ContactActivity.class));
+    }
+
+
+    private void showPrivacyDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Privacy & Security")
+                .setMessage(
+                        "Your privacy is important. This app collects minimal personal data " +
+                                "necessary for account management and service functionality. " +
+                                "Data is stored securely and will not be shared without your consent, " +
+                                "in accordance with Tanzanian Data Protection regulations (The Data Protection Act, 2019). " +
+                                "You have the right to access and delete your data anytime."
+                )
+                .setPositiveButton("Close", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    //Show Coming Soon Dialog
+    private void showComingSoonDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Coming Soon")
+                .setMessage("This feature is coming soon!")
+                .setPositiveButton("Close", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

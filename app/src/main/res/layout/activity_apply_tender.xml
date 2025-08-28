@@ -1,108 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/backgroundLight"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/uvmsBackgroundLight">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:background="@color/uvmsBackgroundLight"
+        android:elevation="0.5dp"
+        android:clipToPadding="false"
+        android:layout_margin="8dp"
+        android:gravity="center_vertical"
+        android:divider="@color/uvmsDivider"
+        android:showDividers="middle">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <!-- Header -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title="Apply to Tender"
-            android:titleTextColor="@color/textDark"
-            android:background="@color/cardBackground"/>
+            android:text="Tender Application Form"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginBottom="12dp" />
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Card.Base"
-            app:cardUseCompatPadding="true"
+        <EditText
+            android:id="@+id/etCompanyName"
+            style="@style/TenderInputText"
+            android:hint="Company Name *" />
+
+        <EditText
+            android:id="@+id/etContactPerson"
+            style="@style/TenderInputText"
+            android:hint="Contact Person *" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            style="@style/TenderInputText"
+            android:hint="Email Address *"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/etProposal"
+            style="@style/TenderInputText"
+            android:hint="Proposal / Bid Details *"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:layout_height="150dp" />
+
+        <!-- Upload Document -->
+        <Button
+            android:id="@+id/btnUploadDoc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Upload Required Document"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/uvmsAccentLightBlue"
+            android:textColor="@color/uvmsTextPrimaryDark" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tvTenderTitle"
-                    android:text="Tender title"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/textDark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_marginTop="6dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipTenderDeadline"
-                        android:text="Deadline: -"
-                        app:chipBackgroundColor="@color/chipBg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipTenderBudget"
-                        android:layout_marginStart="8dp"
-                        android:text="Budget: -"
-                        app:chipBackgroundColor="@color/chipBg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:hint="Bid Amount"
+        <TextView
+            android:id="@+id/tvSelectedDoc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editBidAmount"
-                android:inputType="numberDecimal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:text="No document selected"
+            android:textSize="14sp"
+            android:textColor="@color/uvmsTextSecondaryDark"
+            android:layout_marginTop="6dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:hint="Proposal Notes"
-            android:layout_marginTop="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editProposalNotes"
-                android:minLines="4"
-                android:gravity="top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAttachDoc"
-            style="@style/Btn.Primary"
-            android:text="Attach Document"
-            android:backgroundTint="@color/uvmsAccentCyan"
-            android:layout_marginTop="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.button.MaterialButton
+        <!-- Submit Button -->
+        <Button
             android:id="@+id/btnSubmitApplication"
-            style="@style/Btn.Primary"
-            android:text="Submit Application"
-            android:backgroundTint="@color/uvmsAccentCyan"
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Submit Application"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/uvmsAccentCyan"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:padding="12dp" />
+
     </LinearLayout>
 </ScrollView>

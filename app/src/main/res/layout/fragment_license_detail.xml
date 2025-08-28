@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -13,44 +12,21 @@
         android:orientation="vertical"
         android:padding="8dp">
 
+        <!-- License Info -->
         <TextView
             android:id="@+id/tvDetailsLicenseNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/license_detail_number"
+            android:text="License Number: "
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="12dp"/>
 
         <TextView
-            android:id="@+id/tvDetailsLicenseId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/licence_detail_id"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/tvDetailsApplicationId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/License_detail_application_id"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/tvDetailsVendorId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/license_detail_vendor_id"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
             android:id="@+id/tvDetailsStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/License_detail_status"
+            android:text="Status: "
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
 
@@ -58,25 +34,60 @@
             android:id="@+id/tvDetailsIssuedDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/license_detail_issued_date"
-            android:textSize="16sp"
+            android:text="Issued Date: "
             android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/tvDetailsExpiryDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/license_detail_expiry_date"
-            android:textSize="16sp"
+            android:text="Expiry Date: "
             android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/tvDetailsFilePath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/License_detail_file_path"
-            android:textSize="16sp"
+            android:text="License File: "
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Vendor Info -->
+        <TextView
+            android:id="@+id/tvVendorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vendor: "
             android:layout_marginBottom="8dp"/>
 
+        <TextView
+            android:id="@+id/tvVendorTIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TIN Number: "
+            android:layout_marginBottom="8dp"/>
+
+        <!-- College Info -->
+        <TextView
+            android:id="@+id/tvCollegeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="College: "
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Tender Info -->
+        <TextView
+            android:id="@+id/tvTenderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tender: "
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Plot Info -->
+        <TextView
+            android:id="@+id/tvPlotNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plot Number: "
+            android:layout_marginBottom="8dp"/>
     </LinearLayout>
 </ScrollView>

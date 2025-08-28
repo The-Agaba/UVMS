@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.android.gms.common.SignInButton;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView registerTextView;
 
     Button loginButton;
+
+    SignInButton googleSignInButton;
 
 
     @Override
@@ -31,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText passwordInput = findViewById(R.id.etPassword);
         registerTextView = findViewById(R.id.tvRegister);
 
-
+        googleSignInButton=findViewById(R.id.btnGoogleSignIn);
         loginButton=findViewById(R.id.btnLogin);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -55,9 +59,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
             // Navigate to MainActivity
+
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
+        });
+        googleSignInButton.setOnClickListener(v1 -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Google Sign-In Feature")
+                    .setMessage("This feature is currently not available. Please use another login method.")
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+
         });
 
     }

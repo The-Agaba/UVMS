@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarApplications"
         android:layout_width="match_parent"
@@ -15,10 +16,47 @@
         android:titleTextColor="@color/uvmsTextPrimaryLight"
         android:background="@drawable/bottom_round_borders"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerApplications"
+    <!-- Tabs for status filtering -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_status"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="12dp"
-        android:clipToPadding="false"/>
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/uvmsBluePrimary"
+        app:tabSelectedTextColor="@color/uvmsBluePrimary"
+        app:tabTextColor="@color/uvmsBlueLight"/>
+
+    <!-- FrameLayout for RecyclerView + empty view -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerApplications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            android:clipToPadding="false"/>
+
+        <!-- Empty view -->
+        <LinearLayout
+            android:id="@+id/empty_applications"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No applications found"
+                android:textColor="@color/uvmsTextPrimaryLight"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 </LinearLayout>

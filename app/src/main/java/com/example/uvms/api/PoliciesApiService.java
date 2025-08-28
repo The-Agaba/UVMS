@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 import java.util.List;
 
-public interface PolicyApiService {
+public interface PoliciesApiService {
 
     // Example: Get all policies
     @GET("Policy")

@@ -2,7 +2,6 @@ package com.example.uvms.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,12 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.uvms.R;
-import com.example.uvms.api.NotificationApiService;
-import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.fragments.HomeFragment;
 import com.example.uvms.fragments.NotificationsFragment;
 import com.example.uvms.fragments.TendersFragment;
 import com.example.uvms.models.Notification;
+import com.example.uvms.api.NotificationApiService;
+import com.example.uvms.clients.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
@@ -29,160 +28,212 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity implements NotificationsFragment.OnNotificationsLoadedListener {
+public class HomeActivity extends AppCompatActivity
+        implements NotificationsFragment.OnNotificationsLoadedListener {
 
-    private List<Notification> notifications;
-    private TextView badge;
-    private TextView navTitle;
-    private BottomNavigationView bottomNavigation;
+    private BottomNavigationView bottomNavigationView;
+    private TextView navTitle, navTitleDesc, badge;
+    private ImageView notificationBell;
+    private boolean suppressNavCallback = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+        EdgeToEdge.enable(this);
 
-        // Handle system bars padding
+        navTitle = findViewById(R.id.navTitle);
+        navTitleDesc = findViewById(R.id.navTitle_desc);
+        badge = findViewById(R.id.badge);
+        notificationBell = findViewById(R.id.navNotificationIcon);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+
+        // Edge-to-edge padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Assign views
-        bottomNavigation = findViewById(R.id.bottomNavigation);
-        ImageView notificationIcon = findViewById(R.id.navNotificationIcon);
-        navTitle = findViewById(R.id.navTitle);
-        badge = findViewById(R.id.badge);
-
-        // Fetch notifications
-        fetchNotifications();
-
-        // Bottom nav listener using if-else
-        bottomNavigation.setOnItemSelectedListener(item -> {
-            // Clear nav title on any bottom nav click
-            navTitle.setText("");
-
-            if (item.getItemId() == R.id.profileActivity) {
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
-            } else if (item.getItemId() == R.id.businessFragment) {
-                switchFragment(new HomeFragment(), HomeFragment.class.getSimpleName(), false);
-                return true;
-            } else if (item.getItemId() == R.id.tendersFragment) {
-                switchFragment(new TendersFragment(), TendersFragment.class.getSimpleName(), false);
-                return true;
-            }
-            return false;
-        });
-
-        // Default fragment → Home
         if (savedInstanceState == null) {
-            switchFragment(new HomeFragment(), HomeFragment.class.getSimpleName(), false);
+            switchFragment(new HomeFragment(), "HomeFragment", false);
         }
 
-        // Notification icon click → hide nav title
-        notificationIcon.setOnClickListener(v -> {
-            navTitle.setText("");
-            switchFragment(new NotificationsFragment(),
-                    NotificationsFragment.class.getSimpleName(),
-                    true);
-        });
+        setupBottomNavigation();
+        setupNotificationBell();
 
-        // Listen for back stack changes
+        // Fetch unread notifications immediately to show badge
+        fetchUnreadNotifications();
+
+        // Update titles and bottom nav on back stack changes
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             Fragment current = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-            if (current != null) updateNavState(current.getClass().getSimpleName());
+            if (current != null) {
+                String tag = current.getClass().getSimpleName();
+                updateNavState(tag);
+                updateNavTitle(tag);
+            }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Fragment current = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-        if (current != null) updateNavState(current.getClass().getSimpleName());
+    /** Bottom navigation click handling */
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (suppressNavCallback) return true;
+
+            int id = item.getItemId();
+            if (id == R.id.businessFragment) {
+                switchFragment(new HomeFragment(), "HomeFragment", false);
+            } else if (id == R.id.tendersFragment) {
+                switchFragment(new TendersFragment(), "TendersFragment", false);
+            } else if (id == R.id.profileActivity) {
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+            }
+            return true;
+        });
     }
 
+    //** Notification bell click opens NotificationsFragment
+    private void setupNotificationBell() {
+        notificationBell.setOnClickListener(v ->
+                switchFragment(new NotificationsFragment(), "NotificationsFragment", true)
+        );
+    }
+
+    //Switch fragments safely
     private void switchFragment(Fragment fragment, String tag, boolean addToBackStack) {
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-
         if (current == null || !current.getClass().equals(fragment.getClass())) {
             FragmentTransaction tx = getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.mainContainer, fragment, tag);
-
             if (addToBackStack) tx.addToBackStack(tag);
             tx.commit();
 
             updateNavState(tag);
+            updateNavTitle(tag);
         }
     }
 
-    // Update bottom nav only; nav title is already hidden
-    private void updateNavState(String tag) {
-        if (bottomNavigation == null) return;
+    /** Bottom nav highlighting */
+    public void updateNavState(String tag) {
+        if (bottomNavigationView == null) return;
 
-        if (HomeFragment.class.getSimpleName().equals(tag)) {
-            highlightBottomNavItem(R.id.businessFragment);
-        } else if (TendersFragment.class.getSimpleName().equals(tag)) {
-            highlightBottomNavItem(R.id.tendersFragment);
-        } else {
-            clearBottomNavHighlight();
-        }
-    }
-
-    private void highlightBottomNavItem(int itemId) {
-        for (int i = 0; i < bottomNavigation.getMenu().size(); i++) {
-            bottomNavigation.getMenu().getItem(i).setChecked(bottomNavigation.getMenu().getItem(i).getItemId() == itemId);
-        }
-    }
-
-    private void clearBottomNavHighlight() {
-        for (int i = 0; i < bottomNavigation.getMenu().size(); i++) {
-            bottomNavigation.getMenu().getItem(i).setChecked(false);
-        }
-    }
-
-    private void fetchNotifications() {
-        NotificationApiService apiService = RetrofitClient.getInstance().create(NotificationApiService.class);
-        Call<List<Notification>> call = apiService.getNotifications();
-        call.enqueue(new Callback<List<Notification>>() {
-            @Override
-            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    onNotificationsLoaded(response.body());
+        suppressNavCallback = true;
+        try {
+            if ("HomeFragment".equals(tag)) {
+                checkOnly(R.id.businessFragment);
+            } else if ("TendersFragment".equals(tag)) {
+                checkOnly(R.id.tendersFragment);
+            } else {
+                clearChecks(); // Other fragments including Profile → no highlight
             }
-
-            @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) { }
-        });
-    }
-
-    @Override
-    public void onNotificationsLoaded(List<Notification> notifications) {
-        this.notifications = notifications;
-        updateBadge(countUnread());
-    }
-
-    private int countUnread() {
-        int count = 0;
-        if (notifications != null) {
-            for (Notification n : notifications)
-                if (!n.isRead()) count++;
+        } finally {
+            suppressNavCallback = false;
         }
-        return count;
     }
 
-    private void updateBadge(int unread) {
-        if (badge == null) return;
-        badge.setVisibility(unread > 0 ? View.VISIBLE : View.GONE);
-        badge.setText(unread > 0 ? String.valueOf(unread) : "");
+    private void checkOnly(int itemId) {
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            bottomNavigationView.getMenu().getItem(i)
+                    .setChecked(bottomNavigationView.getMenu().getItem(i).getItemId() == itemId);
+        }
+    }
+
+    private void clearChecks() {
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            bottomNavigationView.getMenu().getItem(i).setChecked(false);
+        }
+    }
+
+    /** Top bar titles */
+    public void updateNavTitle(String tag) {
+        if (navTitle == null || navTitleDesc == null) return;
+
+        switch (tag) {
+            case "HomeFragment":
+                navTitle.setText("Business");
+                navTitleDesc.setText("Manage your licenses and vendors");
+                break;
+            case "TendersFragment":
+                navTitle.setText("Tenders");
+                navTitleDesc.setText("Browse available tenders");
+                break;
+            case "NotificationsFragment":
+                navTitle.setText("Notifications");
+                navTitleDesc.setText("Stay updated with alerts");
+                break;
+            case "PoliciesFragment":
+                navTitle.setText("Policies");
+                navTitleDesc.setText("Review business policies");
+                break;
+            case "SettingsFragment":
+                navTitle.setText("Settings");
+                navTitleDesc.setText("Customize your preferences");
+                break;
+            case "HelpFragment":
+                navTitle.setText("Help & Support");
+                navTitleDesc.setText("Get assistance and FAQs");
+                break;
+            case "LicenseDetailFragment":
+                navTitle.setText("License Detail");
+                navTitleDesc.setText("");
+                break;
+            default:
+                navTitle.setText("");
+                navTitleDesc.setText("");
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
-        if (current != null) updateNavState(current.getClass().getSimpleName());
+        if (current != null) {
+            String tag = current.getClass().getSimpleName();
+            updateNavState(tag);
+            updateNavTitle(tag);
+        }
+    }
+
+    /** 🔹 Callback from NotificationsFragment */
+    @Override
+    public void onNotificationsLoaded(List<Notification> notifications) {
+        updateBadge(notifications);
+    }
+
+    /** 🔹 Fetch notifications from API to update badge */
+    private void fetchUnreadNotifications() {
+        NotificationApiService apiService = RetrofitClient.getInstance()
+                .create(NotificationApiService.class);
+
+        apiService.getNotifications().enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    updateBadge(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
+                // optional: handle failure
+            }
+        });
+    }
+
+    //🔹 Update badge count
+    private void updateBadge(List<Notification> notifications) {
+        int unreadCount = 0;
+        for (Notification n : notifications) {
+            if (!n.isRead()) unreadCount++;
+        }
+
+        if (unreadCount > 0) {
+            badge.setVisibility(TextView.VISIBLE);
+            badge.setText(String.valueOf(unreadCount));
+        } else {
+            badge.setVisibility(TextView.GONE);
+        }
     }
 }

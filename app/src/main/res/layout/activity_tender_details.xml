@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/uvmsBackgroundLight">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/uvmsBackgroundLight"
+        android:padding="20dp"
+        android:elevation="1dp"
+        android:clipToPadding="false">
+
+        <!-- Tender Title -->
+        <TextView
+            android:id="@+id/tvTenderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tender Title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/uvmsTextPrimaryLight"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Tender Details -->
+        <TextView android:id="@+id/tvTenderId" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderBuyer" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderCategory" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderLocation" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderDeadline" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderBudget" style="@style/TenderDetailText"/>
+        <TextView android:id="@+id/tvTenderStatus" style="@style/TenderDetailText"/>
+
+        <!-- Download Tender Docs -->
+        <Button
+            android:id="@+id/btnDownloadTenderDoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download Tender Document"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/uvmsAccentLightBlue"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:padding="12dp" />
+
+        <!-- Apply Now -->
+        <Button
+            android:id="@+id/btnApplyNow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apply Now"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/uvmsAccentCyan"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</ScrollView>

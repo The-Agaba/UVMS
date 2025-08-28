@@ -1,6 +1,8 @@
 package com.example.uvms.models;
 
-public class Plot {
+import java.io.Serializable;
+
+public class Plot implements Serializable {
     private int plotId;
     private int tenderId;
     private String plotNumber;

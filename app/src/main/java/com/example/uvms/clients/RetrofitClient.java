@@ -4,7 +4,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://api.mockfly.dev/mocks/4c1c6ccb-a305-4f13-a05b-4490b1541114/"; // this was my mock api
+    private static final String BASE_URL =
+            "https://api.mockfly.dev/mocks/4c1c6ccb-a305-4f13-a05b-4490b1541114/"; // ✅ must end with /
+
     private static Retrofit retrofit;
 
     public static Retrofit getInstance() {

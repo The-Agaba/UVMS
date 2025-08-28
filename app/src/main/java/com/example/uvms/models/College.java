@@ -1,6 +1,8 @@
 package com.example.uvms.models;
 
-public class College {
+import java.io.Serializable;
+
+public class College implements Serializable {
     private int collegeId;
     private String collegeName;
 
@@ -16,4 +18,3 @@ public class College {
     public String getCollegeName() { return collegeName; }
     public void setCollegeName(String collegeName) { this.collegeName = collegeName; }
 }
-

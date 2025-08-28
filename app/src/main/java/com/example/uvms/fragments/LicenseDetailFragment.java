@@ -5,27 +5,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.example.uvms.R;
+import com.example.uvms.models.College;
 import com.example.uvms.models.License;
+import com.example.uvms.models.Plot;
+import com.example.uvms.models.Tender;
+import com.example.uvms.models.Vendor;
 
 public class LicenseDetailFragment extends Fragment {
 
     private static final String ARG_LICENSE = "arg_license";
-
     private License license;
 
-    // --- Views ---
-    private TextView tvLicenseNumber, tvLicenseId, tvApplicationId, tvVendorId,
-            tvStatus, tvIssuedDate, tvExpiryDate, tvFilePath;
+    private TextView tvLicenseNumber, tvStatus, tvIssuedDate, tvExpiryDate, tvFilePath;
+    private TextView tvVendorName, tvVendorTIN;
+    private TextView tvCollegeName;
+    private TextView tvTenderTitle;
+    private TextView tvPlotNumber;
 
-    public LicenseDetailFragment() {
-        // Required empty public constructor
-    }
+    public LicenseDetailFragment() {}
 
-    /** Create fragment with License object */
     public static LicenseDetailFragment newInstance(License license) {
         LicenseDetailFragment fragment = new LicenseDetailFragment();
         Bundle args = new Bundle();
@@ -50,27 +54,45 @@ public class LicenseDetailFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_license_detail, container, false);
 
-        // Initialize views
         tvLicenseNumber = view.findViewById(R.id.tvDetailsLicenseNumber);
-        tvLicenseId = view.findViewById(R.id.tvDetailsLicenseId);
-        tvApplicationId = view.findViewById(R.id.tvDetailsApplicationId);
-        tvVendorId = view.findViewById(R.id.tvDetailsVendorId);
         tvStatus = view.findViewById(R.id.tvDetailsStatus);
         tvIssuedDate = view.findViewById(R.id.tvDetailsIssuedDate);
         tvExpiryDate = view.findViewById(R.id.tvDetailsExpiryDate);
         tvFilePath = view.findViewById(R.id.tvDetailsFilePath);
 
-        // Bind data safely
+        tvVendorName = view.findViewById(R.id.tvVendorName);
+        tvVendorTIN = view.findViewById(R.id.tvVendorTIN);
+
+        tvCollegeName = view.findViewById(R.id.tvCollegeName);
+        tvTenderTitle = view.findViewById(R.id.tvTenderTitle);
+        tvPlotNumber = view.findViewById(R.id.tvPlotNumber);
+
         if (license != null) {
             tvLicenseNumber.setText("License Number: " + license.getSafeString(license.getLicenseNumber(), "N/A"));
-            tvLicenseId.setText("License ID: " + license.getLicenseId());
-            tvApplicationId.setText("Application ID: " + license.getApplicationId());
-            tvVendorId.setText("Vendor ID: " + license.getVendorId());
             tvStatus.setText("Status: " + license.getSafeString(license.getStatus(), "N/A"));
             tvStatus.setTextColor(license.getStatusColor());
+
             tvIssuedDate.setText("Issued Date: " + license.getSafeString(license.getIssueDate(), "-"));
             tvExpiryDate.setText("Expiry Date: " + license.getSafeString(license.getExpiryDate(), "-"));
-            tvFilePath.setText("License File Path: " + license.getSafeString(license.getLicenseFilePath(), "N/A"));
+            tvFilePath.setText("License File: " + license.getSafeString(license.getLicenseFilePath(), "N/A"));
+
+            Vendor vendor = license.getVendor();
+            if (vendor != null) {
+                tvVendorName.setText("Vendor: " + vendor.getCompanyName());
+                tvVendorTIN.setText("TIN: " + vendor.getTinNumber());
+            } else {
+                tvVendorName.setText("Vendor: N/A");
+                tvVendorTIN.setText("TIN: N/A");
+            }
+
+            College college = license.getCollege();
+            tvCollegeName.setText(college != null ? "College: " + college.getCollegeName() : "College: N/A");
+
+            Tender tender = license.getTender();
+            tvTenderTitle.setText(tender != null ? "Tender: " + tender.getTitle() : "Tender: N/A");
+
+            Plot plot = license.getPlot();
+            tvPlotNumber.setText(plot != null ? "Plot Number: " + plot.getPlotNumber() : "Plot Number: N/A");
         }
 
         return view;

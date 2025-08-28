@@ -1,8 +1,9 @@
 package com.example.uvms.models;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable; // <-- add this import
 
-public class Vendor {
+public class Vendor implements Serializable { // <-- implements Serializable
     @SerializedName("vendor_id")
     public int vendorId;
 
@@ -10,7 +11,7 @@ public class Vendor {
     public String email;
 
     @SerializedName("password_hash")
-    public String password;
+    public String passwordHash;
 
     @SerializedName("first_name")
     public String firstName;
@@ -45,14 +46,11 @@ public class Vendor {
     @SerializedName("business_type")
     public String businessType;
 
-    // Full constructor (kept all fields)
-    public Vendor(int vendorId, String email, String password, String firstName, String lastName,
-                  String profilePicturePath, String phoneNumber, String companyName, String tinNumber,
-                  String businessAddress, String registrationDate, String lastLogin, boolean isActive,
-                  String businessType) {
+    // --- Constructor ---
+    public Vendor(int vendorId, String email, String passwordHash, String firstName, String lastName, String profilePicturePath, String phoneNumber, String companyName, String tinNumber, String businessAddress, String registrationDate, String lastLogin, boolean isActive, String businessType) {
         this.vendorId = vendorId;
         this.email = email;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profilePicturePath = profilePicturePath;
@@ -66,30 +64,15 @@ public class Vendor {
         this.businessType = businessType;
     }
 
-    // Simplified constructor for registration
-    public Vendor(String firstName, String lastName, String email, String password,
-                  String phoneNumber, String companyName, String tinNumber,
-                  String businessAddress, String businessType) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.companyName = companyName;
-        this.tinNumber = tinNumber;
-        this.businessAddress = businessAddress;
-        this.businessType = businessType;
-    }
-
-    // Getters and Setters (unchanged)
+    // --- Getters & Setters ---
     public int getVendorId() { return vendorId; }
     public void setVendorId(int vendorId) { this.vendorId = vendorId; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -123,6 +106,4 @@ public class Vendor {
 
     public String getBusinessType() { return businessType; }
     public void setBusinessType(String businessType) { this.businessType = businessType; }
-
-
 }

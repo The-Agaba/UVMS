@@ -1,7 +1,4 @@
 <resources>
-    <!-- App Name -->
-    <string name="app_name">UVMS</string>
-
     <!-- Slide Titles -->
     <string name="slide_title_1">Welcome to UVMS</string>
     <string name="slide_title_2">Vendor Management</string>
@@ -9,6 +6,7 @@
     <string name="slide_title_4">Policy Access</string>
     <string name="slide_title_5">Secure &amp; Role-Based Access</string>
     <string name="slide_title_6">Coming Soon</string>
+
 
     <!-- Slide Descriptions -->
     <string name="slide_desc_1">Manage vendors efficiently within the University environment. Simplifying registration, licensing, and policy awareness.</string>
@@ -29,7 +27,6 @@
     <string name="password_hint">Password</string>
     <string name="login">Login</string>
     <string name="register_text">Don’t have an account? <font color="#FBC02D">Register</font></string>
-    <string name="login_link">Already have an account? <font color="#FBC02D">Login here</font></string>
 
     <!-- Registration -->
     <string name="vendor_registration_title">Vendor Registration</string>
@@ -157,22 +154,38 @@
         <item>English</item>
         <item>Swahili</item>
     </string-array>
+<string name="app_name">UVMS</string>
 
+    <string name="help_welcome">Hi, how can we help you?</string>
+    <string name="search_hint">Search</string>
+    <string name="menu_account_settings">Account Settings</string>
+    <string name="menu_login_password">Password Reset</string>
+    <string name="menu_privacy_security">Privacy &amp; Security</string>
+    <string name="menu_marketplace">Marketplace</string>
+    <string name="menu_contact_us">Contact us</string>
+    <string name="menu_report_issue">Report an issue</string>
+
+    <string name="contact_title">Contact Us</string>
+    <string name="contact_email">support@uvms.co.tz</string>
+    <string name="contact_phone">+255 123 456 789</string>
+    <string name="contact_address">UDOM street, Dodoma, Tanzania</string>
+    <string name="contact_additional_info">
+        We are here to help you with any queries or issues. Please reach out through email or phone.
+    </string>
+
+    <string name="login_link">Already have an account? <font color="#FBC02D">Login here</font></string>
 
     <string name="desc_view_policies">Guidelines</string>
-    <string name="desc_my_profile">Update information</string>
-    <string name="desc_documents">View all documents</string>
+    <string name="desc_my_profile">View contracts</string>
+    <string name="desc_documents">View applications</string>
     <string name="desc_tenders">View your Tenders</string>
     <string name="desc_settings">App preferences</string>
     <string name="desc_help_support">Get assistance</string>
 
-
-    <!-- Slide -->
     <string name="slide_title">Slide Title</string>
     <string name="slide_description">Slide Description</string>
-
-    <!-- Quick Action -->
     <string name="icon_desc">Icon description</string>
+
     <string name="license_detail_number">License Number:</string>
     <string name="licence_detail_id">License ID:</string>
     <string name="License_detail_application_id">Application ID:</string>
@@ -181,5 +194,16 @@
     <string name="license_detail_issued_date">Issued Date:</string>
     <string name="license_detail_expiry_date">Expiry Date:</string>
     <string name="License_detail_file_path">License File Path:</string>
+
+    <string name="description_of_the_slide">Description of the slide</string>
+
+    <!-- Policies Fragment -->
+    <string name="no_policies_found_progressbar">No policies found</string>
+    <string name="retry_progressbar">Retry</string>
+
+    <!-- View Applications Fragment -->
+    <string name="no_vendor_applications_view_fragment">No vendor applications found</string>
+    <string name="invite_vendor_view_applications">Invite a vendor to apply</string>
+
 
 </resources>
