@@ -4,8 +4,6 @@
     android:viewportWidth="256"
     android:viewportHeight="256">
 
-
-
     <!-- Stylized U -->
     <path
         android:name="u_path"
@@ -21,7 +19,7 @@
         android:trimPathStart="0"
         android:trimPathEnd="0"/>
 
-    <!-- Stylized V (check) -->
+    <!-- Stylized V -->
     <path
         android:name="v_path"
         android:strokeColor="@color/colorAccent"
@@ -33,7 +31,7 @@
         android:trimPathStart="0"
         android:trimPathEnd="0"/>
 
-
+    <!-- Shine line -->
     <path
         android:name="shine_path"
         android:strokeColor="@color/uvmsGradientEnd"
@@ -43,5 +41,4 @@
         android:pathData="M48,72 q80,-36 160,0"
         android:trimPathStart="0"
         android:trimPathEnd="0"/>
-
 </vector>
