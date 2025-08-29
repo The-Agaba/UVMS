@@ -3,6 +3,7 @@ package com.example.uvms.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,8 +170,18 @@ public class NotificationsFragment extends Fragment implements Filterable {
             @Override
             public void onFailure(Call<List<Notification>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("ERROR")
+                        .setMessage("Check your connection")
+                        .setPositiveButton("Retry", (dialog, which) -> fetchNotifications())
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            dialog.dismiss();
 
-                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        })
+                        .setCancelable(false)
+                        .show();
+
+                Log.e("ContractFragment", "API Error: ", t);
 
              }
         });

@@ -1,18 +1,15 @@
 package com.example.uvms.fragments;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,14 +31,13 @@ public class ContractFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private LinearLayout emptyView;
-    private Button btnCreateContract;
-    private EditText searchEditText;
+    private SearchView searchView;
 
     private LicenseAdapter adapter;
-    private List<License> licenseList = new ArrayList<>();
-    private List<License> filteredList = new ArrayList<>();
+    private final List<License> licenseList = new ArrayList<>();
+    private final List<License> filteredList = new ArrayList<>();
 
-    private int vendorId = 1; // default, will be overridden by arguments
+    private int vendorId = 1; // default, can be overridden by arguments
 
     @Nullable
     @Override
@@ -51,16 +47,17 @@ public class ContractFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_contract, container, false);
 
-        // Read vendor ID from arguments
+        // Read vendor ID from arguments if provided
         if (getArguments() != null) {
             vendorId = getArguments().getInt("vendor_id", 1);
         }
 
+        // Initialize views
         recyclerView = view.findViewById(R.id.rv_contracts);
         emptyView = view.findViewById(R.id.empty_contracts);
+        searchView = view.findViewById(R.id.search_contracts);
 
-        searchEditText = view.findViewById(R.id.search_contracts);
-
+        // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new LicenseAdapter(getContext(), filteredList, license ->
                 Toast.makeText(getContext(),
@@ -69,31 +66,43 @@ public class ContractFragment extends Fragment {
         );
         recyclerView.setAdapter(adapter);
 
-
-        setupSearch();
+        setupSearchView();
         fetchContracts();
 
         return view;
     }
 
-    private void setupSearch() {
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterContracts(s.toString());
+    /** Setup SearchView for live filtering */
+    private void setupSearchView() {
+        searchView.setQueryHint(getString(R.string.search_contracts));
+        searchView.setIconifiedByDefault(false);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterContracts(query);
+                return true;
             }
-            @Override public void afterTextChanged(Editable s) {}
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterContracts(newText);
+                return true;
+            }
         });
     }
 
+    /** Filter contracts by search query */
     private void filterContracts(String query) {
         filteredList.clear();
-        if (query.isEmpty()) {
+        if (query == null || query.isEmpty()) {
             filteredList.addAll(licenseList);
         } else {
-            for (License l : licenseList) {
-                if (l.getSafeString(l.getLicenseNumber(), "").toLowerCase().contains(query.toLowerCase())) {
-                    filteredList.add(l);
+            String lowerQuery = query.toLowerCase();
+            for (License license : licenseList) {
+                if (license.getSafeString(license.getLicenseNumber(), "")
+                        .toLowerCase().contains(lowerQuery)) {
+                    filteredList.add(license);
                 }
             }
         }
@@ -101,45 +110,42 @@ public class ContractFragment extends Fragment {
         toggleEmptyView(filteredList.isEmpty());
     }
 
+    /** Show/hide empty view */
     private void toggleEmptyView(boolean isEmpty) {
-        if (isEmpty) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
+        recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
+    /** Fetch contracts from API filtered by vendor ID */
     private void fetchContracts() {
         LicenseApiService apiService = RetrofitClient.getInstance()
                 .create(LicenseApiService.class);
 
-        // Fetch licenses filtered by vendor
         apiService.getLicenses().enqueue(new Callback<List<License>>() {
             @Override
             public void onResponse(Call<List<License>> call, Response<List<License>> response) {
                 if (!isAdded()) return;
 
+                licenseList.clear();
                 List<License> licenses = response.body();
-                if (licenses != null && !licenses.isEmpty()) {
-                    licenseList.clear();
+                if (licenses != null) {
                     for (License license : licenses) {
                         if (license.getVendorId() == vendorId) {
                             licenseList.add(license);
                         }
                     }
-                    filterContracts(searchEditText.getText().toString());
-                } else {
-                    toggleEmptyView(true);
                 }
+
+                filterContracts(searchView.getQuery().toString());
             }
 
             @Override
             public void onFailure(Call<List<License>> call, Throwable t) {
                 if (isAdded()) {
                     toggleEmptyView(true);
-                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(),
+                            "Error: " + t.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });
