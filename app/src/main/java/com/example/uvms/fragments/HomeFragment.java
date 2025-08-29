@@ -185,6 +185,7 @@ public class HomeFragment extends Fragment {
         statusSummary.put("ACTIVE", 0);
         statusSummary.put("PENDING", 0);
         statusSummary.put("REJECTED", 0);
+        statusSummary.put("EXPIRED",0);
 
         if (licenses != null) {
             for (License license : licenses) {
@@ -209,6 +210,7 @@ public class HomeFragment extends Fragment {
                 case "ACTIVE": color = getResources().getColor(R.color.green); break;
                 case "PENDING": color = getResources().getColor(R.color.yellow); break;
                 case "REJECTED": color = getResources().getColor(R.color.red); break;
+                case "EXPIRED": color = getResources().getColor(R.color.gray);
                 default: color = getResources().getColor(R.color.gray);
             }
 
