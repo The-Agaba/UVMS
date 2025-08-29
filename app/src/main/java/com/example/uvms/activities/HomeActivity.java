@@ -179,6 +179,15 @@ public class HomeActivity extends AppCompatActivity
                 navTitle.setText("License Detail");
                 navTitleDesc.setText("");
                 break;
+            case "ViewApplicationsFragment":
+                navTitle.setText("My Applications");
+                navTitleDesc.setText("Check your applications");
+                break;
+            case "ContractFragment":
+                navTitle.setText("Contracts");
+                navTitleDesc.setText("Check your approved contracts");
+                break;
+
             default:
                 navTitle.setText("");
                 navTitleDesc.setText("");
