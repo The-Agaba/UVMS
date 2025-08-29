@@ -23,6 +23,7 @@
         <activity android:name=".activities.RegisterActivity" android:exported="false" />
         <activity android:name=".activities.LoginActivity" android:exported="false" />
         <activity android:name=".activities.Landing_ScreenActivity" android:exported="false" />
+        <activity android:name=".activities.ApplyTenderActivity" android:exported="false" />
         <activity android:name=".activities.Splash_ScreenActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

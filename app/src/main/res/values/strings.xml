@@ -212,6 +212,12 @@
     <string name="student">student</string>
     <string name="vendor">vendor</string>
     <string name="license">license</string>
+    <string name="selected">"Selected: "</string>
+    <string name="cobe">COBE</string>
+    <string name="cnms">CNMS</string>
+    <string name="cive">CIVE</string>
+    <string name="open_only">Open only</string>
+    <string name="chss">CHSS</string>
 
 
 </resources>

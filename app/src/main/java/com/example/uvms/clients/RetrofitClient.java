@@ -1,5 +1,7 @@
 package com.example.uvms.clients;
 
+import com.example.uvms.api.LicenseApiService;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -17,5 +19,10 @@ public class RetrofitClient {
                     .build();
         }
         return retrofit;
+    }
+
+    // Add this method to get the API service
+    public static LicenseApiService getApiService() {
+        return getInstance().create(LicenseApiService.class);
     }
 }

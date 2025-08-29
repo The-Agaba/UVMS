@@ -43,7 +43,7 @@ public class ApplyTenderActivity extends AppCompatActivity {
 
         // If a document URL was passed, show it as pre-selected
         if (tenderDocUrl != null && !tenderDocUrl.isEmpty()) {
-            tvSelectedDoc.setText("Document from tender: " + tenderDocUrl);
+            tvSelectedDoc.setText(getString(R.string.selected) + tenderDocUrl);
             // Optionally, you could download it to local storage or keep URL reference
             // TODO: Implement automatic attachment of downloaded doc when submitting
         }

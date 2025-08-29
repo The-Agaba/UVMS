@@ -78,11 +78,13 @@ public class TendersFragment extends Fragment {
         });
 
         // Chip filters listener
-        for (int i = 0; i < chipGroupFilters.getChildCount(); i++) {
-            Chip chip = (Chip) chipGroupFilters.getChildAt(i);
-            chip.setOnCheckedChangeListener((buttonView, isChecked) ->
-                    filterTenders(searchView.getQuery().toString()));
-        }
+        chipGroupFilters.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            // No need to iterate through chips individually if you just need to refilter
+            // The filterTenders method will consider all currently checked chips
+            filterTenders(searchView.getQuery().toString());
+        });
+        // Allow multiple chips to be selected
+        chipGroupFilters.setSelectionRequired(false);
 
         switchOpenOnly.setOnCheckedChangeListener((buttonView, isChecked) ->
                 filterTenders(searchView.getQuery().toString()));
@@ -98,11 +100,11 @@ public class TendersFragment extends Fragment {
         tenderList.clear();
 
         // Hardcoded tenders
-        tenderList.add(new Tender("TNDR-001", "Supply and Delivery of ICT Equipment", "Ministry of Education", "Goods",
+        tenderList.add(new Tender("TNDR-001", "Supply and Delivery of ICT Equipment", "Ministry of Education", "CIVE",
                 "Dodoma", "Tue, 2 Sep 2025 • 16:00 EAT", "Open", "https://example.com/doc1.pdf"));
-        tenderList.add(new Tender("TNDR-002", "Construction of New Library", "City Council", "Works",
+        tenderList.add(new Tender("TNDR-002", "Construction of New Library", "City Council", "CNMS",
                 "Dar es Salaam", "Mon, 15 Sep 2025 • 12:00 EAT", "Open", "https://example.com/doc2.pdf"));
-        tenderList.add(new Tender("TNDR-003", "IT Consultancy Services", "Private Company", "Services",
+        tenderList.add(new Tender("TNDR-003", "IT Consultancy Services", "Private Company", "COBE",
                 "Arusha", "Fri, 5 Oct 2025 • 17:00 EAT", "Closed", "https://example.com/doc3.pdf"));
 
         progressBar.setVisibility(View.GONE);
@@ -132,14 +134,21 @@ public class TendersFragment extends Fragment {
                     t.buyer.toLowerCase().contains(query.toLowerCase()) ||
                     t.id.toLowerCase().contains(query.toLowerCase());
 
-            boolean matchesChip = true;
-            for (int i = 0; i < chipGroupFilters.getChildCount(); i++) {
-                Chip chip = (Chip) chipGroupFilters.getChildAt(i);
-                if (chip.isChecked() && !t.category.equalsIgnoreCase(chip.getText().toString())) {
-                    matchesChip = false;
-                    break;
+            boolean matchesChip = false; // Default to false if no chips are selected, or true if selection is not required
+            List<Integer> checkedChipIds = chipGroupFilters.getCheckedChipIds();
+
+            if (checkedChipIds.isEmpty()) {
+                matchesChip = true; // If no chips are selected, all categories match
+            } else {
+                for (Integer chipId : checkedChipIds) {
+                    Chip chip = chipGroupFilters.findViewById(chipId);
+                    if (chip != null && t.category.equalsIgnoreCase(chip.getText().toString())) {
+                        matchesChip = true;
+                        break; // Match found, no need to check other selected chips for this tender
+                    }
                 }
             }
+            for (int i = 0; i < chipGroupFilters.getChildCount(); i++) {
 
             boolean matchesOpen = !openOnly || t.status.equalsIgnoreCase("Open");
 
@@ -151,4 +160,4 @@ public class TendersFragment extends Fragment {
         adapter.tenderList = filtered;
         updateUI();
     }
-}
+}}

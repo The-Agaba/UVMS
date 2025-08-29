@@ -43,55 +43,61 @@
                 android:gravity="center_vertical"
                 android:paddingTop="8dp">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupFilters"
+                <HorizontalScrollView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:singleLine="true"
-                    app:singleSelection="false"
-                    app:selectionRequired="false">
+                    android:scrollbars="none">
 
-                    <!-- Example default chips (toggleable). Add/remove dynamically in code. -->
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipClosingSoon"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:checkable="true"
-                        android:text="CIVE"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupFilters"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:singleLine="true"
+                        app:singleSelection="false"
+                        app:selectionRequired="false">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipWorks"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:checkable="true"
-                        android:text="CNMS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <!-- Example default chips (toggleable). Add/remove dynamically in code. -->
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCIVE"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/cive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipGoods"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:checkable="true"
-                        android:text="COBE"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCNMS"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/cnms"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipServices"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:checkable="true"
-                        android:text="CHSS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipGCOBE"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/cobe"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCHSS"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/chss"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchOpenOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Open only"
+                    android:text="@string/open_only"
                     android:textColor="@color/uvmsTextPrimaryLight"
                     android:checked="true" />
             </LinearLayout>
