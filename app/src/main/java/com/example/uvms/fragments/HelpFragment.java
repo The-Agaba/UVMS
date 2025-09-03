@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.uvms.R;
 import com.example.uvms.activities.ContactActivity;
 import com.example.uvms.activities.EditProfileActivity;
+import com.example.uvms.activities.PasswordResetActivity;
 import com.example.uvms.activities.ProfileActivity;
 
 public class HelpFragment extends Fragment {
@@ -59,7 +60,7 @@ public class HelpFragment extends Fragment {
     }
 
     private void openEditProfileActivity() {
-        startActivity(new Intent(getContext(), EditProfileActivity.class));
+        startActivity(new Intent(getContext(), PasswordResetActivity.class));
     }
 
     private void openContactActivity() {

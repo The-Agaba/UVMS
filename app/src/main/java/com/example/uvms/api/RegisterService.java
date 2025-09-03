@@ -2,6 +2,7 @@ package com.example.uvms.api;
 
 import com.example.uvms.models.Vendor;
 import com.example.uvms.request_response.RegisterRequest;
+import com.example.uvms.request_response.RegisterResponse;
 
 
 import java.util.List;
@@ -12,11 +13,11 @@ import retrofit2.http.POST;
 
 public interface RegisterService {
 
-    @POST("news")
-    Call<Vendor> registerVendor(@Body RegisterRequest request);
+    @POST("auth/register")
+    Call<RegisterResponse> registerVendor(@Body RegisterRequest request);
 
 
-    @GET("vendors") // or your mock endpoint returning the JSON
+    @GET("vendors")
     Call<List<Vendor>> getVendors();
 
 

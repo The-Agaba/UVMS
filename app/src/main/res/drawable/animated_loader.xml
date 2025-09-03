@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="40dp"
+            android:height="40dp"
+            android:viewportWidth="100"
+            android:viewportHeight="100">
+
+            <!-- Red circle group -->
+            <group
+                android:name="redCircle"
+                android:translateX="30"
+                android:translateY="50">
+                <path
+                    android:fillColor="#e90c59"
+                    android:pathData="M0,0 m-20,0 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0"/>
+            </group>
+
+            <!-- Blue circle group -->
+            <group
+                android:name="blueCircle"
+                android:translateX="70"
+                android:translateY="50">
+                <path
+                    android:fillColor="#46dff0"
+                    android:pathData="M0,0 m-20,0 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0"/>
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <!-- Animate red circle -->
+    <target android:name="redCircle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="translateX"
+                android:duration="1000"
+                android:valueFrom="30"
+                android:valueTo="70"
+                android:valueType="floatType"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"/>
+        </aapt:attr>
+    </target>
+
+    <!-- Animate blue circle (delayed) -->
+    <target android:name="blueCircle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="translateX"
+                android:duration="1000"
+                android:startOffset="500"
+                android:valueFrom="70"
+                android:valueTo="30"
+                android:valueType="floatType"
+                android:repeatCount="infinite"
+                android:repeatMode="reverse"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -2,6 +2,7 @@ package com.example.uvms.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -15,15 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.example.uvms.R;
 import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.api.RegisterService;
-import com.example.uvms.models.Vendor;
 import com.example.uvms.request_response.RegisterRequest;
+import com.example.uvms.request_response.RegisterResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 
 import java.util.Objects;
 
@@ -44,19 +47,22 @@ public class RegisterActivity extends AppCompatActivity {
 
     private RegisterService registerService;
 
+
+    private Drawable defaultIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Edge-to-edge padding
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialize views
+
         firstNameLayout = findViewById(R.id.firstNameInputLayout);
         lastNameLayout = findViewById(R.id.lastNameInputLayout);
         emailLayout = findViewById(R.id.emailInputLayout);
@@ -80,6 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         loginLink = findViewById(R.id.tvLoginLink);
 
+        // Save default icon AFTER initialization
+        defaultIcon = btnRegister.getIcon();
+
         passwordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
 
         // Spinner setup
@@ -88,11 +97,28 @@ public class RegisterActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBusinessType.setAdapter(adapter);
 
-        // Retrofit service
-        registerService = RetrofitClient.getInstance().create(RegisterService.class);
+
+        registerService = RetrofitClient.getInstance(this).create(RegisterService.class);
 
         // Button clicks
-        btnRegister.setOnClickListener(v -> submitRegistration());
+        btnRegister.setOnClickListener(v -> {
+            btnRegister.setEnabled(false);
+
+            // Load animated vector
+            AnimatedVectorDrawableCompat loadingDrawable =
+                    AnimatedVectorDrawableCompat.create(this, R.drawable.animated_loader);
+
+            btnRegister.setIconTint(null);
+            btnRegister.setIcon(loadingDrawable);
+            btnRegister.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
+            btnRegister.setIconPadding(8);
+            loadingDrawable.start();
+            btnRegister.setText("Loading...");
+
+            if (loadingDrawable != null) loadingDrawable.start();
+            submitRegistration();
+        });
+
         btnBack.setOnClickListener(v -> finish());
         loginLink.setOnClickListener(v -> navigateToLogin());
     }
@@ -109,45 +135,51 @@ public class RegisterActivity extends AppCompatActivity {
         String businessType = spinnerBusinessType.getSelectedItem().toString();
 
         if (!validateForm(firstName, lastName, email, password, phone, companyName, tin, address, businessType)) {
+            btnRegister.setEnabled(true);
             return;
         }
 
         RegisterRequest request = new RegisterRequest(firstName, lastName, email, password, phone, companyName, tin, address, businessType);
 
-        registerService.registerVendor(request).enqueue(new Callback<Vendor>() {
-
-
+        registerService.registerVendor(request).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<Vendor> call, Response<Vendor> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                    navigateToLogin();
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    RegisterResponse registerResponse = response.body();
+                    Toast.makeText(RegisterActivity.this,
+                            registerResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    if (registerResponse.isSuccess()) {
+                        navigateToLogin();
+                    } else {
+                        btnRegister.setIcon(defaultIcon);
+                        btnRegister.setEnabled(true);
+                        btnRegister.setText("Retry Register ");
+                        showErrorDialog(registerResponse.getMessage());
+                    }
                 } else {
-                    new AlertDialog.Builder(RegisterActivity.this)
-                            .setTitle("Registration Failed")
-                            .setMessage("Please try again.")
-                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                            .show();
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "null";
+                        RegisterResponse errorResponse = new Gson().fromJson(errorBody, RegisterResponse.class);
+                        showErrorDialog(errorResponse != null && errorResponse.getMessage() != null ?
+                                errorResponse.getMessage() : "Registration failed. Please try again.");
+                    } catch (Exception e) {
+                        Log.e("RegisterActivity", "Error parsing errorBody", e);
+                        showErrorDialog("Registration failed. Please try again.");
+                    }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Vendor> call, Throwable t) {
-                new AlertDialog.Builder(RegisterActivity.this)
-                        .setTitle(" ⚠️⚠️Error⚠️⚠️")
-                        .setMessage("An error occurred. Please try again.")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .setNegativeButton("Retry", (dialog, which) -> submitRegistration())
-                        .show();
-
-                t.printStackTrace();
-                Log.e("RegistrationActivity", "Error: " + t);
-
+            public void onFailure(@NonNull Call<RegisterResponse> call, Throwable t) {
+                btnRegister.setIcon(defaultIcon);
+                btnRegister.setEnabled(true);
+                btnRegister.setText("Register");
+                showErrorDialog("An error occurred: " + t.getMessage());
             }
         });
-
-
-
     }
 
     private boolean validateForm(String firstName, String lastName, String email, String password,
@@ -187,5 +219,13 @@ public class RegisterActivity extends AppCompatActivity {
     private void navigateToLogin() {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         finish();
+    }
+
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(RegisterActivity.this)
+                .setTitle("Registration Failed")
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

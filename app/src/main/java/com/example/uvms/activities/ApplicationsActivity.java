@@ -33,7 +33,7 @@ public class ApplicationsActivity extends AppCompatActivity {
     private LinearLayout emptyView;
     private TabLayout tabLayout;
 
-    private int vendorId = 1; // Replace with actual logged-in vendor ID dynamically
+    private int vendorId = 1; // to replace with actual logged-in vendor ID dynamically
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,8 +99,9 @@ public class ApplicationsActivity extends AppCompatActivity {
     }
 
     private void fetchApplications(int vendorId) {
-        ApplicationApiService apiService = RetrofitClient.getInstance()
+        ApplicationApiService apiService = RetrofitClient.getInstance(this)
                 .create(ApplicationApiService.class);
+
 
         Call<List<Application>> call = apiService.getApplications(vendorId);
         call.enqueue(new Callback<List<Application>>() {

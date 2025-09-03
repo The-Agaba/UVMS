@@ -134,13 +134,13 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /** Fetch licenses from API and update RecyclerView + status cards */
+    //Fetch licenses from API and update RecyclerView + status cards
     private void fetchLicensesFromApi() {
         loader.setVisibility(View.VISIBLE);
         Drawable d = loader.getDrawable();
         if (d instanceof Animatable) ((Animatable) d).start();
 
-        LicenseApiService apiService = RetrofitClient.getInstance().create(LicenseApiService.class);
+        LicenseApiService apiService = RetrofitClient.getInstance(requireContext()).create(LicenseApiService.class);
         Call<List<License>> call = apiService.getLicenses();
 
         call.enqueue(new Callback<List<License>>() {

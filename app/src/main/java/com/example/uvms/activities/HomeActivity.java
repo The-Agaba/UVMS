@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity
         });
     }
 
-    /** Bottom navigation click handling */
+    //** Bottom navigation click handling
     private void setupBottomNavigation() {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (suppressNavCallback) return true;
@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity
         });
     }
 
-    //** Notification bell click opens NotificationsFragment
+    //Notification bell click opens NotificationsFragment
     private void setupNotificationBell() {
         notificationBell.setOnClickListener(v ->
                 switchFragment(new NotificationsFragment(), "NotificationsFragment", true)
@@ -115,7 +115,7 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    /** Bottom nav highlighting */
+    //Bottom nav highlighting
     public void updateNavState(String tag) {
         if (bottomNavigationView == null) return;
 
@@ -146,14 +146,14 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    /** Top bar titles */
+    //Top bar titles
     public void updateNavTitle(String tag) {
         if (navTitle == null || navTitleDesc == null) return;
 
         switch (tag) {
             case "HomeFragment":
                 navTitle.setText("Business");
-                navTitleDesc.setText("Manage your licenses and vendors");
+                navTitleDesc.setText("Welcome Username");
                 break;
             case "TendersFragment":
                 navTitle.setText("Tenders");
@@ -205,15 +205,15 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    /** 🔹 Callback from NotificationsFragment */
+    // Callback from NotificationsFragment
     @Override
     public void onNotificationsLoaded(List<Notification> notifications) {
         updateBadge(notifications);
     }
 
-    /** 🔹 Fetch notifications from API to update badge */
+    //Fetch notifications from API to update badge
     private void fetchUnreadNotifications() {
-        NotificationApiService apiService = RetrofitClient.getInstance()
+        NotificationApiService apiService = RetrofitClient.getInstance(this)
                 .create(NotificationApiService.class);
 
         apiService.getNotifications().enqueue(new Callback<List<Notification>>() {
@@ -231,7 +231,7 @@ public class HomeActivity extends AppCompatActivity
         });
     }
 
-    //🔹 Update badge count
+    //Update badge count
     private void updateBadge(List<Notification> notifications) {
         int unreadCount = 0;
         for (Notification n : notifications) {

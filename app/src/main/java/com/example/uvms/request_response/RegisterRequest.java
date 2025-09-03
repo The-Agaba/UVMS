@@ -13,10 +13,11 @@ public class RegisterRequest {
     @SerializedName("email")
     private String email;
 
-    @SerializedName("password_hash")  // server expects hashed/stored password field
-    private String passwordHash;
+    @SerializedName("password")
+    private String password;
 
-    @SerializedName("phone_number")
+    @SerializedName("phone_number"
+    )
     private String phoneNumber;
 
     @SerializedName("company_name")
@@ -38,7 +39,7 @@ public class RegisterRequest {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = passwordHash;
         this.phoneNumber = phoneNumber;
         this.companyName = companyName;
         this.tinNumber = tinNumber;

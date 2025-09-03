@@ -88,21 +88,28 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Login Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/login"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:textColor="@color/uvmsBackgroundDark"
-                app:icon="@drawable/ic_login"
-                app:iconGravity="end"
-                android:backgroundTint="@color/uvmsAccentCyan"
-                app:iconTint="@color/statusPendingYellow"
-                app:iconPadding="8dp"
-                app:cornerRadius="12dp"
-                android:layout_marginTop="24dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+
+                <!-- Material Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="@string/login"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textColor="@color/uvmsBackgroundDark"
+                    app:icon="@drawable/ic_login"
+                    app:iconGravity="end"
+                    android:backgroundTint="@color/uvmsAccentCyan"
+                    app:iconTint="@color/statusPendingYellow"
+                    app:iconPadding="8dp"
+                    app:cornerRadius="12dp"/>
+            </FrameLayout>
+
 
             <!-- Divider -->
             <com.google.android.material.divider.MaterialDivider
@@ -136,11 +143,28 @@
                 android:layout_height="wrap_content"
                 android:text="@string/register_text"
                 android:textSize="16sp"
-                android:textColor="@color/uvmsTextSecondaryLight"
+                android:textColor="@color/uvmsBackgroundDark"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
                 android:focusable="true"/>
+
+
         </LinearLayout>
     </ScrollView>
+
+
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:textSize="16sp"
+        android:textColor="#38020D"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

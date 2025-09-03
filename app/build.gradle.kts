@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.gridlayout)
     implementation(libs.play.services.auth)
 
@@ -55,6 +56,7 @@ dependencies {
 
 // Vector Drawable Support
     implementation(libs.vectordrawable)
+    implementation(libs.logging.interceptor)
 
 // Lifecycle (optional, useful for fragments in Java)
     implementation(libs.lifecycle.runtime)

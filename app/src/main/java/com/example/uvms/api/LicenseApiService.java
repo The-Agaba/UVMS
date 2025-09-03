@@ -16,12 +16,12 @@ import retrofit2.http.Part;
 public interface LicenseApiService {
 
     // Existing endpoint to fetch licenses
-    @GET("licenses") // replace with your mock API endpoint
+    @GET("license") // replace with your mock API endpoint
     Call<List<License>> getLicenses();
 
     // New endpoint to submit license renewal
     @Multipart
-    @POST("licenses/renew") // replace with your actual endpoint
+    @POST("license/renew") // replace with your actual endpoint
     Call<ResponseBody> renewLicense(
             @Part("license_number") RequestBody licenseNumber,
             @Part("company_name") RequestBody companyName,

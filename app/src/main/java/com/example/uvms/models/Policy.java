@@ -14,7 +14,7 @@ public class Policy {
     private String content;
 
     @SerializedName("scope")
-    private String scope; // university or college
+    private String scope;
 
     @SerializedName("college_id")
     private Integer collegeId; // nullable

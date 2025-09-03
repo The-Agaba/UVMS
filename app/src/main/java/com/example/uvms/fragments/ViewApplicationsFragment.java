@@ -105,7 +105,7 @@ public class ViewApplicationsFragment extends Fragment {
     }
 
     private void fetchApplications() {
-        ApplicationApiService apiService = RetrofitClient.getInstance()
+        ApplicationApiService apiService = RetrofitClient.getInstance(requireContext())
                 .create(ApplicationApiService.class);
 
         apiService.getApplications(vendorId).enqueue(new Callback<List<Application>>() {

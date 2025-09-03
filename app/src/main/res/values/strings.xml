@@ -154,7 +154,7 @@
         <item>English</item>
         <item>Swahili</item>
     </string-array>
-<string name="app_name">UVMS</string>
+    <string name="app_name">UVMS</string>
 
     <string name="help_welcome">Hi, how can we help you?</string>
     <string name="search_hint">Search</string>
@@ -218,6 +218,7 @@
     <string name="cive">CIVE</string>
     <string name="open_only">Open only</string>
     <string name="chss">CHSS</string>
+    <string name="forgot_password">Forgot Password?</string>
 
 
 </resources>

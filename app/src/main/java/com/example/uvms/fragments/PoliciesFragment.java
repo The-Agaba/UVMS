@@ -118,7 +118,7 @@ public class PoliciesFragment extends Fragment {
             return;
         }
 
-        PoliciesApiService service = RetrofitClient.getInstance().create(PoliciesApiService.class);
+        PoliciesApiService service = RetrofitClient.getInstance(requireContext()).create(PoliciesApiService.class);
         service.getAllPolicies().enqueue(new Callback<List<Policy>>() {
             @Override
             public void onResponse(@NonNull Call<List<Policy>> call, @NonNull Response<List<Policy>> response) {

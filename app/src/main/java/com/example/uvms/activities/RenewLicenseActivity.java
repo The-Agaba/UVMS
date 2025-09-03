@@ -115,7 +115,7 @@ public class RenewLicenseActivity extends AppCompatActivity {
             RequestBody expiryBody = RequestBody.create(expiry, MediaType.parse("text/plain"));
 
             // Retrofit call
-            LicenseApiService api = RetrofitClient.getApiService();
+            LicenseApiService api = RetrofitClient.getApiService(this);
             Call<ResponseBody> call = api.renewLicense(licenseBody, companyBody, expiryBody, filePart);
 
             Toast.makeText(this, "Submitting Renewal...", Toast.LENGTH_SHORT).show();

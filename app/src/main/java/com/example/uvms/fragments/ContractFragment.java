@@ -118,7 +118,7 @@ public class ContractFragment extends Fragment {
 
     /** Fetch contracts from API filtered by vendor ID */
     private void fetchContracts() {
-        LicenseApiService apiService = RetrofitClient.getInstance()
+        LicenseApiService apiService = RetrofitClient.getInstance(requireContext())
                 .create(LicenseApiService.class);
 
         apiService.getLicenses().enqueue(new Callback<List<License>>() {

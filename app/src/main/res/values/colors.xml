@@ -11,9 +11,9 @@
     <color name="uvmsSurfaceDark">#1E1E1E</color>
     <color name="uvmsDivider">#BDBDBD</color>
 
-    <color name="green">#357C38</color>       <!-- Active -->
-    <color name="yellow">#9B8E23</color>      <!-- Pending -->
-    <color name="red">#A42D24</color>         <!-- Rejected -->
+    <color name="green">#357C38</color>
+    <color name="yellow">#9B8E23</color>
+    <color name="red">#A42D24</color>
     <color name="gray">#7C7C7C</color>
 
     <!-- Text / Icons -->

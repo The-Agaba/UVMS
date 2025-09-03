@@ -110,7 +110,7 @@ public class NotificationsFragment extends Fragment implements Filterable {
     private void fetchNotifications() {
         progressBar.setVisibility(View.VISIBLE);
 
-        NotificationApiService apiService = RetrofitClient.getInstance()
+        NotificationApiService apiService = RetrofitClient.getInstance(requireContext())
                 .create(NotificationApiService.class);
 
         Call<List<Notification>> call = apiService.getNotifications();
