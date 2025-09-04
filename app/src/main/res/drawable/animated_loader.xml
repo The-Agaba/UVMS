@@ -50,7 +50,7 @@
         <aapt:attr name="android:animation">
             <objectAnimator
                 android:propertyName="translateX"
-                android:duration="1000"
+                android:duration="500"
                 android:startOffset="500"
                 android:valueFrom="70"
                 android:valueTo="30"

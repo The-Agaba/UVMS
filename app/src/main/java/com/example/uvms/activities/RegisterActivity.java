@@ -1,7 +1,7 @@
 package com.example.uvms.activities;
 
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,8 +20,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.example.uvms.R;
-import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.api.RegisterService;
+import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.request_response.RegisterRequest;
 import com.example.uvms.request_response.RegisterResponse;
 import com.google.android.material.button.MaterialButton;
@@ -46,15 +47,14 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView loginLink;
 
     private RegisterService registerService;
-
-
     private Drawable defaultIcon;
+
+    private static final String PREFS_NAME = "uvms_prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -62,7 +62,13 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
+        bindViews();
+        setupSpinner();
+        registerService = RetrofitClient.getInstance(this).create(RegisterService.class);
+        setupListeners();
+    }
 
+    private void bindViews() {
         firstNameLayout = findViewById(R.id.firstNameInputLayout);
         lastNameLayout = findViewById(R.id.lastNameInputLayout);
         emailLayout = findViewById(R.id.emailInputLayout);
@@ -86,25 +92,21 @@ public class RegisterActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         loginLink = findViewById(R.id.tvLoginLink);
 
-        // Save default icon AFTER initialization
         defaultIcon = btnRegister.getIcon();
-
         passwordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+    }
 
-        // Spinner setup
+    private void setupSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.business_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBusinessType.setAdapter(adapter);
+    }
 
-
-        registerService = RetrofitClient.getInstance(this).create(RegisterService.class);
-
-        // Button clicks
+    private void setupListeners() {
         btnRegister.setOnClickListener(v -> {
             btnRegister.setEnabled(false);
 
-            // Load animated vector
             AnimatedVectorDrawableCompat loadingDrawable =
                     AnimatedVectorDrawableCompat.create(this, R.drawable.animated_loader);
 
@@ -112,10 +114,9 @@ public class RegisterActivity extends AppCompatActivity {
             btnRegister.setIcon(loadingDrawable);
             btnRegister.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_START);
             btnRegister.setIconPadding(8);
-            loadingDrawable.start();
+            if (loadingDrawable != null) loadingDrawable.start();
             btnRegister.setText("Loading...");
 
-            if (loadingDrawable != null) loadingDrawable.start();
             submitRegistration();
         });
 
@@ -135,7 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
         String businessType = spinnerBusinessType.getSelectedItem().toString();
 
         if (!validateForm(firstName, lastName, email, password, phone, companyName, tin, address, businessType)) {
-            btnRegister.setEnabled(true);
+            resetRegisterButton();
             return;
         }
 
@@ -143,20 +144,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerService.registerVendor(request).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-
-
+            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
+                resetRegisterButton();
                 if (response.isSuccessful() && response.body() != null) {
                     RegisterResponse registerResponse = response.body();
-                    Toast.makeText(RegisterActivity.this,
-                            registerResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, registerResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
-                    if (registerResponse.isSuccess()) {
-                        navigateToLogin();
+                    if (registerResponse.isSuccess() && registerResponse.getVendor() != null) {
+                        saveUserToPrefs(registerResponse.getVendor());
+                        navigateToProfile();
                     } else {
-                        btnRegister.setIcon(defaultIcon);
-                        btnRegister.setEnabled(true);
-                        btnRegister.setText("Retry Register ");
                         showErrorDialog(registerResponse.getMessage());
                     }
                 } else {
@@ -173,18 +170,43 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<RegisterResponse> call, Throwable t) {
-                btnRegister.setIcon(defaultIcon);
-                btnRegister.setEnabled(true);
-                btnRegister.setText("Register");
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
+                resetRegisterButton();
                 showErrorDialog("An error occurred: " + t.getMessage());
             }
         });
     }
 
+    // --- Save more fields after registration ---
+    private void saveUserToPrefs(RegisterResponse.VendorData vendor) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("user_id", String.valueOf(vendor.getVendorId()));
+        editor.putString("user_first_name", vendor.getFirstName());
+        editor.putString("user_last_name", vendor.getLastName());
+        editor.putString("user_email", vendor.getEmail());
+        editor.putString("user_company_name", vendor.getCompanyName());
+        editor.putString("user_tin_number", vendor.getTinNumber());
+        editor.putBoolean("user_is_active", vendor.isActive());
+
+        // Add defaults for missing fields
+        editor.putString("user_phone_number", ""); // Registration response missing phone
+        editor.putString("business_type", ""); // Add if available in API response later
+        editor.putString("user_business_address", "");
+        editor.putString("user_created_at", "");
+
+        editor.apply();
+    }
+
+    private void resetRegisterButton() {
+        btnRegister.setEnabled(true);
+        btnRegister.setIcon(defaultIcon);
+        btnRegister.setText("Register");
+    }
+
     private boolean validateForm(String firstName, String lastName, String email, String password,
                                  String phone, String companyName, String tin, String address, String businessType) {
-
         boolean isValid = true;
         firstNameLayout.setError(null);
         lastNameLayout.setError(null);
@@ -202,18 +224,17 @@ public class RegisterActivity extends AppCompatActivity {
         else if (password.length() < 8) { passwordLayout.setError("Password must be at least 8 characters"); isValid = false; }
         else if (!password.matches(".*[a-zA-Z].*")) { passwordLayout.setError("Password must contain at least one letter"); isValid = false; }
         else if (!password.matches(".*\\d.*")) { passwordLayout.setError("Password must contain at least one number"); isValid = false; }
-
         if (phone.isEmpty()) { phoneLayout.setError("Phone number is required"); isValid = false; }
         if (companyName.isEmpty()) { companyLayout.setError("Company name is required"); isValid = false; }
         if (tin.isEmpty()) { tinLayout.setError("TIN is required"); isValid = false; }
         if (address.isEmpty()) { addressLayout.setError("Address is required"); isValid = false; }
-
-        if (businessType.equals("Select type")) {
-            Toast.makeText(this, "Select business type", Toast.LENGTH_SHORT).show();
-            isValid = false;
-        }
-
+        if (businessType.equals("Select type")) { Toast.makeText(this, "Select business type", Toast.LENGTH_SHORT).show(); isValid = false; }
         return isValid;
+    }
+
+    private void navigateToProfile() {
+        startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+        finish();
     }
 
     private void navigateToLogin() {

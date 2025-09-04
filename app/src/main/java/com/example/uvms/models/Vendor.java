@@ -1,56 +1,72 @@
 package com.example.uvms.models;
 
 import com.google.gson.annotations.SerializedName;
-import java.io.Serializable; // <-- add this import
+import java.io.Serializable;
 
-public class Vendor implements Serializable { // <-- implements Serializable
-    @SerializedName("vendor_id")
-    public int vendorId;
+public class Vendor implements Serializable {
+
+    @SerializedName("vendorId")
+    private int vendorId;
 
     @SerializedName("email")
-    public String email;
+    private String email;
 
-    @SerializedName("password_hash")
-    public String passwordHash;
+    @SerializedName("password")
+    private String password;
 
-    @SerializedName("first_name")
-    public String firstName;
+    @SerializedName("firstName")
+    private String firstName;
 
-    @SerializedName("last_name")
-    public String lastName;
+    @SerializedName("lastName")
+    private String lastName;
 
-    @SerializedName("profile_picture_path")
-    public String profilePicturePath;
+    @SerializedName("profilePicturePath")
+    private String profilePicturePath;
 
-    @SerializedName("phone_number")
-    public String phoneNumber;
+    @SerializedName("phoneNumber")
+    private String phoneNumber;
 
-    @SerializedName("company_name")
-    public String companyName;
+    @SerializedName("companyName")
+    private String companyName;
 
-    @SerializedName("tin_number")
-    public String tinNumber;
+    @SerializedName("tinNumber")
+    private String tinNumber;
 
-    @SerializedName("business_address")
-    public String businessAddress;
+    @SerializedName("businessAddress")
+    private String businessAddress;
 
-    @SerializedName("registration_date")
-    public String registrationDate;
+    @SerializedName("registrationDate")
+    private String registrationDate;
 
-    @SerializedName("last_login")
-    public String lastLogin;
+    @SerializedName("lastLogin")
+    private String lastLogin;
 
-    @SerializedName("is_active")
-    public boolean isActive = true;
+    @SerializedName("active")
+    private boolean isActive;
 
-    @SerializedName("business_type")
-    public String businessType;
+    @SerializedName("businessType")
+    private String businessType;
+
+    @SerializedName("role")
+    private String role;
+
+    @SerializedName("createdAt")
+    private String createdAt;
+
+    @SerializedName("updatedAt")
+    private String updatedAt;
+
+    @SerializedName("deletedAt")
+    private String deletedAt;
 
     // --- Constructor ---
-    public Vendor(int vendorId, String email, String passwordHash, String firstName, String lastName, String profilePicturePath, String phoneNumber, String companyName, String tinNumber, String businessAddress, String registrationDate, String lastLogin, boolean isActive, String businessType) {
+    public Vendor(int vendorId, String email, String password, String firstName, String lastName,
+                  String profilePicturePath, String phoneNumber, String companyName, String tinNumber,
+                  String businessAddress, String registrationDate, String lastLogin, boolean isActive,
+                  String businessType, String role, String createdAt, String updatedAt, String deletedAt) {
         this.vendorId = vendorId;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profilePicturePath = profilePicturePath;
@@ -62,6 +78,10 @@ public class Vendor implements Serializable { // <-- implements Serializable
         this.lastLogin = lastLogin;
         this.isActive = isActive;
         this.businessType = businessType;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
 
     // --- Getters & Setters ---
@@ -71,8 +91,8 @@ public class Vendor implements Serializable { // <-- implements Serializable
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getPasswordHash() { return passwordHash; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -106,4 +126,16 @@ public class Vendor implements Serializable { // <-- implements Serializable
 
     public String getBusinessType() { return businessType; }
     public void setBusinessType(String businessType) { this.businessType = businessType; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public String getCreatedAt() { return createdAt; }
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public String getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(String deletedAt) { this.deletedAt = deletedAt; }
 }
