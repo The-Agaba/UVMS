@@ -1,6 +1,7 @@
 package com.example.uvms.request_response;
 
 public class RegisterResponse {
+
     private boolean success;
     private String message;
     private String tokenType;
@@ -10,20 +11,20 @@ public class RegisterResponse {
 
     // --- Inner static class for Vendor details ---
     public static class VendorData {
-        private Integer vendor_id;
+        private Integer vendorId;
         private String email;
-        private String first_name;
-        private String last_name;
-        private String company_name;
-        private String tin_number;
-        private boolean is_active;
+        private String firstName;
+        private String lastName;
+        private String companyName;
+        private String tinNumber;
+        private boolean isActive;
 
         // Getters & Setters
-        public Integer getVendor_id() {
-            return vendor_id;
+        public Integer getVendorId() {
+            return vendorId;
         }
-        public void setVendor_id(Integer vendor_id) {
-            this.vendor_id = vendor_id;
+        public void setVendorId(Integer vendorId) {
+            this.vendorId = vendorId;
         }
 
         public String getEmail() {
@@ -33,39 +34,39 @@ public class RegisterResponse {
             this.email = email;
         }
 
-        public String getFirst_name() {
-            return first_name;
+        public String getFirstName() {
+            return firstName;
         }
-        public void setFirst_name(String first_name) {
-            this.first_name = first_name;
-        }
-
-        public String getLast_name() {
-            return last_name;
-        }
-        public void setLast_name(String last_name) {
-            this.last_name = last_name;
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
         }
 
-        public String getCompany_name() {
-            return company_name;
+        public String getLastName() {
+            return lastName;
         }
-        public void setCompany_name(String company_name) {
-            this.company_name = company_name;
-        }
-
-        public String getTin_number() {
-            return tin_number;
-        }
-        public void setTin_number(String tin_number) {
-            this.tin_number = tin_number;
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
 
-        public boolean isIs_active() {
-            return is_active;
+        public String getCompanyName() {
+            return companyName;
         }
-        public void setIs_active(boolean is_active) {
-            this.is_active = is_active;
+        public void setCompanyName(String companyName) {
+            this.companyName = companyName;
+        }
+
+        public String getTinNumber() {
+            return tinNumber;
+        }
+        public void setTinNumber(String tinNumber) {
+            this.tinNumber = tinNumber;
+        }
+
+        public boolean isActive() {
+            return isActive;
+        }
+        public void setActive(boolean active) {
+            isActive = active;
         }
     }
 

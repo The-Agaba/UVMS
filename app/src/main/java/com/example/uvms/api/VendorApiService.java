@@ -1,11 +1,18 @@
 package com.example.uvms.api;
 
 import com.example.uvms.models.Vendor;
+
 import retrofit2.Call;
-import retrofit2.http.GET;
+import retrofit2.http.Body;
+import retrofit2.http.Header;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface VendorApiService {
-    @GET("vendors/{id}") // replace with your mock API endpoint
-    Call<Vendor> getVendorById(@Path("id") int vendorId);
+    @PUT("vendors/{id}")
+    Call<Vendor> updateVendor(
+            @Header("Authorization") String token,
+            @Path("id") int vendorId,
+            @Body Vendor vendor
+    );
 }
