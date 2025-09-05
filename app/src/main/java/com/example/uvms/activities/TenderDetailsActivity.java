@@ -1,92 +1,127 @@
 package com.example.uvms.activities;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.widget.Button;
+import android.os.Environment;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
-
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
 
 public class TenderDetailsActivity extends BaseActivity {
 
-    private TextView tvTenderTitle, tvTenderId, tvTenderBuyer,
-            tvTenderCategory, tvTenderLocation, tvTenderDeadline,
-            tvTenderBudget, tvTenderStatus;
-    private Button btnApplyNow, btnDownloadDocs;
-
-    // Example hardcoded tender document URL (replace with API-driven URL later)
-    private String tenderDocumentUrl = "https://example.com/tenderdocs/sample.pdf";
+    private static final int PERMISSION_REQUEST_CODE = 1001;
+    private TextView tvTitle, tvTenderId, tvDescription, tvPostDate, tvDeadline;
+    private Chip chipCollege;
+    private MaterialButton btnDownload, btnApply;
+    private String contractUrl, tenderTitle, tenderCollege;
+    private int tenderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tender_details);
 
-        // Initialize views
-        tvTenderTitle = findViewById(R.id.tvTenderTitle);
+        // --- Find views ---
+        tvTitle = findViewById(R.id.tvTenderTitle);
+        chipCollege = findViewById(R.id.chipTenderCollege);
         tvTenderId = findViewById(R.id.tvTenderId);
-        tvTenderBuyer = findViewById(R.id.tvTenderBuyer);
-        tvTenderCategory = findViewById(R.id.tvTenderCategory);
-        tvTenderLocation = findViewById(R.id.tvTenderLocation);
-        tvTenderDeadline = findViewById(R.id.tvTenderDeadline);
-        tvTenderBudget = findViewById(R.id.tvTenderBudget);
-        tvTenderStatus = findViewById(R.id.tvTenderStatus);
-        btnApplyNow = findViewById(R.id.btnApplyNow);
-        btnDownloadDocs = findViewById(R.id.btnDownloadTenderDoc);
+        tvDescription = findViewById(R.id.tvTenderDescription);
+        tvPostDate = findViewById(R.id.tvTenderPostDate);
+        tvDeadline = findViewById(R.id.tvTenderDeadline);
+        btnDownload = findViewById(R.id.btnDownloadContract);
+        btnApply = findViewById(R.id.btnApplyTender);
 
-        // Example hardcoded tender details (replace with API-driven data)
-        tvTenderTitle.setText("Construction of New School Block");
-        tvTenderId.setText("ID: TNDR-001");
-        tvTenderBuyer.setText("City Council Procurement Office");
-        tvTenderCategory.setText("Construction");
-        tvTenderLocation.setText("Dar es Salaam, Tanzania");
-        tvTenderDeadline.setText(formatDate(System.currentTimeMillis() + 7*24*60*60*1000)); // 1 week from now
-        tvTenderBudget.setText(formatCurrency(50000000));
-        tvTenderStatus.setText("Open");
+        // --- Get intent extras ---
+        tenderId = getIntent().getIntExtra("tenderId", -1);
+        tenderTitle = getIntent().getStringExtra("tenderTitle");
+        tenderCollege = getIntent().getStringExtra("tenderCollege");
+        String tenderDescription = getIntent().getStringExtra("tenderDescription");
+        String tenderPostDate = getIntent().getStringExtra("tenderPostDate");
+        String tenderDeadline = getIntent().getStringExtra("tenderDeadline");
+        contractUrl = getIntent().getStringExtra("tenderDocUrl");
 
-        // Download Tender Docs button
-        btnDownloadDocs.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tenderDocumentUrl));
-            startActivity(browserIntent);
-        });
+        // --- Populate UI ---
+        tvTitle.setText(tenderTitle != null ? tenderTitle : "N/A");
+        chipCollege.setText(tenderCollege != null ? tenderCollege : "N/A");
+        tvTenderId.setText(tenderId != -1 ? "UDOM/ICT/" + tenderId : "N/A");
+        tvDescription.setText(tenderDescription != null ? tenderDescription : "N/A");
+        tvPostDate.setText(tenderPostDate != null ? "Posted on: " + tenderPostDate : "N/A");
+        tvDeadline.setText(tenderDeadline != null ? "Closes: " + tenderDeadline : "N/A");
 
-        // Inside onCreate(), replace Apply Now button listener:
-
-        btnApplyNow.setOnClickListener(v -> {
-            Intent applyIntent = new Intent(TenderDetailsActivity.this, ApplyTenderActivity.class);
-            applyIntent.putExtra("tenderId", "TNDR-001");
-            // Pass document URL to ApplyTenderActivity
-            applyIntent.putExtra("tenderDocUrl", tenderDocumentUrl);
-            startActivity(applyIntent);
-        });
-
-
-        /*
-         * TODO:
-         * - Replace hardcoded tender details with API-driven data
-         * - Handle multiple tender documents
-         * - Optionally show preview of document list before download
-         */
+        // --- Button Listeners ---
+        btnDownload.setOnClickListener(v -> downloadContract());
+        btnApply.setOnClickListener(v -> openApplyTenderActivity());
     }
 
-    // Format deadline date
-    private String formatDate(long millis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-        return sdf.format(new Date(millis));
+    private void downloadContract() {
+        if (contractUrl == null || contractUrl.isEmpty()) {
+            Toast.makeText(this, "No contract available to download.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check storage permission for Android < 10
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                return;
+            }
+        }
+        // Download contract
+        try {
+            Uri uri = Uri.parse(contractUrl);
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setTitle(tenderTitle);
+            request.setDescription("Downloading tender contract...");
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment());
+
+            DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.enqueue(request);
+
+            Toast.makeText(this, "Download started...", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Download failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // Format budget in Tanzanian Shillings
-    private String formatCurrency(double amount) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("sw", "TZ"));
-        return formatter.format(amount);
+    private void openApplyTenderActivity() {
+        Intent intent = new Intent(this, ApplyTenderActivity.class);
+        intent.putExtra("tenderId", tenderId);
+        intent.putExtra("tenderTitle", tenderTitle);
+        intent.putExtra("tenderCollege", tenderCollege);
+        intent.putExtra("tenderDocUrl", contractUrl);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                downloadContract();
+            } else {
+                Toast.makeText(this, "Storage permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,37 +30,26 @@ import retrofit2.Response;
 
 public class ViewApplicationsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerApplications;
     private LinearLayout emptyView;
-    private Button btnInviteVendor;
-    private TabLayout tabLayout;
+    private TabLayout tabStatus;
 
     private ApplicationAdapter adapter;
-    private List<Application> applicationList = new ArrayList<>();
-
-    private final int vendorId = 1; // Replace with actual logged-in vendor ID
+    private List<Application> allApplications = new ArrayList<>();
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_viewapplications, container, false);
 
-        recyclerView = view.findViewById(R.id.rv_applications);
+        recyclerApplications = view.findViewById(R.id.recyclerApplications);
         emptyView = view.findViewById(R.id.empty_applications);
+        tabStatus = view.findViewById(R.id.tab_status);
 
-        tabLayout = view.findViewById(R.id.tab_status);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ApplicationAdapter(getContext(), applicationList, app ->
-                Toast.makeText(getContext(),
-                        "Clicked Application ID #" + app.getApplicationId(),
-                        Toast.LENGTH_SHORT).show()
-        );
-        recyclerView.setAdapter(adapter);
-
+        adapter = new ApplicationAdapter(getContext(), new ArrayList<>());
+        recyclerApplications.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerApplications.setAdapter(adapter);
 
         setupTabs();
         fetchApplications();
@@ -69,67 +58,76 @@ public class ViewApplicationsFragment extends Fragment {
     }
 
     private void setupTabs() {
-        tabLayout.addTab(tabLayout.newTab().setText("All"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pending"));
-        tabLayout.addTab(tabLayout.newTab().setText("Approved"));
-        tabLayout.addTab(tabLayout.newTab().setText("Denied"));
+        tabStatus.addTab(tabStatus.newTab().setText("ALL"));
+        tabStatus.addTab(tabStatus.newTab().setText("PENDING"));
+        tabStatus.addTab(tabStatus.newTab().setText("APPROVED"));
+        tabStatus.addTab(tabStatus.newTab().setText("REJECTED"));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override public void onTabSelected(TabLayout.Tab tab) { filterByStatus(tab.getText().toString()); }
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) { filterByStatus(tab.getText().toString()); }
+        tabStatus.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                filterApplications(tab.getText().toString());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
     }
 
-    private void filterByStatus(String status) {
-        List<Application> filtered = new ArrayList<>();
-        if (status.equalsIgnoreCase("All")) {
-            filtered.addAll(applicationList);
-        } else {
-            for (Application app : applicationList) {
-                if (app.getStatus().equalsIgnoreCase(status)) filtered.add(app);
-            }
-        }
-        adapter.updateData(filtered);
-        toggleEmptyView(filtered.isEmpty());
-    }
-
-    private void toggleEmptyView(boolean isEmpty) {
-        if (isEmpty) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
-    }
-
     private void fetchApplications() {
-        ApplicationApiService apiService = RetrofitClient.getInstance(requireContext())
+        showLoading(true);
+
+        ApplicationApiService api = RetrofitClient.getInstance(requireContext())
                 .create(ApplicationApiService.class);
 
-        apiService.getApplications(vendorId).enqueue(new Callback<List<Application>>() {
+        Call<List<Application>> call = api.getApplications(); // You may need to add this GET method
+        call.enqueue(new Callback<List<Application>>() {
             @Override
             public void onResponse(Call<List<Application>> call, Response<List<Application>> response) {
-                if (!isAdded()) return;
-
-                List<Application> apps = response.body();
-                if (apps != null && !apps.isEmpty()) {
-                    applicationList.clear();
-                    applicationList.addAll(apps);
-                    filterByStatus(tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getText().toString());
+                showLoading(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    allApplications = response.body();
+                    filterApplications(tabStatus.getTabAt(tabStatus.getSelectedTabPosition()).getText().toString());
                 } else {
-                    toggleEmptyView(true);
+                    Toast.makeText(getContext(), "Failed to fetch applications", Toast.LENGTH_SHORT).show();
+                    showEmpty(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Application>> call, Throwable t) {
-                if (isAdded()) {
-                    toggleEmptyView(true);
-                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                showLoading(false);
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showEmpty(true);
             }
         });
+    }
+
+    private void filterApplications(String status) {
+        List<Application> filtered;
+        if ("ALL".equalsIgnoreCase(status)) {
+            filtered = allApplications;
+        } else {
+            filtered = allApplications.stream()
+                    .filter(app -> status.equalsIgnoreCase(app.getStatus()))
+                    .collect(Collectors.toList());
+        }
+
+        adapter.updateList(filtered);
+        showEmpty(filtered.isEmpty());
+    }
+
+    private void showEmpty(boolean show) {
+        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        recyclerApplications.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
+    private void showLoading(boolean loading) {
+        // Optionally, show a ProgressBar (add in layout) or disable interaction
+        // For simplicity, we'll just hide/show recycler
+        recyclerApplications.setVisibility(loading ? View.GONE : View.VISIBLE);
     }
 }

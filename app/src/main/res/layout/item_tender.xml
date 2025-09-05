@@ -34,16 +34,8 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                tools:text="Supply and Delivery of ICT Equipment" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCollege"
-                style="@style/Widget.Material3.Chip.Assist.Elevated"
-                android:layout_marginStart="6dp"
-                android:checkable="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="CoET" />
+                tools:text="Supply and Delivery of ICT Equipment"
+                android:textAlignment="center"/>
         </LinearLayout>
 
         <!-- Tender ID -->
@@ -78,9 +70,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
+            android:drawableStart="@drawable/ic_document"
+            android:drawableTint="@color/colorPrimaryDark"
             android:maxLines="3"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            tools:text="Tender description goes here, briefly summarizing scope of work and requirements." />
+            tools:text="Tender description goes here, briefly summarizing scope of work and requirements. " />
 
         <!-- Deadline -->
         <LinearLayout

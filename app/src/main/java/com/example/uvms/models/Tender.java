@@ -27,7 +27,7 @@ public class Tender implements Serializable {
     private Admin createdBy;
 
     @SerializedName("college")
-    private College college;  // ✅ Added field for nested college object
+    private College college;
 
     @SerializedName("createdAt")
     private String createdAt;
@@ -35,7 +35,7 @@ public class Tender implements Serializable {
     @SerializedName("updatedAt")
     private String updatedAt;
 
-    // --- Getters & Setters ---
+    // --- Getters ---
     public int getTenderId() { return tenderId; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
@@ -43,15 +43,12 @@ public class Tender implements Serializable {
     public String getStatus() { return status; }
     public String getContractTemplatePath() { return contractTemplatePath; }
     public Admin getCreatedBy() { return createdBy; }
-    public College getCollege() { return college; } // ✅ Getter for College
+    public College getCollege() { return college; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
 
-    // --- Helper for college name ---
+    // Helper for college name (used in filtering and displaying)
     public String getCollegeName() {
         return college != null ? college.getCollegeName() : "N/A";
-    }
-
-    public void setCollegeName(String collegeName) {
     }
 }

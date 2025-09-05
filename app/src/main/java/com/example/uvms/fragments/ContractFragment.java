@@ -130,7 +130,7 @@ public class ContractFragment extends Fragment {
                 List<License> licenses = response.body();
                 if (licenses != null) {
                     for (License license : licenses) {
-                        if (license.getVendor().getVendorId()== vendorId) {
+                        if (license.getVendorId()==vendorId) {
                             licenseList.add(license);
                         }
                     }
