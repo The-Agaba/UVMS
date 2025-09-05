@@ -1,11 +1,17 @@
 package com.example.uvms.api;
 
 import com.example.uvms.models.College;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 public interface CollegeApiService {
-    @GET("colleges/{id}") // replace with your mock API endpoint
-    Call<College> getCollegeById(@Path("id") int collegeId);
+
+    // Fetch all colleges (with nested tenders and admins)
+    @GET("colleges")
+    Call<List<College>> getColleges();
+
+    // Optional: fetch single college by ID
+    @GET("colleges/{id}")
+    Call<College> getCollegeById(@retrofit2.http.Path("id") int collegeId);
 }

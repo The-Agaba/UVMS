@@ -219,6 +219,23 @@
     <string name="open_only">Open only</string>
     <string name="chss">CHSS</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="no_tenders">no_tenders</string>
+    <string name="no_tenders_match_your_filters">no_tenders_match_your_filters</string>
+    <string name="try_adjusting_filters_or_search_keywords" />
+    <string name="error" />
+    <string name="something_went_wrong" />
+    <string name="retry" />
+    <string name="ci" />
+    <string name="ids" />
+    <string name="snph" />
+    <string name="smd" />
+    <string name="sol" />
+    <string name="coed" />
+    <string name="coese" />
+    <string name="deadline" />
+    <string name="buyer" />
+    <string name="apply" />
+    <string name="tender_id">tender_id\n</string>
 
 
 </resources>

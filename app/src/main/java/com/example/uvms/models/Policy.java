@@ -19,19 +19,22 @@ public class Policy {
     @SerializedName("college_id")
     private Integer collegeId; // nullable
 
-    @SerializedName("posted_by")
-    private int postedBy;
+    @SerializedName("admin")   // matches the nested object
+    private Admin admin;
 
-    @SerializedName("date_posted")
+    @SerializedName("datePosted")  // camelCase from JSON
     private String datePosted;
 
-    @SerializedName("is_active")
+    @SerializedName("isActive")   // camelCase from JSON
     private boolean isActive;
 
-    // Optional: You can still use category for local filtering
-    private String category; // Food, Safety, Quality, Compliance
+    // Optional: for local UI categorization
+    private String category;
 
-    // Getters & Setters
+    // --- NEW: Read more / Read less toggle ---
+    private transient boolean expanded = false;
+
+    // --- Getters & Setters ---
     public int getPolicyId() { return policyId; }
     public void setPolicyId(int policyId) { this.policyId = policyId; }
 
@@ -47,8 +50,8 @@ public class Policy {
     public Integer getCollegeId() { return collegeId; }
     public void setCollegeId(Integer collegeId) { this.collegeId = collegeId; }
 
-    public int getPostedBy() { return postedBy; }
-    public void setPostedBy(int postedBy) { this.postedBy = postedBy; }
+    public Admin getAdmin() { return admin; }
+    public void setAdmin(Admin admin) { this.admin = admin; }
 
     public String getDatePosted() { return datePosted; }
     public void setDatePosted(String datePosted) { this.datePosted = datePosted; }
@@ -58,4 +61,8 @@ public class Policy {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    // --- Read more / Read less ---
+    public boolean isExpanded() { return expanded; }
+    public void setExpanded(boolean expanded) { this.expanded = expanded; }
 }

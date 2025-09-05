@@ -1,7 +1,3 @@
-<!-- =========================================================
-  File: res/layout/item_tender.xml
-  Purpose: Single tender row/card used inside the RecyclerView
-========================================================= -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +10,8 @@
     app:cardCornerRadius="20dp"
     app:cardUseCompatPadding="true"
     app:strokeWidth="1dp"
-    app:strokeColor="@color/uvmsAccentCyan">
+    app:strokeColor="@color/uvmsAccentCyan"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +19,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Top row: Title + status badge -->
+        <!-- Top row: Title + College Chip -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,82 +34,55 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                tools:text="Supply and Delivery of ICT Equipment for Regional Offices" />
+                tools:text="Supply and Delivery of ICT Equipment" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipStatus"
-                style="@style/Widget.Material3.Chip.Assist"
-                android:layout_marginStart="8dp"
+                android:id="@+id/chipCollege"
+                style="@style/Widget.Material3.Chip.Assist.Elevated"
+                android:layout_marginStart="6dp"
                 android:checkable="false"
-                android:text="Open"
-                app:chipIcon="@drawable/ic_circle_12"
-                app:chipIconVisible="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:text="CoET" />
         </LinearLayout>
 
-        <!-- Buyer / meta row -->
+        <!-- Tender ID -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@drawable/ic_business_24"
-                android:contentDescription="Buyer"
+                android:src="@drawable/ic_id_card"
+                android:contentDescription="@string/tender_id"
                 app:tint="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/tvBuyer"
+                android:id="@+id/tvTenderId"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                tools:text="Ministry of Education and Vocational Training" />
-
-            <TextView
-                android:id="@+id/tvTenderId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                android:textStyle="bold"
-                tools:text="#TN-2025-00421" />
+                tools:text="UDOM/ICT/2025/01" />
         </LinearLayout>
 
-        <!-- Chips: Category + Location -->
-        <LinearLayout
+        <!-- Description -->
+        <TextView
+            android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="6dp"
-            android:gravity="start">
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            tools:text="Tender description goes here, briefly summarizing scope of work and requirements." />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCategory"
-                style="@style/Widget.Material3.Chip.Assist.Elevated"
-                android:checkable="false"
-                android:text="ICT Equipment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipLocation"
-                style="@style/Widget.Material3.Chip.Assist.Elevated"
-                android:layout_marginStart="6dp"
-                android:checkable="false"
-                android:text="Dodoma"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <!-- Deadline + Budget -->
+        <!-- Deadline -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +94,7 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/ic_schedule_24"
-                android:contentDescription="Deadline"
+                android:contentDescription="@string/deadline"
                 app:tint="@color/colorPrimary" />
 
             <TextView
@@ -135,39 +105,20 @@
                 android:layout_marginStart="6dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 tools:text="Closes: Tue, 2 Sep 2025 • 16:00 EAT" />
-
-            <TextView
-                android:id="@+id/tvBudget"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textStyle="bold"
-                tools:text="TZS 120M" />
         </LinearLayout>
 
-        <!-- Actions -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Apply Button -->
+        <TextView
+            android:id="@+id/tvApply"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnView"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="View details" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnApply"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="Apply" />
-        </LinearLayout>
+            android:text="@string/apply"
+            android:textColor="@color/uvmsBluePrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:drawableEndCompat="@drawable/ic_apply_24"
+            app:drawableTint="@color/uvmsBluePrimary" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -23,12 +23,10 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
     private List<License> licenseList;
     private OnItemClickListener listener;
 
-    // Listener interface
     public interface OnItemClickListener {
         void onItemClick(License license);
     }
 
-    // Constructor
     public LicenseAdapter(Context context, List<License> licenseList, OnItemClickListener listener) {
         this.context = context;
         this.licenseList = licenseList;
@@ -46,32 +44,33 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
     public void onBindViewHolder(@NonNull LicenseViewHolder holder, int position) {
         License license = licenseList.get(position);
 
-        // Bind data safely
         holder.tvLicenseId.setText(String.valueOf(license.getLicenseId()));
         holder.tvLicenseStatus.setText(license.getSafeString(license.getStatus(), "N/A"));
         holder.tvIssuedDate.setText(license.getSafeString(license.getIssueDate(), "-"));
         holder.tvExpiryDate.setText(license.getSafeString(license.getExpiryDate(), "-"));
 
-        // Set status color and background
+        // Status bubble
         int statusColor = license.getStatusColor();
         holder.tvLicenseStatus.setTextColor(statusColor);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(12f);
+        bg.setColor(statusColor);
+        holder.tvLicenseStatus.setBackground(bg);
 
-        if (holder.tvLicenseStatus.getBackground() instanceof GradientDrawable) {
-            GradientDrawable bg = (GradientDrawable) holder.tvLicenseStatus.getBackground();
-            bg.setColor(statusColor);
-        }
+        // Show/hide renewal button
+        holder.btnRequestRenewal.setVisibility(license.isExpanded() ? View.VISIBLE : View.GONE);
 
-        // Renewal button
+        // Item click listener → open detail fragment
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(license);
+        });
+
+        // Renewal button click (optional)
         holder.btnRequestRenewal.setOnClickListener(v ->
                 Toast.makeText(context,
                         "Renewal requested for License ID " + license.getLicenseId(),
                         Toast.LENGTH_SHORT).show()
         );
-
-        // Item click
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onItemClick(license);
-        });
     }
 
     @Override
@@ -79,7 +78,6 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         return licenseList.size();
     }
 
-    // ViewHolder
     public static class LicenseViewHolder extends RecyclerView.ViewHolder {
         TextView tvLicenseId, tvLicenseStatus, tvIssuedDate, tvExpiryDate;
         Button btnRequestRenewal;
@@ -94,7 +92,6 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         }
     }
 
-    // Update adapter data
     public void updateData(List<License> newList) {
         licenseList.clear();
         licenseList.addAll(newList);

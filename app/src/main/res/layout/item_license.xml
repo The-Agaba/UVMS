@@ -125,6 +125,7 @@
             app:iconTint="@color/uvmsTextPrimaryLight"
             app:backgroundTint="@color/uvmsAccentCyan"
             app:rippleColor="@color/uvmsSurfaceDark"
+            android:visibility="gone"
             android:focusable="false"
             android:clickable="true"
             app:layout_constraintTop_toBottomOf="@id/tv_issued_date"

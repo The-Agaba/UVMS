@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.uvms.R;
 import com.example.uvms.adapters.PoliciesAdapter;
@@ -69,15 +68,11 @@ public class PoliciesFragment extends Fragment {
         filterChipGroup = view.findViewById(R.id.filterChipGroup);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new PoliciesAdapter(new ArrayList<>());  // Use your adapter's expected constructor
+        adapter = new PoliciesAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        // Swipe-to-refresh
         swipeRefreshLayout.setOnRefreshListener(this::fetchPolicies);
-
-        // Retry button
         btnRetry.setOnClickListener(v -> fetchPolicies());
-
         setupSearchAndFilter();
 
         fetchPolicies();
@@ -118,17 +113,20 @@ public class PoliciesFragment extends Fragment {
             return;
         }
 
-        PoliciesApiService service = RetrofitClient.getInstance(requireContext()).create(PoliciesApiService.class);
+        PoliciesApiService service = RetrofitClient.getInstance(requireContext())
+                .create(PoliciesApiService.class);
+
         service.getAllPolicies().enqueue(new Callback<List<Policy>>() {
             @Override
             public void onResponse(@NonNull Call<List<Policy>> call, @NonNull Response<List<Policy>> response) {
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
-                    if (response.body().isEmpty()) {
+                    List<Policy> policies = response.body();
+                    if (policies.isEmpty()) {
                         showEmptyState("No policies found");
                     } else {
-                        adapter.updateData(response.body());
+                        adapter.updateData(policies);
                         hideEmptyState();
                     }
                 } else {
@@ -173,9 +171,6 @@ public class PoliciesFragment extends Fragment {
     private void hideEmptyState() {
         recyclerView.setVisibility(View.VISIBLE);
         emptyStateLayout.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-        emptyMessage.setVisibility(View.GONE);
-        btnRetry.setVisibility(View.GONE);
     }
 
     private boolean isNetworkAvailable() {

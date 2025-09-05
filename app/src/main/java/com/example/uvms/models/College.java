@@ -1,20 +1,26 @@
 package com.example.uvms.models;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.List;
 
 public class College implements Serializable {
+
+    @SerializedName("college_id")
     private int collegeId;
+
+    @SerializedName("college_name")
     private String collegeName;
 
-    public College(int collegeId, String collegeName) {
-        this.collegeId = collegeId;
-        this.collegeName = collegeName;
-    }
+    @SerializedName("admins")
+    private List<Admin> admins;
 
-    // Getters & Setters
+    @SerializedName("tenders")
+    private List<Tender> tenders;
+
+    // Getters
     public int getCollegeId() { return collegeId; }
-    public void setCollegeId(int collegeId) { this.collegeId = collegeId; }
-
     public String getCollegeName() { return collegeName; }
-    public void setCollegeName(String collegeName) { this.collegeName = collegeName; }
+    public List<Admin> getAdmins() { return admins; }
+    public List<Tender> getTenders() { return tenders; }
 }

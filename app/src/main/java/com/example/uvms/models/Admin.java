@@ -1,42 +1,44 @@
 package com.example.uvms.models;
 
-public class Admin {
+import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+
+public class Admin implements Serializable {
+
+    @SerializedName("admin_id")
     private int adminId;
+
+    @SerializedName("email")
     private String email;
+
+    @SerializedName("password_hash")
     private String passwordHash;
+
+    @SerializedName("name")
     private String name;
-    private String role; // "college_admin" or "super_admin"
-    private Integer collegeId; // Nullable for super admin
+
+    @SerializedName("role")
+    private String role; // COLLEGE_ADMIN or SUPER_ADMIN
+
+    @SerializedName("created_at")
     private String createdAt;
+
+    @SerializedName("last_login")
     private String lastLogin;
+
+    @SerializedName("is_active")
     private boolean isActive;
 
-    // Getters & Setters
+    // ✅ Optional: If backend later adds collegeId, you can uncomment
+    // private Integer collegeId;
+
+    // Getters and setters
     public int getAdminId() { return adminId; }
-    public void setAdminId(int adminId) { this.adminId = adminId; }
-
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
     public String getPasswordHash() { return passwordHash; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
-
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
-    public Integer getCollegeId() { return collegeId; }
-    public void setCollegeId(Integer collegeId) { this.collegeId = collegeId; }
-
     public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
-
     public String getLastLogin() { return lastLogin; }
-    public void setLastLogin(String lastLogin) { this.lastLogin = lastLogin; }
-
     public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
 }
-

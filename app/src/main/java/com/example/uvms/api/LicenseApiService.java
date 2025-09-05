@@ -1,7 +1,6 @@
 package com.example.uvms.api;
 
 import com.example.uvms.models.License;
-
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -15,13 +14,12 @@ import retrofit2.http.Part;
 
 public interface LicenseApiService {
 
-    // Existing endpoint to fetch licenses
-    @GET("license") // replace with your mock API endpoint
+    // ✅ API returns an array → use List<License>
+    @GET("licenses")
     Call<List<License>> getLicenses();
 
-    // New endpoint to submit license renewal
     @Multipart
-    @POST("license/renew") // replace with your actual endpoint
+    @POST("licenses/renew")
     Call<ResponseBody> renewLicense(
             @Part("license_number") RequestBody licenseNumber,
             @Part("company_name") RequestBody companyName,

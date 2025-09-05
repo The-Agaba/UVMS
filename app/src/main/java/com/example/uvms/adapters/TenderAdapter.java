@@ -6,23 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.uvms.R;
-import com.example.uvms.activities.TenderDetailsActivity;
 import com.example.uvms.activities.ApplyTenderActivity;
+import com.example.uvms.activities.TenderDetailsActivity;
 import com.example.uvms.models.Tender;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
-
 import java.util.List;
 
 public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderViewHolder> {
 
-    private Context context;
-    public List<Tender> tenderList;
+    private final Context context;
+    private List<Tender> tenderList;
 
     public TenderAdapter(Context context, List<Tender> tenderList) {
         this.context = context;
@@ -40,62 +36,57 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
     public void onBindViewHolder(@NonNull TenderViewHolder holder, int position) {
         Tender tender = tenderList.get(position);
 
-        holder.tvTitle.setText(tender.title);
-        holder.tvBuyer.setText(tender.buyer);
-        holder.tvTenderId.setText(tender.id);
-        holder.chipStatus.setText(tender.status);
-        holder.chipCategory.setText(tender.category);
-        holder.chipLocation.setText(tender.location);
-        holder.tvDeadline.setText("Closes: " + tender.deadline);
-        holder.tvBudget.setText(tender.budget);
+        holder.tvTitle.setText(tender.getTitle() != null ? tender.getTitle() : "N/A");
+        holder.tvDescription.setText(tender.getDescription() != null ? tender.getDescription() : "N/A");
+        holder.tvTenderId.setText(String.valueOf(tender.getTenderId()));
+        holder.tvDeadline.setText("Closes: " + (tender.getDeadlineDate() != null ? tender.getDeadlineDate() : "N/A"));
+        holder.chipCollege.setText(tender.getCollegeName() != null ? tender.getCollegeName() : "Unknown College");
 
-        // View details
-        holder.btnView.setOnClickListener(v -> {
+        // Open details
+        holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, TenderDetailsActivity.class);
-            intent.putExtra("tenderId", tender.id);
-            intent.putExtra("tenderTitle", tender.title);
-            intent.putExtra("tenderBuyer", tender.buyer);
-            intent.putExtra("tenderCategory", tender.category);
-            intent.putExtra("tenderLocation", tender.location);
-            intent.putExtra("tenderDeadline", tender.deadline);
-            intent.putExtra("tenderStatus", tender.status);
-            intent.putExtra("tenderDocUrl", tender.documentUrl);
+            intent.putExtra("tenderId", tender.getTenderId());
+            intent.putExtra("tenderTitle", tender.getTitle());
+            intent.putExtra("tenderBuyer", tender.getCreatedBy() != null ? tender.getCreatedBy().getName() : "N/A");
+            intent.putExtra("tenderStatus", tender.getStatus());
+            intent.putExtra("tenderDeadline", tender.getDeadlineDate());
+            intent.putExtra("tenderDocUrl", tender.getContractTemplatePath());
+            intent.putExtra("tenderCollege", tender.getCollegeName());
             context.startActivity(intent);
         });
 
-        // Apply
-        holder.btnApply.setOnClickListener(v -> {
+        // Apply button
+        holder.tvApply.setOnClickListener(v -> {
             Intent intent = new Intent(context, ApplyTenderActivity.class);
-            intent.putExtra("tenderId", tender.id);
-            intent.putExtra("tenderDocUrl", tender.documentUrl);
+            intent.putExtra("tenderId", tender.getTenderId());
+            intent.putExtra("tenderDocUrl", tender.getContractTemplatePath());
+            intent.putExtra("tenderCollege", tender.getCollegeName());
             context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return tenderList.size();
+        return tenderList != null ? tenderList.size() : 0;
+    }
+
+    public void updateList(List<Tender> newTenders) {
+        this.tenderList = newTenders;
+        notifyDataSetChanged();
     }
 
     static class TenderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvBuyer, tvTenderId, tvDeadline, tvBudget;
-        Chip chipStatus, chipCategory, chipLocation;
-        MaterialButton btnView, btnApply;
+        TextView tvTitle, tvTenderId, tvDeadline, tvDescription, tvApply;
+        Chip chipCollege;
 
         public TenderViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvBuyer = itemView.findViewById(R.id.tvBuyer);
+            tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTenderId = itemView.findViewById(R.id.tvTenderId);
             tvDeadline = itemView.findViewById(R.id.tvDeadline);
-            tvBudget = itemView.findViewById(R.id.tvBudget);
-
-            chipStatus = itemView.findViewById(R.id.chipStatus);
-            chipCategory = itemView.findViewById(R.id.chipCategory);
-            chipLocation = itemView.findViewById(R.id.chipLocation);
-
-            btnView = itemView.findViewById(R.id.btnView);
-            btnApply = itemView.findViewById(R.id.btnApply);
+            chipCollege = itemView.findViewById(R.id.chipCollege);
+            tvApply = itemView.findViewById(R.id.tvApply);
         }
     }
 }

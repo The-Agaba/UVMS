@@ -54,24 +54,29 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Initialize views
         loader = view.findViewById(R.id.loaderView);
         recyclerLicense = view.findViewById(R.id.recyclerLicense);
         quickActionsGrid = view.findViewById(R.id.quickActionsGrid);
         failedCard = view.findViewById(R.id.license_card_failed);
         licenseStatusContainer = view.findViewById(R.id.license_container);
 
-        // Setup RecyclerView
+        // RecyclerView setup
         recyclerLicense.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
 
         licenseAdapter = new LicenseAdapter(getContext(), new ArrayList<>(), license -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.mainContainer, LicenseDetailFragment.newInstance(license))
-                    .addToBackStack(null)
-                    .commit();
+            if (!isAdded()) return;
+            try {
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.mainContainer, LicenseDetailFragment.newInstance(license))
+                        .addToBackStack(LicenseDetailFragment.class.getSimpleName())
+                        .commit();
+            } catch (IllegalStateException e) {
+                Log.e("HomeFragment", "Cannot open LicenseDetailFragment", e);
+                Toast.makeText(getContext(), "Cannot open license details right now", Toast.LENGTH_SHORT).show();
+            }
         });
         recyclerLicense.setAdapter(licenseAdapter);
 
@@ -81,7 +86,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    /** Quick Actions Setup */
+    /** Quick Actions */
     private void setupQuickActions() {
         QuickAction[] quickActions = {
                 new QuickAction("View Policies", getString(R.string.desc_view_policies), R.drawable.ic_policy_view),
@@ -109,7 +114,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /** Quick Action Navigation */
     private void handleActionClick(String actionTitle) {
         Map<String, Fragment> actionMap = new HashMap<>();
         actionMap.put("View Policies", new PoliciesFragment());
@@ -134,7 +138,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    //Fetch licenses from API and update RecyclerView + status cards
+    /** Fetch licenses safely */
     private void fetchLicensesFromApi() {
         loader.setVisibility(View.VISIBLE);
         Drawable d = loader.getDrawable();
@@ -147,15 +151,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<License>> call, Response<List<License>> response) {
                 loader.setVisibility(View.GONE);
-                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                if (response.isSuccessful() && response.body() != null) {
                     failedCard.setVisibility(View.GONE);
-                    List<License> licenses = response.body();
-                    licenseAdapter.updateData(licenses);
-                    updateLicenseStatusCards(licenses);
-                    Log.d("API_RESPONSE", "Licenses loaded: " + licenses.size());
+                    licenseAdapter.updateData(response.body());
+                    updateLicenseStatusCards(response.body());
                 } else {
                     failedCard.setVisibility(View.VISIBLE);
-                    updateLicenseStatusCards(null); // Show 0s when empty
+                    updateLicenseStatusCards(null);
                     Toast.makeText(getContext(), "No licenses found", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -163,6 +165,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<License>> call, Throwable t) {
                 loader.setVisibility(View.GONE);
+                failedCard.setVisibility(View.VISIBLE);
+                updateLicenseStatusCards(null);
                 if (isAdded()) {
                     new AlertDialog.Builder(getContext())
                             .setTitle("⚠️ Error")
@@ -170,14 +174,12 @@ public class HomeFragment extends Fragment {
                             .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                             .show();
                 }
-                failedCard.setVisibility(View.VISIBLE);
-                updateLicenseStatusCards(null); // Show 0s on failure
                 Log.e("API_ERROR", t.getMessage(), t);
             }
         });
     }
 
-    /** Update License Status Cards dynamically and preserve shape */
+    /** Update license status cards horizontally */
     private void updateLicenseStatusCards(List<License> licenses) {
         licenseStatusContainer.removeAllViews();
 
@@ -189,36 +191,39 @@ public class HomeFragment extends Fragment {
 
         if (licenses != null) {
             for (License license : licenses) {
-                String status = license.getStatus();
+                String status = license.getStatus() != null ? license.getStatus().toUpperCase() : "EXPIRED";
                 statusSummary.put(status, statusSummary.getOrDefault(status, 0) + 1);
             }
         }
 
         for (Map.Entry<String, Integer> entry : statusSummary.entrySet()) {
-            View card = LayoutInflater.from(getContext())
-                    .inflate(R.layout.item_status_card, licenseStatusContainer, false);
+            if (getContext() == null) return;
 
+            View card = LayoutInflater.from(getContext()).inflate(R.layout.item_status_card, licenseStatusContainer, false);
             TextView count = card.findViewById(R.id.statusCount);
             TextView label = card.findViewById(R.id.statusLabel);
 
             count.setText(String.valueOf(entry.getValue()));
             label.setText(entry.getKey());
 
-            // Determine color
             int color;
-            switch (entry.getKey()) {
-                case "ACTIVE": color = getResources().getColor(R.color.green); break;
-                case "PENDING": color = getResources().getColor(R.color.yellow); break;
-                case "REJECTED": color = getResources().getColor(R.color.red); break;
-                case "EXPIRED": color = getResources().getColor(R.color.gray);
-                default: color = getResources().getColor(R.color.gray);
+            if (isAdded()) {
+                switch (entry.getKey()) {
+                    case "ACTIVE": color = getResources().getColor(R.color.green); break;
+                    case "PENDING": color = getResources().getColor(R.color.yellow); break;
+                    case "REJECTED": color = getResources().getColor(R.color.red); break;
+                    case "EXPIRED": color = getResources().getColor(R.color.gray); break;
+                    default: color = getResources().getColor(R.color.gray);
+                }
+            } else {
+                color = android.graphics.Color.GRAY;
             }
 
-            // Preserve shape while changing color
-            GradientDrawable bg = (GradientDrawable) card.getBackground();
-            bg.setColor(color);
+            Drawable backgroundDrawable = card.getBackground();
+            if (backgroundDrawable instanceof GradientDrawable) {
+                ((GradientDrawable) backgroundDrawable).setColor(color);
+            }
 
-            // Spacing
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -230,7 +235,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /** QuickAction Model */
+    /** QuickAction class */
     private static class QuickAction {
         private final String title;
         private final String subtitle;

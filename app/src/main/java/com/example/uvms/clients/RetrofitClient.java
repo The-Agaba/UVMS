@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.api.LoginService;
+import com.example.uvms.api.TenderApiService;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,6 +67,10 @@ public class RetrofitClient {
     public static LicenseApiService getApiService(Context context) {
         return getInstance(context).create(LicenseApiService.class);
     }
+    public static TenderApiService getTenderService(Context context) {
+        return getInstance(context).create(TenderApiService.class);
+    }
+
 
     /**
      * Separate Retrofit instance without token for login

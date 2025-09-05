@@ -10,25 +10,22 @@ public class License implements Serializable {
     @SerializedName("license_id")
     private int licenseId;
 
-    @SerializedName("application_id")
+    @SerializedName("application")
     private int applicationId;
 
-    @SerializedName("vendor_id")
-    private int vendorId;
-
-    @SerializedName("license_number")
+    @SerializedName("licenseNumber")
     @Nullable
     private String licenseNumber;
 
-    @SerializedName("issue_date")
+    @SerializedName("issueDate")
     @Nullable
     private String issueDate;
 
-    @SerializedName("expiry_date")
+    @SerializedName("expiryDate")
     @Nullable
     private String expiryDate;
 
-    @SerializedName("license_file_path")
+    @SerializedName("licenseFilePath")
     @Nullable
     private String licenseFilePath;
 
@@ -36,14 +33,24 @@ public class License implements Serializable {
     @Nullable
     private String status;
 
-    @SerializedName("is_active")
+    @SerializedName("isActive")
     private boolean isActive;
 
-    // --- Related entities (optional if API sends them) ---
+    // --- Related entities ---
+    @SerializedName("vendor")
     private Vendor vendor;
+
+    @SerializedName("college")
     private College college;
+
+    @SerializedName("plot")
     private Plot plot;
+
+    @SerializedName("tender")
     private Tender tender;
+
+    // --- Track expansion for RecyclerView ---
+    private boolean expanded = false;
 
     // --- Empty constructor for Retrofit/Gson ---
     public License() {}
@@ -51,7 +58,6 @@ public class License implements Serializable {
     // --- Getters ---
     public int getLicenseId() { return licenseId; }
     public int getApplicationId() { return applicationId; }
-    public int getVendorId() { return vendorId; }
     @Nullable public String getLicenseNumber() { return licenseNumber; }
     @Nullable public String getIssueDate() { return issueDate; }
     @Nullable public String getExpiryDate() { return expiryDate; }
@@ -64,10 +70,11 @@ public class License implements Serializable {
     public Plot getPlot() { return plot; }
     public Tender getTender() { return tender; }
 
+    public boolean isExpanded() { return expanded; }
+
     // --- Setters ---
     public void setLicenseId(int licenseId) { this.licenseId = licenseId; }
     public void setApplicationId(int applicationId) { this.applicationId = applicationId; }
-    public void setVendorId(int vendorId) { this.vendorId = vendorId; }
     public void setLicenseNumber(@Nullable String licenseNumber) { this.licenseNumber = licenseNumber; }
     public void setIssueDate(@Nullable String issueDate) { this.issueDate = issueDate; }
     public void setExpiryDate(@Nullable String expiryDate) { this.expiryDate = expiryDate; }
@@ -78,6 +85,7 @@ public class License implements Serializable {
     public void setCollege(College college) { this.college = college; }
     public void setPlot(Plot plot) { this.plot = plot; }
     public void setTender(Tender tender) { this.tender = tender; }
+    public void setExpanded(boolean expanded) { this.expanded = expanded; }
 
     // --- Helper Methods ---
     public int getStatusColor() {

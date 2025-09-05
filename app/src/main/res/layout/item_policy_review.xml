@@ -5,43 +5,63 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Policy Title -->
     <TextView
         android:id="@+id/text_view_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
 
+    <!-- Policy Content with preview -->
     <TextView
         android:id="@+id/text_view_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:textSize="14sp"
-         /><!-- Show a preview -->
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:scrollHorizontally="false"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/black" />
 
-
+    <!-- Policy Scope -->
     <TextView
         android:id="@+id/text_view_scope"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginBottom="2dp" />
 
+    <!-- Posted By -->
+    <TextView
+        android:id="@+id/text_view_posted_by"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginBottom="2dp" />
+
+    <!-- College ID (optional) -->
     <TextView
         android:id="@+id/text_view_college_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone" />
 
+    <!-- Date Posted -->
     <TextView
         android:id="@+id/text_view_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>

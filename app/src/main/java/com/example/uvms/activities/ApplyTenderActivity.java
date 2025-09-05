@@ -1,8 +1,10 @@
 package com.example.uvms.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,7 +52,7 @@ public class ApplyTenderActivity extends AppCompatActivity {
 
         btnUploadDoc.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
+            intent.setType("application/pdf");
             startActivityForResult(Intent.createChooser(intent, "Select Document"), REQUEST_CODE_FILE_PICKER);
         });
 
@@ -80,8 +82,25 @@ public class ApplyTenderActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_FILE_PICKER && resultCode == RESULT_OK && data != null) {
             selectedFileUri = data.getData();
-            if (selectedFileUri != null) {
-                tvSelectedDoc.setText("Selected: " + selectedFileUri.getLastPathSegment());
+            if (selectedFileUri != null ) {
+                // Check file size
+                Cursor returnCursor = getContentResolver().query(selectedFileUri, null, null, null, null);
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+                long fileSize = returnCursor.getLong(sizeIndex);
+                returnCursor.close();
+
+                // 5MB in bytes
+                long maxSize = 5 * 1024 * 1024;
+
+                if (fileSize <= maxSize) {
+                    tvSelectedDoc.setText(getString(R.string.selected) + selectedFileUri.getLastPathSegment());
+                } else {
+                    selectedFileUri = null; // Reset if file is too large
+                    tvSelectedDoc.setText(""); // Clear the text view
+                    Toast.makeText(this, "File size exceeds 5MB limit. Please select a smaller PDF file.", Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     }

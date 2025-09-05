@@ -1,11 +1,3 @@
-<!-- =========================================================
-  File: res/layout/activity_available_tenders.xml
-  Purpose: Main "Available Tenders" screen with search, filters, chips, and list
-  Notes:
-   - Requires Material Components (M3) theme.
-   - IDs referenced by code: toolbar, searchView, chipGroupFilters, switchOpenOnly,
-     swipeRefresh, recyclerTenders, fabFilters, emptyState, errorState, progressBar
-========================================================= -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -82,7 +74,7 @@
                             android:id="@+id/chipGCOBE"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:checkable="true"
-                            android:text="@string/cobe"
+                            android:text="CoBE"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -93,17 +85,67 @@
                             android:text="@string/chss"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCOESE"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/coese"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCOED"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/coed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSOL"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text= "@string/sol"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSCM"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/smd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSNPH"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/snph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipIDS"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/ids"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCI"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:checkable="true"
+                            android:text="@string/ci"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/switchOpenOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/open_only"
-                    android:textColor="@color/uvmsTextPrimaryLight"
-                    android:checked="true" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -144,20 +186,20 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/ic_box_search_96"
-                android:contentDescription="No tenders" />
+                android:contentDescription="@string/no_tenders" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="No tenders match your filters"
+                android:text="@string/no_tenders_match_your_filters"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Try adjusting filters or search keywords."
+                android:text="@string/try_adjusting_filters_or_search_keywords"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
         </LinearLayout>
 
@@ -175,13 +217,13 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/ic_error_cloud_96"
-                android:contentDescription="Error" />
+                android:contentDescription="@string/error" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Something went wrong"
+                android:text="@string/something_went_wrong"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
             <com.google.android.material.button.MaterialButton
@@ -190,7 +232,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Retry" />
+                android:text="@string/retry" />
         </LinearLayout>
 
         <ProgressBar
@@ -202,15 +244,5 @@
             android:visibility="gone"
             tools:visibility="gone" />
     </FrameLayout>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabFilters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Filters"
-        app:icon="@drawable/ic_filter_list_24"
-        app:layout_anchor="@id/recyclerTenders"
-        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

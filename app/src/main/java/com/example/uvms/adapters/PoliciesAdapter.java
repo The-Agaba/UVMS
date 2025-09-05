@@ -4,13 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
 import com.example.uvms.models.Policy;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
         this.originalPolicies = new ArrayList<>(this.policyList);
     }
 
-    // Update data from API
+    // Update adapter data
     public void updateData(List<Policy> newPolicies) {
         if (newPolicies == null) return;
 
@@ -73,9 +71,21 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
         Policy policy = policyList.get(position);
 
         holder.titleTextView.setText(policy.getTitle());
-        holder.contentTextView.setText(policy.getContent());
+
+        // Show short content if not expanded
+        int previewLength = 100;
+        if (!policy.isExpanded() && policy.getContent().length() > previewLength) {
+            String shortText = policy.getContent().substring(0, previewLength) + "... Read More";
+            holder.contentTextView.setText(shortText);
+        } else {
+            holder.contentTextView.setText(policy.getContent() + (policy.isExpanded() ? " Read Less" : ""));
+        }
+
         holder.scopeTextView.setText("Scope: " + policy.getScope());
-        holder.dateTextView.setText("Posted on: " + policy.getDatePosted());
+
+        if (policy.getAdmin() != null) {
+            holder.postedByTextView.setText("Posted by: " + policy.getAdmin().getName());
+        }
 
         if (policy.getCollegeId() != null) {
             holder.collegeIdTextView.setVisibility(View.VISIBLE);
@@ -83,6 +93,14 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
         } else {
             holder.collegeIdTextView.setVisibility(View.GONE);
         }
+
+        holder.dateTextView.setText("Posted on: " + policy.getDatePosted());
+
+        // Toggle expand on content click
+        holder.contentTextView.setOnClickListener(v -> {
+            policy.setExpanded(!policy.isExpanded());
+            notifyItemChanged(position);
+        });
     }
 
     @Override
@@ -91,13 +109,14 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
     }
 
     static class PolicyViewHolder extends RecyclerView.ViewHolder {
-        TextView titleTextView, contentTextView, scopeTextView, collegeIdTextView, dateTextView;
+        TextView titleTextView, contentTextView, scopeTextView, postedByTextView, collegeIdTextView, dateTextView;
 
         public PolicyViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.text_view_title);
             contentTextView = itemView.findViewById(R.id.text_view_content);
             scopeTextView = itemView.findViewById(R.id.text_view_scope);
+            postedByTextView = itemView.findViewById(R.id.text_view_posted_by);
             collegeIdTextView = itemView.findViewById(R.id.text_view_college_id);
             dateTextView = itemView.findViewById(R.id.text_view_date);
         }
