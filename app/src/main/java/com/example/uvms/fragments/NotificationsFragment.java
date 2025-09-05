@@ -1,189 +1,160 @@
 package com.example.uvms.fragments;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ProgressBar;
-import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
+import com.example.uvms.activities.HomeActivity;
 import com.example.uvms.adapters.NotificationsAdapter;
 import com.example.uvms.api.NotificationApiService;
-import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.models.Notification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NotificationsFragment extends Fragment implements Filterable {
-
-
-
-
+public class NotificationsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private NotificationsAdapter adapter;
-
-    // 🔹 Listener to notify HomeActivity about changes
-    private OnNotificationsLoadedListener listener;
     private ProgressBar progressBar;
+    private NotificationsAdapter adapter;
+    private List<Notification> notifications = new ArrayList<>();
+    private NotificationApiService apiService;
 
-    public NotificationsFragment() {
-        // Required empty public constructor
-    }
-
-    public static NotificationsFragment newInstance() {
-        return new NotificationsFragment();
-    }
-
+    @Nullable
     @Override
-    public Filter getFilter() {
-        return null;
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-    //  Define callback interface for badge updates
-    public interface OnNotificationsLoadedListener {
-        void onNotificationsLoaded(List<Notification> notifications);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // Initialize the listener
-        if (context instanceof OnNotificationsLoadedListener) {
-            listener = (OnNotificationsLoadedListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null; // avoid memory leaks
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewMessages);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = view.findViewById(R.id.progressBar);
 
-        fetchNotifications(); //  Load notifications when fragment starts
-
-        SearchView searchView = view.findViewById(R.id.searchViewMessages);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new NotificationsAdapter(notifications, new NotificationsAdapter.OnNotificationActionListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (adapter != null) adapter.getFilter().filter(query);
-                return false;
+            public void onMarkRead(Notification notification) {
+                markNotificationRead(notification);
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                if (adapter != null) adapter.getFilter().filter(newText);
-                return false;
+            public void onDelete(Notification notification) {
+                deleteNotification(notification);
             }
         });
+        recyclerView.setAdapter(adapter);
 
+        // Safely get the API service from HomeActivity
+        if (getActivity() instanceof HomeActivity) {
+            apiService = ((HomeActivity) getActivity()).getNotificationApiService();
+        }
+
+        fetchNotifications();
 
         return view;
     }
 
+    /** ---------------- Fetch All Notifications ---------------- */
     private void fetchNotifications() {
+        if (apiService == null) {
+            Toast.makeText(getContext(), "API not initialized", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
-        NotificationApiService apiService = RetrofitClient.getInstance(requireContext())
-                .create(NotificationApiService.class);
-
-        Call<List<Notification>> call = apiService.getNotifications();
-        call.enqueue(new Callback<List<Notification>>() {
+        apiService.getNotifications().enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Notification> notifications = response.body();
-
-                    //  Notify HomeActivity about the list (so it can update badge)
-                    if (listener != null) {
-                        listener.onNotificationsLoaded(notifications);
-                    }
-
-                    adapter = new NotificationsAdapter(notifications, new NotificationsAdapter.OnNotificationActionListener() {
-                        @Override
-                        public void onMarkRead(Notification notification) {
-                            notification.setRead(true);
-
-                            adapter.notifyDataSetChanged();
-
-                            // 🔹 Update badge count in HomeActivity
-                            if (listener != null) listener.onNotificationsLoaded(notifications);
-                        }
-
-                        @Override
-                        public void onDelete(Notification notification) {
-                            notifications.remove(notification);
-                            adapter.notifyDataSetChanged();
-
-                            //  Update badge count in HomeActivity
-                            if (listener != null) listener.onNotificationsLoaded(notifications);
-                        }
-                    });
-
-                    recyclerView.setAdapter(adapter);
-
+                    notifications.clear();
+                    notifications.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+                    updateBadgeCount();
                 } else {
-                    if(isAdded()) {
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle("ERROR")
-                                .setMessage("Failed to load your notifications")
-                                .setPositiveButton("Retry", (dialog, which) -> fetchNotifications())
-                                .setNegativeButton("Cancel", (dialog, which) -> {
-                                    dialog.dismiss();
-
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    }
-
+                    Toast.makeText(getContext(), "No notifications found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Notification>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("ERROR")
-                        .setMessage("Check your connection")
-                        .setPositiveButton("Retry", (dialog, which) -> fetchNotifications())
-                        .setNegativeButton("Cancel", (dialog, which) -> {
-                            dialog.dismiss();
-
-                        })
-                        .setCancelable(false)
-                        .show();
-
-                Log.e("ContractFragment", "API Error: ", t);
-
-             }
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    /** ---------------- Mark Notification as Read ---------------- */
+    private void markNotificationRead(Notification notification) {
+        if (apiService == null) return;
+
+        apiService.markAsRead(notification.getNotificationId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    notification.setRead(true); // Update locally
+                    adapter.notifyDataSetChanged();
+                    updateBadgeCount();
+                } else {
+                    Toast.makeText(getContext(), "Failed to mark as read", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** ---------------- Delete Notification ---------------- */
+    private void deleteNotification(Notification notification) {
+        if (apiService == null) return;
+
+        apiService.deleteNotification(notification.getNotificationId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    notifications.remove(notification);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "Notification deleted", Toast.LENGTH_SHORT).show();
+                    updateBadgeCount();
+                } else {
+                    Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** ---------------- Update Badge Count on HomeActivity ---------------- */
+    private void updateBadgeCount() {
+        if (getActivity() instanceof HomeActivity) {
+            int unreadCount = 0;
+            for (Notification n : notifications) {
+                if (!n.isRead()) unreadCount++;
+            }
+            ((HomeActivity) getActivity()).updateNotificationBadge(unreadCount);
+        }
     }
 }

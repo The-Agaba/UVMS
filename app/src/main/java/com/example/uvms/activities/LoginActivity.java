@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         String existingToken = prefs.getString("auth_token", null);
         if (existingToken != null && !existingToken.isEmpty()
                 && currentTimeMillis() < prefs.getLong("expires_in", 0)) {
+            setLoggedInFlag();
             navigateToHome();
             return;
         } else {
@@ -148,9 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     if (loginResponse.isSuccess()) {
-                        // Save token
                         storeLoginResponse(loginResponse);
-                        // Fetch full vendor data
                         fetchFullVendorData(loginResponse.getAccessToken());
                     } else {
                         showErrorDialog(loginResponse.getMessage());
@@ -179,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                 setLoadingState(false);
                 if (response.isSuccessful() && response.body() != null) {
                     storeVendorData(response.body());
+                    setLoggedInFlag(); // mark user as logged in
                     navigateToHome();
                 } else {
                     Toast.makeText(LoginActivity.this, "Failed to fetch full profile", Toast.LENGTH_SHORT).show();
@@ -216,13 +216,19 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("user_profile_picture", vendor.getProfilePicturePath());
         editor.putString("user_welcome_message", "Welcome, " + vendor.getFirstName() + "!");
         editor.putString("user_last_login", vendor.getLastLogin());
-        editor.putString("user_created_at", vendor.getRegistrationDate()); // use registrationDate as createdAt
+        editor.putString("user_created_at", vendor.getRegistrationDate());
         editor.putBoolean("user_is_active", vendor.isActive());
         editor.putString("user_phone_number", vendor.getPhoneNumber());
         editor.putString("user_role", vendor.getRole());
         editor.putString("user_updated_at", vendor.getUpdatedAt());
         editor.putString("user_deleted_at", vendor.getDeletedAt());
         editor.putString("business_type", vendor.getBusinessType());
+        editor.apply();
+    }
+
+    private void setLoggedInFlag() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("is_logged_in", true);
         editor.apply();
     }
 

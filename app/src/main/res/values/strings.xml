@@ -177,6 +177,7 @@
 
     <string name="desc_view_policies">Guidelines</string>
     <string name="desc_my_profile">View contracts</string>
+    <string name="desc_my_profile_two">View Profile</string>
     <string name="desc_documents">View applications</string>
     <string name="desc_tenders">View your Tenders</string>
     <string name="desc_settings">App preferences</string>

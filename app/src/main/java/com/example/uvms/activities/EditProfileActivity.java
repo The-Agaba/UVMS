@@ -15,13 +15,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.uvms.R;
 import com.example.uvms.api.VendorApiService;
 import com.example.uvms.clients.RetrofitClient;
-import com.example.uvms.models.Vendor;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,27 +60,19 @@ public class EditProfileActivity extends AppCompatActivity {
         etBusinessId = findViewById(R.id.etBusinessId);
         btnSave = findViewById(R.id.btnSaveProfile);
 
-        // Prefill inputs with Intent or SharedPreferences fallback
-        etFullName.setText(getIntent().getStringExtra("name") != null
-                ? getIntent().getStringExtra("name")
-                : prefs.getString("user_first_name", "") + " " + prefs.getString("user_last_name", ""));
-        etEmail.setText(getIntent().getStringExtra("email") != null
-                ? getIntent().getStringExtra("email")
-                : prefs.getString("user_email", ""));
-        etPhone.setText(getIntent().getStringExtra("phone") != null
-                ? getIntent().getStringExtra("phone")
-                : prefs.getString("user_phone_number", ""));
-        etBusinessName.setText(getIntent().getStringExtra("businessName") != null
-                ? getIntent().getStringExtra("businessName")
-                : prefs.getString("user_company_name", ""));
-        etBusinessType.setText(getIntent().getStringExtra("businessType") != null
-                ? getIntent().getStringExtra("businessType")
-                : prefs.getString("business_type", ""));
-        etBusinessId.setText(getIntent().getStringExtra("businessId") != null
-                ? getIntent().getStringExtra("businessId")
-                : prefs.getString("user_tin_number", ""));
+        // Prefill inputs
+        prefillInputs();
 
         btnSave.setOnClickListener(v -> updateProfilePartial());
+    }
+
+    private void prefillInputs() {
+        etFullName.setText(prefs.getString("user_first_name", "") + " " + prefs.getString("user_last_name", ""));
+        etEmail.setText(prefs.getString("user_email", ""));
+        etPhone.setText(prefs.getString("user_phone_number", ""));
+        etBusinessName.setText(prefs.getString("user_company_name", ""));
+        etBusinessType.setText(prefs.getString("business_type", ""));
+        etBusinessId.setText(prefs.getString("user_tin_number", ""));
     }
 
     private void updateProfilePartial() {
@@ -98,21 +90,15 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        int vendorId;
-        try {
-            vendorId = Integer.parseInt(prefs.getString("user_id", "0"));
-        } catch (Exception e) {
-            vendorId = 0;
-        }
+        int vendorId = Integer.parseInt(prefs.getString("user_id", "0"));
 
-        // Split first and last name if fullName is provided
+        // Split first and last name
         String firstName = null, lastName = null;
         if (!fullName.isEmpty()) {
             firstName = fullName.contains(" ") ? fullName.split(" ", 2)[0] : fullName;
             lastName = fullName.contains(" ") ? fullName.split(" ", 2)[1] : "";
         }
 
-        // Build partial update map
         Map<String, Object> updateFields = new HashMap<>();
         if (firstName != null) updateFields.put("firstName", firstName);
         if (lastName != null) updateFields.put("lastName", lastName);
@@ -124,20 +110,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
         VendorApiService apiService = RetrofitClient.getInstance(this).create(VendorApiService.class);
         String token = "Bearer " + prefs.getString("auth_token", "");
+
         apiService.updateVendorPartial(token, vendorId, updateFields)
-                .enqueue(new Callback<Vendor>() {
+                .enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<Vendor> call, Response<Vendor> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            Vendor vendor = response.body();
-                            saveToPreferencesPartial(vendor);
-                            returnResult(vendor);
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
                             Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                            saveToPreferences(updateFields);
+                            returnResult(updateFields);
                         } else {
                             try {
                                 String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
                                 Log.e(TAG, "Update failed: " + response.code() + " " + errorBody);
-                                Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + response.code(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfileActivity.this, "Failed to update profile", Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(EditProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
@@ -146,34 +132,36 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Vendor> call, Throwable t) {
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Toast.makeText(EditProfileActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.e(TAG, "Network error", t);
                     }
                 });
     }
 
-    private void saveToPreferencesPartial(Vendor vendor) {
+    private void saveToPreferences(Map<String, Object> fields) {
         SharedPreferences.Editor editor = prefs.edit();
-        if (vendor.getFirstName() != null) editor.putString("user_first_name", vendor.getFirstName());
-        if (vendor.getLastName() != null) editor.putString("user_last_name", vendor.getLastName());
-        if (vendor.getEmail() != null) editor.putString("user_email", vendor.getEmail());
-        if (vendor.getPhoneNumber() != null) editor.putString("user_phone_number", vendor.getPhoneNumber());
-        if (vendor.getCompanyName() != null) editor.putString("user_company_name", vendor.getCompanyName());
-        if (vendor.getBusinessType() != null) editor.putString("business_type", vendor.getBusinessType());
-        if (vendor.getTinNumber() != null) editor.putString("user_tin_number", vendor.getTinNumber());
+        if (fields.containsKey("firstName")) editor.putString("user_first_name", (String) fields.get("firstName"));
+        if (fields.containsKey("lastName")) editor.putString("user_last_name", (String) fields.get("lastName"));
+        if (fields.containsKey("email")) editor.putString("user_email", (String) fields.get("email"));
+        if (fields.containsKey("phoneNumber")) editor.putString("user_phone_number", (String) fields.get("phoneNumber"));
+        if (fields.containsKey("companyName")) editor.putString("user_company_name", (String) fields.get("companyName"));
+        if (fields.containsKey("businessType")) editor.putString("business_type", (String) fields.get("businessType"));
+        if (fields.containsKey("tinNumber")) editor.putString("user_tin_number", (String) fields.get("tinNumber"));
         editor.apply();
     }
 
-    private void returnResult(Vendor vendor) {
+    private void returnResult(Map<String, Object> fields) {
         Intent resultIntent = new Intent();
-        if (vendor.getFirstName() != null || vendor.getLastName() != null)
-            resultIntent.putExtra("name", (vendor.getFirstName() != null ? vendor.getFirstName() : "") + " " + (vendor.getLastName() != null ? vendor.getLastName() : ""));
-        if (vendor.getEmail() != null) resultIntent.putExtra("email", vendor.getEmail());
-        if (vendor.getPhoneNumber() != null) resultIntent.putExtra("phone", vendor.getPhoneNumber());
-        if (vendor.getCompanyName() != null) resultIntent.putExtra("businessName", vendor.getCompanyName());
-        if (vendor.getBusinessType() != null) resultIntent.putExtra("businessType", vendor.getBusinessType());
-        if (vendor.getTinNumber() != null) resultIntent.putExtra("businessId", vendor.getTinNumber());
+        if (fields.containsKey("firstName") || fields.containsKey("lastName"))
+            resultIntent.putExtra("name",
+                    (fields.containsKey("firstName") ? fields.get("firstName") : "") + " " +
+                            (fields.containsKey("lastName") ? fields.get("lastName") : ""));
+        if (fields.containsKey("email")) resultIntent.putExtra("email", (String) fields.get("email"));
+        if (fields.containsKey("phoneNumber")) resultIntent.putExtra("phone", (String) fields.get("phoneNumber"));
+        if (fields.containsKey("companyName")) resultIntent.putExtra("businessName", (String) fields.get("companyName"));
+        if (fields.containsKey("businessType")) resultIntent.putExtra("businessType", (String) fields.get("businessType"));
+        if (fields.containsKey("tinNumber")) resultIntent.putExtra("businessId", (String) fields.get("tinNumber"));
         setResult(RESULT_OK, resultIntent);
         finish();
     }
