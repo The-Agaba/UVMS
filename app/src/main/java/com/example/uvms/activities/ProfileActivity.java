@@ -14,10 +14,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
 
     private static final String PREFS_NAME = "uvms_prefs";
     private static final int EDIT_PROFILE_REQUEST = 1001;

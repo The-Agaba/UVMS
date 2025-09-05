@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
 
 import java.text.NumberFormat;
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class TenderDetailsActivity extends AppCompatActivity {
+public class TenderDetailsActivity extends BaseActivity {
 
     private TextView tvTenderTitle, tvTenderId, tvTenderBuyer,
             tvTenderCategory, tvTenderLocation, tvTenderDeadline,

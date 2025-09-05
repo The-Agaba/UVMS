@@ -13,9 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
 
-public class ApplyTenderActivity extends AppCompatActivity {
+public class ApplyTenderActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_FILE_PICKER = 1001;
 

@@ -8,12 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
 import com.example.uvms.api.NotificationApiService;
 import com.example.uvms.clients.RetrofitClient;
@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private BottomNavigationView bottomNavigationView;
     private TextView navTitle, navTitleDesc, notificationBadge;
@@ -42,7 +42,6 @@ public class HomeActivity extends AppCompatActivity {
     private boolean doubleBackToExitPressedOnce = false;
     private final Handler backPressHandler = new Handler();
 
-    /** Fragment titles & descriptions */
     private final Map<String, String[]> fragmentTitles = new HashMap<String, String[]>() {{
         put(HomeFragment.class.getSimpleName(), new String[]{"Business", "Manage your business here"});
         put(TendersFragment.class.getSimpleName(), new String[]{"Tenders", "Browse available tenders"});
@@ -55,7 +54,6 @@ public class HomeActivity extends AppCompatActivity {
         put(ContractFragment.class.getSimpleName(), new String[]{"Contracts", "Check your approved contracts"});
     }};
 
-    /** Bottom navigation mapping */
     private final Map<Integer, Class<? extends Fragment>> bottomNavMap = new HashMap<Integer, Class<? extends Fragment>>() {{
         put(R.id.businessFragment, HomeFragment.class);
         put(R.id.tendersFragment, TendersFragment.class);
@@ -86,55 +84,42 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize Notification API via RetrofitClient
         notificationApiService = RetrofitClient.getInstance(this).create(NotificationApiService.class);
 
-        // Load default fragment
         if (savedInstanceState == null) {
             switchFragment(new HomeFragment(), true);
         }
 
         setupBottomNavigation();
-
-        // Sync UI whenever back stack changes
         getSupportFragmentManager().addOnBackStackChangedListener(this::syncUIWithCurrentFragment);
 
-        // Open notifications on bell click
         notificationBell.setOnClickListener(v -> switchFragment(new NotificationsFragment(), true));
 
-        // Load notification badge count
-        updateNotificationBadgeFromApi();
+        // Update notification badge initially
+        new Handler().postDelayed(this::updateNotificationBadgeFromApi, 500);
     }
 
-    /** ---------------- Fragment Switching ---------------- */
     public void switchFragment(Fragment fragment, boolean addToBackStack) {
         String tag = fragment.getClass().getSimpleName();
-
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.mainContainer, fragment, tag);
 
-        // Always add bottom nav fragments to back stack
         boolean isBottomNavFragment = bottomNavMap.containsValue(fragment.getClass());
-        if (addToBackStack || isBottomNavFragment) {
-            tx.addToBackStack(tag);
-        }
+        if (addToBackStack || isBottomNavFragment) tx.addToBackStack(tag);
 
         tx.setReorderingAllowed(true);
         tx.commit();
-
         getSupportFragmentManager().executePendingTransactions();
         syncUIWithCurrentFragment();
     }
 
-    /** ---------------- Bottom Navigation ---------------- */
     private void setupBottomNavigation() {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (suppressNavCallback) return true;
-
             Class<? extends Fragment> fragClass = bottomNavMap.get(item.getItemId());
             if (fragClass != null) {
                 try {
-                    Fragment fragment = fragClass.newInstance();
+                    Fragment fragment = fragClass.getDeclaredConstructor().newInstance();
                     switchFragment(fragment, true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -145,23 +130,15 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    /** ---------------- UI Sync ---------------- */
     public void syncUIWithCurrentFragment() {
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
         if (current == null) return;
 
-        // Update title & description
         String key = current.getTag() != null ? current.getTag() : current.getClass().getSimpleName();
         String[] titleDesc = fragmentTitles.get(key);
-        if (titleDesc != null) {
-            navTitle.setText(titleDesc[0]);
-            navTitleDesc.setText(titleDesc[1]);
-        } else {
-            navTitle.setText("");
-            navTitleDesc.setText("");
-        }
+        navTitle.setText(titleDesc != null ? titleDesc[0] : "");
+        navTitleDesc.setText(titleDesc != null ? titleDesc[1] : "");
 
-        // Bottom nav highlight
         suppressNavCallback = true;
         try {
             boolean isBottom = bottomNavMap.containsValue(current.getClass());
@@ -183,7 +160,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    /** ---------------- Back Press ---------------- */
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
@@ -193,7 +169,6 @@ public class HomeActivity extends AppCompatActivity {
         if (count > 1) {
             getSupportFragmentManager().popBackStack();
         } else if (isBottom) {
-            // Double back to exit
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
@@ -202,65 +177,49 @@ public class HomeActivity extends AppCompatActivity {
             Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
             backPressHandler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         } else {
-            // Non-bottom fragment → go to home
             switchFragment(new HomeFragment(), true);
         }
-
         getSupportFragmentManager().executePendingTransactions();
         syncUIWithCurrentFragment();
     }
 
-    /** ---------------- Notifications ---------------- */
     public NotificationApiService getNotificationApiService() {
+        if (notificationApiService == null) {
+            notificationApiService = RetrofitClient.getInstance(this).create(NotificationApiService.class);
+        }
         return notificationApiService;
     }
 
-    public void fetchNotifications(OnNotificationsFetched listener) {
-        notificationApiService.getNotifications().enqueue(new Callback<List<Notification>>() {
-            @Override
-            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    listener.onFetched(response.body());
-                } else {
-                    listener.onError("No notifications found");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
-                listener.onError("Network error: " + t.getMessage());
-            }
-        });
+    public int getCurrentVendorId() {
+        return prefs.getInt("vendor_id", -1);
     }
 
     public void updateNotificationBadge(int unreadCount) {
         if (notificationBadge == null) return;
-        if (unreadCount > 0) {
-            notificationBadge.setVisibility(View.VISIBLE);
-            notificationBadge.setText(String.valueOf(unreadCount));
-        } else {
-            notificationBadge.setVisibility(View.GONE);
-        }
+        notificationBadge.setVisibility(unreadCount > 0 ? View.VISIBLE : View.GONE);
+        if (unreadCount > 0) notificationBadge.setText(String.valueOf(unreadCount));
     }
 
     public void updateNotificationBadgeFromApi() {
-        fetchNotifications(new OnNotificationsFetched() {
+        //int vendorId = getCurrentVendorId();
+        int vendorId = 1;
+
+        if (vendorId == -1 || notificationApiService == null) return;
+
+        notificationApiService.getNotificationsForVendor(vendorId).enqueue(new Callback<List<Notification>>() {
             @Override
-            public void onFetched(List<Notification> notifications) {
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 int unreadCount = 0;
-                for (Notification n : notifications) if (!n.isRead()) unreadCount++;
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Notification n : response.body()) if (!n.isRead()) unreadCount++;
+                }
                 updateNotificationBadge(unreadCount);
             }
 
             @Override
-            public void onError(String message) {
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
                 updateNotificationBadge(0);
             }
         });
-    }
-
-    public interface OnNotificationsFetched {
-        void onFetched(List<Notification> notifications);
-        void onError(String message);
     }
 }

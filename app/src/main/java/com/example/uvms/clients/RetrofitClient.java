@@ -14,74 +14,63 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
+
     private static final String TAG = "RetrofitClient";
     private static final String BASE_URL = "https://uvmsapiv1.onrender.com/api/";
 
-    private static Retrofit retrofit;
+    private static Retrofit retrofitWithToken;
+    private static Retrofit retrofitWithoutToken;
 
-    /**
-     * Get Retrofit instance with token from SharedPreferences
-     */
+    /** -------------------- Retrofit WITH token -------------------- */
     public static Retrofit getInstance(Context context) {
-        if (retrofit == null) {
+        if (retrofitWithToken == null) {
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         Request original = chain.request();
-                        Request.Builder requestBuilder = original.newBuilder();
+                        Request.Builder builder = original.newBuilder();
 
-                        // Get token from SharedPreferences
                         SharedPreferences prefs = context.getSharedPreferences("uvms_prefs", Context.MODE_PRIVATE);
                         String token = prefs.getString("auth_token", null);
                         if (token != null) {
-                            requestBuilder.header("Authorization", "Bearer " + token);
+                            builder.header("Authorization", "Bearer " + token);
                         }
 
-                        Request request = requestBuilder.build();
-                        return chain.proceed(request);
+                        return chain.proceed(builder.build());
                     })
                     .build();
 
-            Log.d(TAG, "Creating new Retrofit instance with BASE_URL: " + BASE_URL);
-            retrofit = new Retrofit.Builder()
+            Log.d(TAG, "Creating Retrofit WITH token instance...");
+            retrofitWithToken = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            Log.d(TAG, "Retrofit instance created successfully.");
-        } else {
-            Log.d(TAG, "Reusing existing Retrofit instance.");
         }
-        return retrofit;
+        return retrofitWithToken;
     }
 
-    /**
-     * Login service (no token required)
-     */
+    /** -------------------- Retrofit WITHOUT token -------------------- */
+    private static Retrofit getInstanceWithoutToken() {
+        if (retrofitWithoutToken == null) {
+            Log.d(TAG, "Creating Retrofit WITHOUT token instance...");
+            retrofitWithoutToken = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofitWithoutToken;
+    }
+
+    /** -------------------- Services -------------------- */
     public static LoginService getLoginService() {
         return getInstanceWithoutToken().create(LoginService.class);
     }
 
-    /**
-     * API service (requires token)
-     */
-    public static LicenseApiService getApiService(Context context) {
+    public static LicenseApiService getLicenseService(Context context) {
         return getInstance(context).create(LicenseApiService.class);
     }
+
     public static TenderApiService getTenderService(Context context) {
         return getInstance(context).create(TenderApiService.class);
-    }
-
-
-    /**
-     * Separate Retrofit instance without token for login
-     */
-    private static Retrofit getInstanceWithoutToken() {
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-        }
-        return retrofit;
     }
 }
