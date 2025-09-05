@@ -1,43 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Card.Base"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true"
-    android:foreground="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/uvmsDivider"
+    app:strokeWidth="1dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- Top Row: Application ID & Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvAppId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Application #21"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/uvmsTextPrimaryLight" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PENDING"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textColor="@color/uvmsAccentCyan" />
+        </LinearLayout>
+
+        <!-- Application Date -->
         <TextView
-            android:id="@+id/txtApplicationTender"
-            android:text="Office Furniture Tender"
-            android:textColor="@color/textDark"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txtApplicationDate"
-            android:text="Submitted: 2025-08-15"
-            android:textColor="@color/textMid"
-            android:layout_marginTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipStatus"
-            android:text="Pending"
-            android:layout_marginTop="8dp"
+            android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:chipBackgroundColor="@color/chipBg"/>
+            android:text="Submitted on: 03 Sept 2025"
+            android:layout_marginTop="6dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/uvmsTextSecondaryLight" />
+
+        <!-- Submitted Contract -->
+        <TextView
+            android:id="@+id/tvSubmittedContract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submitted Contract: /contracts/vendor1.pdf"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/uvmsTextPrimaryLight" />
+
+        <!-- Approved Contract -->
+        <TextView
+            android:id="@+id/tvApprovedContract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Approved Contract: Awaiting approval"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/uvmsTextSecondaryLight" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

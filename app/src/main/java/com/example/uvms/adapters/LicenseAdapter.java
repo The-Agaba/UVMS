@@ -15,7 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.uvms.R;
 import com.example.uvms.models.License;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseViewHolder> {
 
@@ -45,12 +49,26 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         License license = licenseList.get(position);
 
         holder.tvLicenseId.setText(String.valueOf(license.getLicenseId()));
-        holder.tvLicenseStatus.setText(license.getSafeString(license.getStatus(), "N/A"));
-        holder.tvIssuedDate.setText(license.getSafeString(license.getIssueDate(), "-"));
-        holder.tvExpiryDate.setText(license.getSafeString(license.getExpiryDate(), "-"));
+
+        // 🔹 Format dates nicely (Sep 05, 2025)
+        holder.tvIssuedDate.setText("Issued: " + formatDate(license.getIssueDate()));
+        holder.tvExpiryDate.setText("Expires: " + formatDate(license.getExpiryDate()));
+
+        // Dynamically compute status if missing
+        String status = license.getStatus() != null ? license.getStatus() :
+                (license.isActive() ? "ACTIVE" : "EXPIRED");
+        holder.tvLicenseStatus.setText(status);
 
         // Status bubble
-        int statusColor = license.getStatusColor();
+        int statusColor;
+        switch (status.toUpperCase()) {
+            case "ACTIVE": statusColor = context.getColor(R.color.green); break;
+            case "EXPIRED": statusColor = context.getColor(R.color.red); break;
+            case "PENDING": statusColor = context.getColor(R.color.yellow); break;
+            case "REJECTED": statusColor = context.getColor(R.color.gray); break;
+            default: statusColor = context.getColor(R.color.gray); break;
+        }
+
         holder.tvLicenseStatus.setTextColor(statusColor);
         GradientDrawable bg = new GradientDrawable();
         bg.setCornerRadius(12f);
@@ -65,7 +83,7 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
             if (listener != null) listener.onItemClick(license);
         });
 
-        // Renewal button click (optional)
+        // Renewal button click
         holder.btnRequestRenewal.setOnClickListener(v ->
                 Toast.makeText(context,
                         "Renewal requested for License ID " + license.getLicenseId(),
@@ -96,5 +114,21 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         licenseList.clear();
         licenseList.addAll(newList);
         notifyDataSetChanged();
+    }
+
+    // 🔹 Helper to format ISO date into "Sep 05, 2025"
+    private String formatDate(String isoDate) {
+        if (isoDate == null || isoDate.isEmpty()) return "-";
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            Date date = inputFormat.parse(isoDate);
+
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return isoDate; // fallback to raw string if parsing fails
+        }
     }
 }

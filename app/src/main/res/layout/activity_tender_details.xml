@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
     android:background="@color/uvmsBackgroundLight">
 
@@ -9,52 +11,164 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/uvmsBackgroundLight"
-        android:padding="20dp"
-        android:elevation="1dp"
-        android:clipToPadding="false">
+        android:spacing="16dp">
 
-        <!-- Tender Title -->
-        <TextView
-            android:id="@+id/tvTenderTitle"
+        <!-- Tender Title Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTenderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp"
+                    tools:text="Supply of Laboratory Equipment" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipTenderCollege"
+                    style="@style/Widget.Material3.Chip.Assist.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="false"
+                    tools:text="College of Natural Sciences" />
+
+            </LinearLayout>
+
+        <!-- Tender Info Section -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tender Title"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/uvmsTextPrimaryLight"
-            android:layout_marginBottom="12dp" />
+            app:cardCornerRadius="6dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="16dp">
 
-        <!-- Tender Details -->
-        <TextView android:id="@+id/tvTenderId" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderBuyer" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderCategory" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderLocation" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderDeadline" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderBudget" style="@style/TenderDetailText"/>
-        <TextView android:id="@+id/tvTenderStatus" style="@style/TenderDetailText"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-        <!-- Download Tender Docs -->
-        <Button
-            android:id="@+id/btnDownloadTenderDoc"
+                <!-- Tender ID -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_id_card"
+                        app:tint="@color/uvmsBluePrimary" />
+
+                    <TextView
+                        android:id="@+id/tvTenderId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        tools:text="UDOM/ICT/2025/01" />
+                </LinearLayout>
+
+                <!-- Post Date -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_date_range_24"
+                        app:tint="@color/uvmsBluePrimary" />
+
+                    <TextView
+                        android:id="@+id/tvTenderPostDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        tools:text="Posted on: 13 Nov 2025 • 12:24 EAT" />
+                </LinearLayout>
+
+                <!-- Deadline -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_schedule_24"
+                        app:tint="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/tvTenderDeadline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        tools:text="Closes: 01 Dec 2025 • 23:59 EAT" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/uvmsDivider"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/tvTenderDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    tools:text="Tender description goes here, briefly summarizing scope of work and requirements." />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Buttons Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Download Tender Document"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/uvmsAccentLightBlue"
-            android:textColor="@color/uvmsTextPrimaryDark"
-            android:padding="12dp" />
+            android:orientation="vertical"
+            android:spacing="12dp">
 
-        <!-- Apply Now -->
-        <Button
-            android:id="@+id/btnApplyNow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Apply Now"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/uvmsAccentCyan"
-            android:textColor="@color/uvmsTextPrimaryDark"
-            android:padding="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownloadContract"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Download Contract"
+                app:icon="@drawable/ic_download_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/uvmsBluePrimary"
+                android:layout_marginBottom="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApplyTender"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply for this Tender"
+                app:icon="@drawable/ic_apply_24"
+                app:iconGravity="textStart"
+                app:iconTint="@color/uvmsTextPrimaryLight"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

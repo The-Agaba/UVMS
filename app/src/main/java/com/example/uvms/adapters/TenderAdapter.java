@@ -12,7 +12,6 @@ import com.example.uvms.R;
 import com.example.uvms.activities.ApplyTenderActivity;
 import com.example.uvms.activities.TenderDetailsActivity;
 import com.example.uvms.models.Tender;
-import com.google.android.material.chip.Chip;
 import java.util.List;
 
 public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderViewHolder> {
@@ -40,7 +39,6 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
         holder.tvDescription.setText(tender.getDescription() != null ? tender.getDescription() : "N/A");
         holder.tvTenderId.setText(String.valueOf(tender.getTenderId()));
         holder.tvDeadline.setText("Closes: " + (tender.getDeadlineDate() != null ? tender.getDeadlineDate() : "N/A"));
-        holder.chipCollege.setText(tender.getCollegeName() != null ? tender.getCollegeName() : "Unknown College");
 
         // Open details
         holder.itemView.setOnClickListener(v -> {
@@ -77,7 +75,6 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
 
     static class TenderViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvTenderId, tvDeadline, tvDescription, tvApply;
-        Chip chipCollege;
 
         public TenderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,7 +82,6 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTenderId = itemView.findViewById(R.id.tvTenderId);
             tvDeadline = itemView.findViewById(R.id.tvDeadline);
-            chipCollege = itemView.findViewById(R.id.chipCollege);
             tvApply = itemView.findViewById(R.id.tvApply);
         }
     }

@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/backgroundLight"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.ViewApplicationsFragment">
+    android:layout_height="match_parent">
 
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarApplications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="My Applications"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        android:titleTextColor="@color/uvmsTextPrimaryLight"
+        android:background="@drawable/bottom_round_borders"/>
 
-    <!-- If you want Material tabs later, add Material dependency (see Gradle below).
-         For now this will inflate okay as long as Material is added. -->
+    <!-- Tabs for status filtering -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_status"
         android:layout_width="match_parent"
-        android:background="@color/uvmsGradientEnd"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/uvmsBluePrimary"
+        app:tabSelectedTextColor="@color/uvmsBluePrimary"
+        app:tabTextColor="@color/uvmsBlueLight"/>
 
+    <!-- FrameLayout for RecyclerView + empty view -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_applications"
+            android:id="@+id/recyclerApplications"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp" />
+            android:padding="12dp"
+            android:clipToPadding="false"/>
 
+        <!-- Empty view -->
         <LinearLayout
             android:id="@+id/empty_applications"
-            android:visibility="gone"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:padding="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/no_vendor_applications_view_fragment" />
-
+                android:text="No applications found"
+                android:textColor="@color/uvmsTextPrimaryLight"
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
