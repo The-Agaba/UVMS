@@ -1,11 +1,10 @@
 package com.example.uvms.fragments;
 
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
+import com.example.uvms.activities.HomeActivity;
+import com.example.uvms.activities.ProfileActivity;
 import com.example.uvms.adapters.LicenseAdapter;
 import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.clients.RetrofitClient;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
     private GridLayout quickActionsGrid;
     private CardView failedCard;
     private LinearLayout licenseStatusContainer;
+    private View activeQuickActionCard;
 
     @Nullable
     @Override
@@ -60,23 +62,15 @@ public class HomeFragment extends Fragment {
         failedCard = view.findViewById(R.id.license_card_failed);
         licenseStatusContainer = view.findViewById(R.id.license_container);
 
-        // RecyclerView setup
-        recyclerLicense.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
-
-        licenseAdapter = new LicenseAdapter(getContext(), new ArrayList<>(), license -> {
+        recyclerLicense.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        licenseAdapter = new LicenseAdapter(requireContext(), new ArrayList<>(), license -> {
             if (!isAdded()) return;
-            try {
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainContainer, LicenseDetailFragment.newInstance(license))
-                        .addToBackStack(LicenseDetailFragment.class.getSimpleName())
-                        .commit();
-            } catch (IllegalStateException e) {
-                Log.e("HomeFragment", "Cannot open LicenseDetailFragment", e);
-                Toast.makeText(getContext(), "Cannot open license details right now", Toast.LENGTH_SHORT).show();
-            }
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainContainer, LicenseDetailFragment.newInstance(license))
+                    .addToBackStack(LicenseDetailFragment.class.getSimpleName())
+                    .setReorderingAllowed(true)
+                    .commit();
         });
         recyclerLicense.setAdapter(licenseAdapter);
 
@@ -86,71 +80,80 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    /** Quick Actions */
     private void setupQuickActions() {
         QuickAction[] quickActions = {
                 new QuickAction("View Policies", getString(R.string.desc_view_policies), R.drawable.ic_policy_view),
                 new QuickAction("Contracts", getString(R.string.desc_my_profile), R.drawable.ic_contract),
-                new QuickAction("My Applications", getString(R.string.desc_documents), R.drawable.ic_application),
+                new QuickAction("My Profile", getString(R.string.desc_my_profile_two), R.drawable.ic_person),
                 new QuickAction("Tenders", getString(R.string.desc_tenders), R.drawable.ic_tenders),
                 new QuickAction("Settings", getString(R.string.desc_settings), R.drawable.ic_maintanance),
                 new QuickAction("Help & Support", getString(R.string.desc_help_support), R.drawable.ic_help)
         };
 
         for (QuickAction action : quickActions) {
-            View card = LayoutInflater.from(getContext())
-                    .inflate(R.layout.item_quick_action, quickActionsGrid, false);
+            View card = LayoutInflater.from(getContext()).inflate(R.layout.item_quick_action, quickActionsGrid, false);
 
-            TextView title = card.findViewById(R.id.actionTitle);
-            TextView subtitle = card.findViewById(R.id.actionSubtitle);
-            ImageView icon = card.findViewById(R.id.actionIcon);
+            ((TextView) card.findViewById(R.id.actionTitle)).setText(action.getTitle());
+            ((TextView) card.findViewById(R.id.actionSubtitle)).setText(action.getSubtitle());
+            ((ImageView) card.findViewById(R.id.actionIcon)).setImageResource(action.getIconRes());
 
-            title.setText(action.getTitle());
-            subtitle.setText(action.getSubtitle());
-            icon.setImageResource(action.getIconRes());
-
-            card.setOnClickListener(v -> handleActionClick(action.getTitle()));
+            card.setOnClickListener(v -> handleActionClick(action.getTitle(), card));
             quickActionsGrid.addView(card);
         }
     }
 
-    private void handleActionClick(String actionTitle) {
+    private void handleActionClick(String actionTitle, View clickedCard) {
         Map<String, Fragment> actionMap = new HashMap<>();
         actionMap.put("View Policies", new PoliciesFragment());
         actionMap.put("Contracts", new ContractFragment());
-        actionMap.put("My Applications", new ViewApplicationsFragment());
         actionMap.put("Tenders", new TendersFragment());
         actionMap.put("Settings", new SettingsFragment());
         actionMap.put("Help & Support", new HelpFragment());
 
+        if ("My Profile".equals(actionTitle)) {
+            startActivity(new Intent(requireContext(), ProfileActivity.class));
+            return;
+        }
+
         Fragment fragment = actionMap.get(actionTitle);
         if (fragment != null && isAdded()) {
-            Fragment currentFragment = getParentFragmentManager().findFragmentById(R.id.mainContainer);
-            if (currentFragment == null || !currentFragment.getClass().equals(fragment.getClass())) {
+            Fragment current = getParentFragmentManager().findFragmentById(R.id.mainContainer);
+            if (current == null || !current.getClass().equals(fragment.getClass())) {
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.mainContainer, fragment)
                         .addToBackStack(fragment.getClass().getSimpleName())
+                        .setReorderingAllowed(true)
                         .commit();
-            } else {
-                Toast.makeText(getContext(), actionTitle + " is already open", Toast.LENGTH_SHORT).show();
+                highlightQuickAction(clickedCard);
+
+                if (getActivity() instanceof HomeActivity) {
+                    ((HomeActivity) getActivity()).syncUIWithCurrentFragment();
+                }
             }
         }
     }
 
-    /** Fetch licenses safely */
+    private void highlightQuickAction(View clickedCard) {
+        if (activeQuickActionCard != null) {
+            activeQuickActionCard.setBackgroundResource(R.drawable.bg_quick_action_normal);
+        }
+        clickedCard.setBackgroundResource(R.drawable.bg_quick_action_active);
+        activeQuickActionCard = clickedCard;
+    }
+
     private void fetchLicensesFromApi() {
         loader.setVisibility(View.VISIBLE);
         Drawable d = loader.getDrawable();
         if (d instanceof Animatable) ((Animatable) d).start();
 
         LicenseApiService apiService = RetrofitClient.getInstance(requireContext()).create(LicenseApiService.class);
-        Call<List<License>> call = apiService.getLicenses();
-
-        call.enqueue(new Callback<List<License>>() {
+        apiService.getLicenses().enqueue(new Callback<List<License>>() {
             @Override
             public void onResponse(Call<List<License>> call, Response<List<License>> response) {
                 loader.setVisibility(View.GONE);
+                if (!isAdded()) return;
+
                 if (response.isSuccessful() && response.body() != null) {
                     failedCard.setVisibility(View.GONE);
                     licenseAdapter.updateData(response.body());
@@ -158,7 +161,6 @@ public class HomeFragment extends Fragment {
                 } else {
                     failedCard.setVisibility(View.VISIBLE);
                     updateLicenseStatusCards(null);
-                    Toast.makeText(getContext(), "No licenses found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -167,88 +169,56 @@ public class HomeFragment extends Fragment {
                 loader.setVisibility(View.GONE);
                 failedCard.setVisibility(View.VISIBLE);
                 updateLicenseStatusCards(null);
-                if (isAdded()) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("⚠️ Error")
-                            .setMessage("An error occurred: Please check your connection and try again.")
-                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                            .show();
-                }
-                Log.e("API_ERROR", t.getMessage(), t);
             }
         });
     }
 
-    /** Update license status cards horizontally */
     private void updateLicenseStatusCards(List<License> licenses) {
         licenseStatusContainer.removeAllViews();
-
         Map<String, Integer> statusSummary = new HashMap<>();
         statusSummary.put("ACTIVE", 0);
         statusSummary.put("PENDING", 0);
         statusSummary.put("REJECTED", 0);
-        statusSummary.put("EXPIRED",0);
+        statusSummary.put("EXPIRED", 0);
 
         if (licenses != null) {
-            for (License license : licenses) {
-                String status = license.getStatus() != null ? license.getStatus().toUpperCase() : "EXPIRED";
+            for (License l : licenses) {
+                String status = l.getStatus() != null ? l.getStatus().toUpperCase() : "EXPIRED";
                 statusSummary.put(status, statusSummary.getOrDefault(status, 0) + 1);
             }
         }
 
         for (Map.Entry<String, Integer> entry : statusSummary.entrySet()) {
-            if (getContext() == null) return;
+            if (!isAdded()) return;
 
             View card = LayoutInflater.from(getContext()).inflate(R.layout.item_status_card, licenseStatusContainer, false);
-            TextView count = card.findViewById(R.id.statusCount);
-            TextView label = card.findViewById(R.id.statusLabel);
+            ((TextView) card.findViewById(R.id.statusCount)).setText(String.valueOf(entry.getValue()));
+            ((TextView) card.findViewById(R.id.statusLabel)).setText(entry.getKey());
 
-            count.setText(String.valueOf(entry.getValue()));
-            label.setText(entry.getKey());
+            int color = requireContext().getColor(R.color.gray);
+            if ("ACTIVE".equals(entry.getKey())) color = requireContext().getColor(R.color.green);
+            else if ("PENDING".equals(entry.getKey())) color = requireContext().getColor(R.color.yellow);
+            else if ("REJECTED".equals(entry.getKey())) color = requireContext().getColor(R.color.red);
 
-            int color;
-            if (isAdded()) {
-                switch (entry.getKey()) {
-                    case "ACTIVE": color = getResources().getColor(R.color.green); break;
-                    case "PENDING": color = getResources().getColor(R.color.yellow); break;
-                    case "REJECTED": color = getResources().getColor(R.color.red); break;
-                    case "EXPIRED": color = getResources().getColor(R.color.gray); break;
-                    default: color = getResources().getColor(R.color.gray);
-                }
-            } else {
-                color = android.graphics.Color.GRAY;
-            }
-
-            Drawable backgroundDrawable = card.getBackground();
-            if (backgroundDrawable instanceof GradientDrawable) {
-                ((GradientDrawable) backgroundDrawable).setColor(color);
-            }
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(10, 10, 10, 10);
-            card.setLayoutParams(params);
+            Drawable bg = card.getBackground();
+            if (bg instanceof GradientDrawable) ((GradientDrawable) bg).setColor(color);
 
             licenseStatusContainer.addView(card);
         }
     }
 
-    /** QuickAction class */
     private static class QuickAction {
-        private final String title;
-        private final String subtitle;
+        private final String title, subtitle;
         private final int iconRes;
 
-        public QuickAction(String title, String subtitle, int iconRes) {
+        QuickAction(String title, String subtitle, int iconRes) {
             this.title = title;
             this.subtitle = subtitle;
             this.iconRes = iconRes;
         }
 
-        public String getTitle() { return title; }
-        public String getSubtitle() { return subtitle; }
-        public int getIconRes() { return iconRes; }
+        String getTitle() { return title; }
+        String getSubtitle() { return subtitle; }
+        int getIconRes() { return iconRes; }
     }
 }

@@ -1,48 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_notifications_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.NotificationsFragment">
+    android:padding="8dp">
 
-    <!-- SearchView at the top -->
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewMessages"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/bg_searchview"
         android:iconifiedByDefault="false"
         android:queryHint="Search messages..."
-
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:layout_margin="3dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_searchview"/>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <!-- RecyclerView for messages -->
+    <TextView
+        android:id="@+id/tvNoNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No notifications"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="20dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
-        android:paddingBottom="100dp"
         android:clipToPadding="true"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        />
-
 
 </LinearLayout>
-
-
