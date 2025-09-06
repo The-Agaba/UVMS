@@ -12,15 +12,28 @@ public class College implements Serializable {
     @SerializedName("college_name")
     private String collegeName;
 
-    @SerializedName("admins")
-    private List<Admin> admins;
-
+    // Tenders are IDs (numbers) in your API
     @SerializedName("tenders")
-    private List<Tender> tenders;
+    private List<Integer> tenderIds;
+
+    // Policies are also IDs (numbers)
+    @SerializedName("policies")
+    private List<Integer> policyIds;
 
     // Getters
-    public int getCollegeId() { return collegeId; }
-    public String getCollegeName() { return collegeName; }
-    public List<Admin> getAdmins() { return admins; }
-    public List<Tender> getTenders() { return tenders; }
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public List<Integer> getTenderIds() {
+        return tenderIds;
+    }
+
+    public List<Integer> getPolicyIds() {
+        return policyIds;
+    }
 }

@@ -9,9 +9,14 @@ public interface CollegeApiService {
 
     // Fetch all colleges (with nested tenders and admins)
     @GET("colleges")
-    Call<List<College>> getColleges();
+    Call<List<College>> getAllColleges();
 
     // Optional: fetch single college by ID
     @GET("colleges/{id}")
     Call<College> getCollegeById(@retrofit2.http.Path("id") int collegeId);
+
+    @GET("colleges/{name}")
+    Call<College> getCollegeByName(@retrofit2.http.Path("name") String collegeName);
+
+
 }

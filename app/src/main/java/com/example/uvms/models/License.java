@@ -11,10 +11,10 @@ public class License implements Serializable {
     private int licenseId;
 
     @SerializedName("application")
-    private int applicationId;
+    private Application application; // now full Application object
 
     @SerializedName("vendor")
-    private int vendorId; // Matches backend ID
+    private Vendor vendor; // now full Vendor object
 
     @SerializedName("licenseNumber")
     @Nullable
@@ -44,13 +44,12 @@ public class License implements Serializable {
     // Computed status for UI
     private String status;
 
-    // --- Empty constructor ---
     public License() {}
 
     // --- Getters ---
     public int getLicenseId() { return licenseId; }
-    public int getApplicationId() { return applicationId; }
-    public int getVendorId() { return vendorId; }
+    public Application getApplication() { return application; }
+    public Vendor getVendor() { return vendor; }
     @Nullable public String getLicenseNumber() { return licenseNumber; }
     @Nullable public String getIssueDate() { return issueDate; }
     @Nullable public String getExpiryDate() { return expiryDate; }
@@ -61,8 +60,8 @@ public class License implements Serializable {
 
     // --- Setters ---
     public void setLicenseId(int licenseId) { this.licenseId = licenseId; }
-    public void setApplicationId(int applicationId) { this.applicationId = applicationId; }
-    public void setVendorId(int vendorId) { this.vendorId = vendorId; }
+    public void setApplication(Application application) { this.application = application; }
+    public void setVendor(Vendor vendor) { this.vendor = vendor; }
     public void setLicenseNumber(@Nullable String licenseNumber) { this.licenseNumber = licenseNumber; }
     public void setIssueDate(@Nullable String issueDate) { this.issueDate = issueDate; }
     public void setExpiryDate(@Nullable String expiryDate) { this.expiryDate = expiryDate; }
@@ -74,7 +73,6 @@ public class License implements Serializable {
 
     // --- Helper methods ---
     public String getStatus() {
-        // Compute status dynamically if missing
         if (status != null) return status;
         return isActive ? "ACTIVE" : "EXPIRED";
     }
@@ -82,11 +80,11 @@ public class License implements Serializable {
     public int getStatusColor() {
         String s = getStatus().toUpperCase();
         switch (s) {
-            case "ACTIVE": return 0xFF4CAF50; // Green
-            case "EXPIRED": return 0xFFF44336; // Red
-            case "PENDING": return 0xFFFF9800; // Orange
-            case "REJECTED": return 0xFF9E9E9E; // Gray
-            default: return 0xFF2196F3; // Blue
+            case "ACTIVE": return 0xFF4CAF50;
+            case "EXPIRED": return 0xFFF44336;
+            case "PENDING": return 0xFFFF9800;
+            case "REJECTED": return 0xFF9E9E9E;
+            default: return 0xFF2196F3;
         }
     }
 

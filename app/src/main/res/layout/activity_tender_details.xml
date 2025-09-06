@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_tender_details"
     android:padding="16dp"
     android:background="@color/uvmsBackgroundLight">
 

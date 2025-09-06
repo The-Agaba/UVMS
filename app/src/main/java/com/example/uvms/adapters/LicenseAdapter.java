@@ -48,20 +48,16 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
     public void onBindViewHolder(@NonNull LicenseViewHolder holder, int position) {
         License license = licenseList.get(position);
 
-        holder.tvLicenseId.setText(String.valueOf(license.getLicenseId()));
+        // License ID
+        holder.tvLicenseId.setText(license.getSafeString(license.getLicenseNumber(), "N/A"));
 
-        // 🔹 Format dates nicely (Sep 05, 2025)
-        holder.tvIssuedDate.setText("Issued: " + formatDate(license.getIssueDate()));
-        holder.tvExpiryDate.setText("Expires: " + formatDate(license.getExpiryDate()));
-
-        // Dynamically compute status if missing
-        String status = license.getStatus() != null ? license.getStatus() :
-                (license.isActive() ? "ACTIVE" : "EXPIRED");
+        // License Status
+        String status = license.getSafeString(license.getStatus(), "EXPIRED").toUpperCase();
         holder.tvLicenseStatus.setText(status);
 
-        // Status bubble
+        // Status color
         int statusColor;
-        switch (status.toUpperCase()) {
+        switch (status) {
             case "ACTIVE": statusColor = context.getColor(R.color.green); break;
             case "EXPIRED": statusColor = context.getColor(R.color.red); break;
             case "PENDING": statusColor = context.getColor(R.color.yellow); break;
@@ -69,16 +65,20 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
             default: statusColor = context.getColor(R.color.gray); break;
         }
 
-        holder.tvLicenseStatus.setTextColor(statusColor);
-        GradientDrawable bg = new GradientDrawable();
-        bg.setCornerRadius(12f);
-        bg.setColor(statusColor);
-        holder.tvLicenseStatus.setBackground(bg);
+        // Bubble
+        holder.statusBubble.setBackgroundColor(statusColor);
 
-        // Show/hide renewal button
+        // Status Text color
+        holder.tvLicenseStatus.setTextColor(context.getColor(R.color.uvmsBackgroundDark));
+
+        // Dates
+        holder.tvIssuedDate.setText(formatDate(license.getIssueDate()));
+        holder.tvExpiryDate.setText(formatDate(license.getExpiryDate()));
+
+        // Renewal button visibility
         holder.btnRequestRenewal.setVisibility(license.isExpanded() ? View.VISIBLE : View.GONE);
 
-        // Item click listener → open detail fragment
+        // Click → open detail fragment
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(license);
         });
@@ -86,7 +86,7 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         // Renewal button click
         holder.btnRequestRenewal.setOnClickListener(v ->
                 Toast.makeText(context,
-                        "Renewal requested for License ID " + license.getLicenseId(),
+                        "Renewal requested for License " + license.getSafeString(license.getLicenseNumber(), "N/A"),
                         Toast.LENGTH_SHORT).show()
         );
     }
@@ -96,8 +96,16 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         return licenseList.size();
     }
 
+    public void updateData(List<License> newList) {
+        licenseList.clear();
+        licenseList.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+    // --- ViewHolder ---
     public static class LicenseViewHolder extends RecyclerView.ViewHolder {
         TextView tvLicenseId, tvLicenseStatus, tvIssuedDate, tvExpiryDate;
+        View statusBubble;
         Button btnRequestRenewal;
 
         public LicenseViewHolder(@NonNull View itemView) {
@@ -106,29 +114,22 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
             tvLicenseStatus = itemView.findViewById(R.id.tv_license_status);
             tvIssuedDate = itemView.findViewById(R.id.tv_issued_date);
             tvExpiryDate = itemView.findViewById(R.id.tv_expiry_date);
+            statusBubble = itemView.findViewById(R.id.status_bubble);
             btnRequestRenewal = itemView.findViewById(R.id.btn_request_renewal);
         }
     }
 
-    public void updateData(List<License> newList) {
-        licenseList.clear();
-        licenseList.addAll(newList);
-        notifyDataSetChanged();
-    }
-
-    // 🔹 Helper to format ISO date into "Sep 05, 2025"
+    // Format ISO -> "Sep 05, 2025"
     private String formatDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) return "-";
-
         try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-            Date date = inputFormat.parse(isoDate);
-
-            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-            return outputFormat.format(date);
+            SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            Date date = input.parse(isoDate);
+            SimpleDateFormat output = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            return output.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
-            return isoDate; // fallback to raw string if parsing fails
+            return isoDate;
         }
     }
 }

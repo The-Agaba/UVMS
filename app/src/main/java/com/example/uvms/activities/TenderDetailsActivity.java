@@ -15,6 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
 import com.google.android.material.button.MaterialButton;
@@ -33,6 +37,12 @@ public class TenderDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tender_details);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_tender_details), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // --- Find views ---
         tvTitle = findViewById(R.id.tvTenderTitle);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.uvms.api.CollegeApiService;
 import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.api.LoginService;
 import com.example.uvms.api.TenderApiService;
@@ -73,4 +74,8 @@ public class RetrofitClient {
     public static TenderApiService getTenderService(Context context) {
         return getInstance(context).create(TenderApiService.class);
     }
+    public static CollegeApiService getCollegeService(Context context) {
+        return getInstance(context).create(CollegeApiService.class);
+    }
+
 }

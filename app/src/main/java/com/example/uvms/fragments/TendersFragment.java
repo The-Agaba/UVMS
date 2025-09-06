@@ -1,29 +1,36 @@
 package com.example.uvms.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.SearchView;
+
 import com.example.uvms.R;
 import com.example.uvms.adapters.TenderAdapter;
 import com.example.uvms.api.TenderApiService;
 import com.example.uvms.clients.RetrofitClient;
+import com.example.uvms.models.College;
 import com.example.uvms.models.Tender;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +43,12 @@ public class TendersFragment extends Fragment {
     private List<Tender> filteredTenderList = new ArrayList<>();
     private ProgressBar progressBar;
     private LinearLayout emptyState, errorState;
-    private MaterialButton btnRetry;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ChipGroup chipGroupColleges;
     private SearchView searchView;
     private TenderApiService apiService;
+
+    private Map<Integer, String> collegeMap = new HashMap<>(); // collegeId -> collegeName
 
     @Nullable
     @Override
@@ -52,24 +60,20 @@ public class TendersFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         emptyState = view.findViewById(R.id.emptyState);
         errorState = view.findViewById(R.id.errorState);
-        btnRetry = view.findViewById(R.id.btnRetry);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
         chipGroupColleges = view.findViewById(R.id.chipGroupFilters);
         searchView = view.findViewById(R.id.searchView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // ❌ old: adapter = new TenderAdapter(getContext(), filteredTenderList, collegeMap);
         adapter = new TenderAdapter(getContext(), filteredTenderList);
         recyclerView.setAdapter(adapter);
 
         apiService = RetrofitClient.getTenderService(requireContext());
 
-        fetchTenders();
+        fetchColleges(); // fetch college names first, then tenders
 
-        btnRetry.setOnClickListener(v -> fetchTenders());
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            progressBar.setVisibility(View.GONE); // Ensure progress bar is hidden on swipe refresh
-            fetchTenders();
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::fetchTenders);
 
         chipGroupColleges.setOnCheckedStateChangeListener((group, checkedIds) -> filterTenders());
 
@@ -90,12 +94,39 @@ public class TendersFragment extends Fragment {
         return view;
     }
 
+    private void fetchColleges() {
+        RetrofitClient.getCollegeService(requireContext()).getAllColleges().enqueue(new Callback<List<College>>() {
+            @Override
+            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (College c : response.body()) {
+                        collegeMap.put(c.getCollegeId(), c.getCollegeName());
+                        Log.d("CollegeMap", "Loaded colleges: " + collegeMap.toString());
+
+                    }
+                    // ✅ update adapter with fresh college map
+                    adapter.setCollegeMap(collegeMap);
+                    fetchTenders();
+                } else {
+                    showError();
+                    Log.e("TendersFragment", "Failed to load colleges: " + response.code());
+                    fetchTenders(); // still fetch tenders even if colleges fail
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<College>> call, Throwable t) {
+                showError();
+                Log.e("TendersFragment", "Error fetching colleges: " + t.getMessage());
+                fetchTenders(); // fallback
+            }
+        });
+    }
+
     private void fetchTenders() {
         emptyState.setVisibility(View.GONE);
         errorState.setVisibility(View.GONE);
-        if (!swipeRefreshLayout.isRefreshing()) { // Only show progress bar if not swipe refreshing
-            progressBar.setVisibility(View.VISIBLE);
-        }
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
 
         apiService.getAllTenders().enqueue(new Callback<List<Tender>>() {
             @Override
@@ -113,6 +144,7 @@ public class TendersFragment extends Fragment {
                     adapter.updateList(filteredTenderList);
                     emptyState.setVisibility(View.VISIBLE);
                     chipGroupColleges.removeAllViews();
+                    Log.e("TendersFragment", "Failed to load tenders: " + response.code());
                 }
             }
 
@@ -120,26 +152,24 @@ public class TendersFragment extends Fragment {
             public void onFailure(Call<List<Tender>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-                errorState.setVisibility(View.VISIBLE);
-                chipGroupColleges.removeAllViews();
+                showError();
+                Log.e("TendersFragment", "Error fetching tenders: " + t.getMessage());
             }
         });
     }
 
     private void populateCollegeChips(List<Tender> tenders) {
         chipGroupColleges.removeAllViews();
-        if (tenders == null || tenders.isEmpty()) return;
+        if (tenders.isEmpty()) return;
 
-        List<String> collegeNames = new ArrayList<>();
-        for (Tender tender : tenders) {
-            if (tender.getCollegeName() != null && !collegeNames.contains(tender.getCollegeName())) {
-                collegeNames.add(tender.getCollegeName());
-            }
+        HashSet<Integer> uniqueCollegeIds = new HashSet<>();
+        for (Tender t : tenders) {
+            uniqueCollegeIds.add(t.getCollegeId());
         }
 
-        for (String collegeName : collegeNames) {
+        for (int collegeId : uniqueCollegeIds) {
             Chip chip = new Chip(getContext());
-            chip.setText(collegeName);
+            chip.setText(collegeMap.getOrDefault(collegeId, "N/A"));
             chip.setCheckable(true);
             chipGroupColleges.addView(chip);
         }
@@ -159,17 +189,20 @@ public class TendersFragment extends Fragment {
         for (Tender tender : allTendersList) {
             boolean matchesSearch = query.isEmpty() ||
                     (tender.getTitle() != null && tender.getTitle().toLowerCase().contains(query)) ||
-                    (tender.getCollegeName() != null && tender.getCollegeName().toLowerCase().contains(query)) ||
-                    (tender.getCreatedBy() != null && tender.getCreatedBy().getName().toLowerCase().contains(query));
+                    (tender.getDescription() != null && tender.getDescription().toLowerCase().contains(query));
 
-            boolean matchesCollege = selectedColleges.isEmpty() || selectedColleges.contains(tender.getCollegeName());
+            String collegeName = collegeMap.getOrDefault(tender.getCollegeId(), "N/A");
+            boolean matchesCollege = selectedColleges.isEmpty() || selectedColleges.contains(collegeName);
 
-            if (matchesSearch && matchesCollege) {
-                filteredTenderList.add(tender);
-            }
+            if (matchesSearch && matchesCollege) filteredTenderList.add(tender);
         }
 
         adapter.updateList(filteredTenderList);
         emptyState.setVisibility(filteredTenderList.isEmpty() && !allTendersList.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    private void showError() {
+        errorState.setVisibility(View.VISIBLE);
+        chipGroupColleges.removeAllViews();
     }
 }

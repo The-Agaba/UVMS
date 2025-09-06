@@ -7,14 +7,6 @@
     android:layout_height="match_parent">
 
     <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarApplications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:title="My Applications"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        android:titleTextColor="@color/uvmsTextPrimaryLight"
-        android:background="@drawable/bottom_round_borders"/>
 
     <!-- Tabs for status filtering -->
     <com.google.android.material.tabs.TabLayout

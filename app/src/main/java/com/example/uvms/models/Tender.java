@@ -8,6 +8,9 @@ public class Tender implements Serializable {
     @SerializedName("tender_id")
     private int tenderId;
 
+    @SerializedName("college")
+    private int collegeId; // Only integer, matches API
+
     @SerializedName("title")
     private String title;
 
@@ -24,10 +27,7 @@ public class Tender implements Serializable {
     private String contractTemplatePath;
 
     @SerializedName("createdBy")
-    private Admin createdBy;
-
-    @SerializedName("college")
-    private College college;
+    private Object createdBy; // Can be Admin object or Map, optional
 
     @SerializedName("createdAt")
     private String createdAt;
@@ -35,20 +35,15 @@ public class Tender implements Serializable {
     @SerializedName("updatedAt")
     private String updatedAt;
 
-    // --- Getters ---
+    // Getters
     public int getTenderId() { return tenderId; }
+    public int getCollegeId() { return collegeId; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public String getDeadlineDate() { return deadlineDate; }
     public String getStatus() { return status; }
     public String getContractTemplatePath() { return contractTemplatePath; }
-    public Admin getCreatedBy() { return createdBy; }
-    public College getCollege() { return college; }
+    public Object getCreatedBy() { return createdBy; }
     public String getCreatedAt() { return createdAt; }
     public String getUpdatedAt() { return updatedAt; }
-
-    // Helper for college name (used in filtering and displaying)
-    public String getCollegeName() {
-        return college != null ? college.getCollegeName() : "N/A";
-    }
 }

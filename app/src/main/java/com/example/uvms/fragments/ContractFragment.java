@@ -136,9 +136,10 @@ public class ContractFragment extends Fragment {
 
                         if (response.isSuccessful() && response.body() != null) {
                             for (License license : response.body()) {
-                                if (license.getVendorId() == vendorId) {
+                                if (license.getVendor() != null && license.getVendor().getVendorId() == vendorId) {
                                     licenseList.add(license);
                                 }
+
                             }
 
                             filterContracts(searchView.getQuery().toString());
