@@ -1,11 +1,12 @@
 package com.example.uvms.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
 import com.example.uvms.adapters.LicenseAdapter;
-import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.models.License;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class ContractFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private LinearLayout emptyView;
+    private TextView emptyMessage;
     private SearchView searchView;
 
     private LicenseAdapter adapter;
@@ -47,7 +50,7 @@ public class ContractFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_contract, container, false);
 
-        // Read vendor ID from arguments if provided
+        // Get vendorId from arguments if provided
         if (getArguments() != null) {
             vendorId = getArguments().getInt("vendor_id", 1);
         }
@@ -55,15 +58,13 @@ public class ContractFragment extends Fragment {
         // Initialize views
         recyclerView = view.findViewById(R.id.rv_contracts);
         emptyView = view.findViewById(R.id.empty_contracts);
+        emptyMessage = emptyView.findViewById(R.id.emptyMessage);
         searchView = view.findViewById(R.id.search_contracts);
 
-        // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new LicenseAdapter(getContext(), filteredList, license ->
-                Toast.makeText(getContext(),
-                        "Clicked License #" + license.getLicenseId(),
-                        Toast.LENGTH_SHORT).show()
-        );
+        adapter = new LicenseAdapter(getContext(), filteredList, license -> {
+            // Do nothing on click
+        });
         recyclerView.setAdapter(adapter);
 
         setupSearchView();
@@ -107,47 +108,69 @@ public class ContractFragment extends Fragment {
             }
         }
         adapter.updateData(filteredList);
-        toggleEmptyView(filteredList.isEmpty());
+        toggleEmptyView(filteredList.isEmpty(), filteredList.isEmpty() ? "No contracts found" : null);
     }
 
-    /** Show/hide empty view */
-    private void toggleEmptyView(boolean isEmpty) {
+    /** Show/hide empty view with optional message */
+    private void toggleEmptyView(boolean isEmpty, @Nullable String message) {
         recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+
+        if (isEmpty && message != null) {
+            emptyMessage.setText(message);
+        }
     }
 
     /** Fetch contracts from API filtered by vendor ID */
     private void fetchContracts() {
-        LicenseApiService apiService = RetrofitClient.getInstance(requireContext())
-                .create(LicenseApiService.class);
+        // Get the API service
+        RetrofitClient.getLicenseService(requireContext())
+                .getLicenses()
+                .enqueue(new Callback<List<License>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<License>> call,
+                                           @NonNull Response<List<License>> response) {
+                        if (!isAdded()) return;
 
-        apiService.getLicenses().enqueue(new Callback<List<License>>() {
-            @Override
-            public void onResponse(Call<List<License>> call, Response<List<License>> response) {
-                if (!isAdded()) return;
+                        licenseList.clear();
 
-                licenseList.clear();
-                List<License> licenses = response.body();
-                if (licenses != null) {
-                    for (License license : licenses) {
-                        if (license.getVendorId()==vendorId) {
-                            licenseList.add(license);
+                        if (response.isSuccessful() && response.body() != null) {
+                            for (License license : response.body()) {
+                                if (license.getVendorId() == vendorId) {
+                                    licenseList.add(license);
+                                }
+                            }
+
+                            filterContracts(searchView.getQuery().toString());
+
+                            // No contracts at all
+                            if (licenseList.isEmpty()) {
+                                toggleEmptyView(true, "No contracts found");
+                            }
+
+                        } else if (response.code() == 401 || response.code() == 403) {
+                            toggleEmptyView(true, "Unauthorized. Please login.");
+                        } else {
+                            toggleEmptyView(true, "Failed to load contracts.");
                         }
                     }
-                }
 
-                filterContracts(searchView.getQuery().toString());
-            }
+                    @Override
+                    public void onFailure(@NonNull Call<List<License>> call,
+                                          @NonNull Throwable t) {
+                        if (!isAdded()) return;
 
-            @Override
-            public void onFailure(Call<List<License>> call, Throwable t) {
-                if (isAdded()) {
-                    toggleEmptyView(true);
-                    Toast.makeText(requireContext(),
-                            "Error: " + t.getMessage(),
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+                        String message;
+                        if (t instanceof SocketTimeoutException) {
+                            message = "Request timed out. Please try again.";
+                        } else if (t instanceof UnknownHostException) {
+                            message = "No internet connection. Please check your network.";
+                        } else {
+                            message = "Failed to load contracts.";
+                        }
+
+                        toggleEmptyView(true, message);
+                    }
+                });
     }
 }

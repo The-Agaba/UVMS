@@ -19,19 +19,19 @@ public class Policy {
     @SerializedName("college_id")
     private Integer collegeId; // nullable
 
-    @SerializedName("admin")   // matches the nested object
-    private Admin admin;
+    @SerializedName("admin")
+    private Integer adminId; // simplified: store just the ID
 
-    @SerializedName("datePosted")  // camelCase from JSON
+    @SerializedName("datePosted")
     private String datePosted;
 
-    @SerializedName("isActive")   // camelCase from JSON
+    @SerializedName("isActive")
     private boolean isActive;
 
-    // Optional: for local UI categorization
+    // Optional for local UI
     private String category;
 
-    // --- NEW: Read more / Read less toggle ---
+    // Read more / Read less toggle
     private transient boolean expanded = false;
 
     // --- Getters & Setters ---
@@ -50,8 +50,8 @@ public class Policy {
     public Integer getCollegeId() { return collegeId; }
     public void setCollegeId(Integer collegeId) { this.collegeId = collegeId; }
 
-    public Admin getAdmin() { return admin; }
-    public void setAdmin(Admin admin) { this.admin = admin; }
+    public Integer getAdminId() { return adminId; }
+    public void setAdminId(Integer adminId) { this.adminId = adminId; }
 
     public String getDatePosted() { return datePosted; }
     public void setDatePosted(String datePosted) { this.datePosted = datePosted; }
@@ -62,7 +62,6 @@ public class Policy {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
-    // --- Read more / Read less ---
     public boolean isExpanded() { return expanded; }
     public void setExpanded(boolean expanded) { this.expanded = expanded; }
 }

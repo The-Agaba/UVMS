@@ -28,6 +28,8 @@ import com.example.uvms.models.Policy;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +111,7 @@ public class PoliciesFragment extends Fragment {
 
         if (!isNetworkAvailable()) {
             swipeRefreshLayout.setRefreshing(false);
-            showRetryState("No internet connection");
+            showRetryState("You’re offline. Please check your internet connection.");
             return;
         }
 
@@ -124,20 +126,33 @@ public class PoliciesFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Policy> policies = response.body();
                     if (policies.isEmpty()) {
-                        showEmptyState("No policies found");
+                        showEmptyState("No policies available at the moment.");
                     } else {
                         adapter.updateData(policies);
                         hideEmptyState();
                     }
                 } else {
-                    showRetryState("Failed to load policies");
+                    showRetryState("We couldn’t load the policies. Please try again.");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Policy>> call, @NonNull Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
-                showRetryState("Network error: " + t.getMessage());
+
+                // Log for debugging but don’t show raw exception to user
+                t.printStackTrace();
+
+                String message;
+                if (t instanceof SocketTimeoutException) {
+                    message = "The request timed out. Please try again.";
+                } else if (t instanceof UnknownHostException) {
+                    message = "Unable to connect. Check your internet connection.";
+                } else {
+                    message = "Something went wrong. Please try again.";
+                }
+
+                showRetryState(message);
             }
         });
     }

@@ -82,7 +82,8 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     private String formatDate(String isoDate) {
         if (isoDate == null) return "N/A";
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy • HH:mm EAT", Locale.getDefault());
+        // ✅ Wrap EAT in quotes so it’s treated as text
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy • HH:mm 'EAT'", Locale.getDefault());
         try {
             Date date = inputFormat.parse(isoDate);
             return outputFormat.format(date);

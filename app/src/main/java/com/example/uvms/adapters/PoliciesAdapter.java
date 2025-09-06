@@ -83,8 +83,10 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
 
         holder.scopeTextView.setText("Scope: " + policy.getScope());
 
-        if (policy.getAdmin() != null) {
-            holder.postedByTextView.setText("Posted by: " + policy.getAdmin().getName());
+        if (policy.getAdminId() != null) {
+            holder.postedByTextView.setText("Posted by ID: " + policy.getAdminId());
+        } else {
+            holder.postedByTextView.setText("Posted by: N/A");
         }
 
         if (policy.getCollegeId() != null) {
