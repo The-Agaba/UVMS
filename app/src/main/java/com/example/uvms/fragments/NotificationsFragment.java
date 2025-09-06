@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class NotificationsFragment extends Fragment {
 
     private static final String PREFS_NAME = "uvms_prefs";
-    private static final String KEY_EMAIL = "email";
+    private static final String KEY_EMAIL = "user_email";
 
     private RecyclerView recyclerView;
     private NotificationsAdapter adapter;
@@ -85,11 +85,11 @@ public class NotificationsFragment extends Fragment {
         loadNotificationsByEmail();
     }
 
-    /** ---------------- Load Notifications by Email ---------------- */
+    /** ---------------- Load Notifications (filter by email) ---------------- */
     private void loadNotificationsByEmail() {
         String email = sharedPreferences.getString(KEY_EMAIL, "");
         if (email.isEmpty()) {
-            showEmptyView("No email found in preferences");
+            showEmptyView("No email saved in preferences");
             return;
         }
 
@@ -97,7 +97,7 @@ public class NotificationsFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.GONE);
 
-        notificationApiService.getAllNotifications() // change this to GET /notifications
+        notificationApiService.getAllNotifications()
                 .enqueue(new Callback<List<Notification>>() {
                     @Override
                     public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
@@ -112,7 +112,7 @@ public class NotificationsFragment extends Fragment {
                             }
 
                             if (notifications.isEmpty()) {
-                                showEmptyView("No notifications for your email");
+                                showEmptyView("No notifications found for your email");
                             } else {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 emptyView.setVisibility(View.GONE);
@@ -120,7 +120,7 @@ public class NotificationsFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                             updateBadge();
                         } else {
-                            showEmptyView("No notifications found");
+                            showEmptyView("No notifications available");
                         }
                     }
 
@@ -128,7 +128,7 @@ public class NotificationsFragment extends Fragment {
                     public void onFailure(Call<List<Notification>> call, Throwable t) {
                         progressBar.setVisibility(View.GONE);
                         showEmptyView("Failed to load notifications");
-                        Toast.makeText(getContext(), "Failed to load notifications", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error loading notifications", Toast.LENGTH_SHORT).show();
                         Log.e(TAG, "Error loading notifications: " + t.getMessage());
                     }
                 });
@@ -175,10 +175,10 @@ public class NotificationsFragment extends Fragment {
                 });
     }
 
-    /** ---------------- Update Empty View ---------------- */
+    /** ---------------- UI Helpers ---------------- */
     private void updateEmptyView() {
         if (notifications.isEmpty()) {
-            showEmptyView("No notifications");
+            showEmptyView("No notifications available");
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
@@ -191,10 +191,12 @@ public class NotificationsFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
     }
 
-    /** ---------------- Update Notification Badge ---------------- */
+    /** ---------------- Badge Update ---------------- */
     private void updateBadge() {
         int unreadCount = 0;
-        for (Notification n : notifications) if (!n.isRead()) unreadCount++;
+        for (Notification n : notifications) {
+            if (!n.isRead()) unreadCount++;
+        }
         homeActivity.updateNotificationBadge(unreadCount);
     }
 }

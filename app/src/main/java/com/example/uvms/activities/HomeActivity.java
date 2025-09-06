@@ -201,8 +201,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     public void updateNotificationBadgeFromApi() {
-        //int vendorId = getCurrentVendorId();
-        int vendorId = 1;
+        int vendorId = getCurrentVendorId();
+
 
         if (vendorId == -1 || notificationApiService == null) return;
 
