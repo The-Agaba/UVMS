@@ -235,6 +235,8 @@
     <string name="cnms">CNMS</string>
     <string name="cive">CIVE</string>
     <string name="apply">apply</string>
+    <string name="college">College</string>
+    <string name="dedicated_plots">Dedicated Plots</string>
 
 
 </resources>

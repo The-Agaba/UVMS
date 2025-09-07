@@ -1,6 +1,7 @@
 package com.example.uvms.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
+import com.example.uvms.activities.ApplyTenderActivity;
+import com.example.uvms.activities.TenderDetailsActivity;
 import com.example.uvms.models.Tender;
 
 import java.util.HashMap;
@@ -60,7 +63,30 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
         }
 
         holder.deadline.setText("Deadline: " + tender.getDeadlineDate());
+
+        // Set click listener for the whole card
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, TenderDetailsActivity.class);
+            intent.putExtra("tender_id", tender.getTenderId());
+            intent.putExtra("college_name", collegeMap.get(tender.getCollegeId()));
+            intent.putExtra("tender_title", tender.getTitle());
+            intent.putExtra("tender_description", tender.getDescription());
+            intent.putExtra("tender_post_date", tender.getCreatedAt());
+            intent.putExtra("tender_deadline", tender.getDeadlineDate());
+            context.startActivity(intent);
+        });
+
+        // Set click listener for "Apply" text view
+        holder.applyTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ApplyTenderActivity.class);
+            intent.putExtra("tender_id", tender.getTenderId());
+            intent.putExtra("tender_title", tender.getTitle());
+            context.startActivity(intent);
+        });
+
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -68,7 +94,7 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
     }
 
     static class TenderViewHolder extends RecyclerView.ViewHolder {
-        TextView title, description, id, deadline;
+        TextView title, description, id, deadline, applyTextView;
 
         public TenderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +102,7 @@ public class TenderAdapter extends RecyclerView.Adapter<TenderAdapter.TenderView
             description = itemView.findViewById(R.id.tvDescription);
             id = itemView.findViewById(R.id.tvTenderId);
             deadline = itemView.findViewById(R.id.tvDeadline);
+            applyTextView = itemView.findViewById(R.id.tvApply);
         }
     }
 }

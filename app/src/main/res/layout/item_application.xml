@@ -71,7 +71,7 @@
             android:id="@+id/tvApprovedContract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Approved Contract: Awaiting approval"
+            android:text="Status: Approved"
             android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textColor="@color/uvmsTextSecondaryLight" />

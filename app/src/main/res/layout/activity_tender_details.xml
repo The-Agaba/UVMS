@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_tender_details"
-    android:padding="16dp"
     android:background="@color/uvmsBackgroundLight">
 
     <LinearLayout
@@ -14,30 +13,59 @@
         android:orientation="vertical"
         android:spacing="16dp">
 
-        <!-- Tender Title Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="3dp"
+            android:elevation="4dp"
+            android:background="@drawable/bottom_round_borders"
+            android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvTenderTitle"
+            <!-- Top AppBar -->
+            <RelativeLayout
+                android:id="@+id/customTopNav"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="25dp"
+                android:padding="12dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bottom_round_borders">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="6dp"
-                    tools:text="Supply of Laboratory Equipment" />
+                    android:orientation="vertical">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipTenderCollege"
-                    style="@style/Widget.Material3.Chip.Assist.Elevated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="false"
-                    tools:text="College of Natural Sciences" />
+                    <TextView
+                        android:id="@+id/tvTenderTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="6dp"
+                        tools:text="Supply of Laboratory Equipment" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvCollegeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/college"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <!-- Tender Title Section -->
 
         <!-- Tender Info Section -->
         <com.google.android.material.card.MaterialCardView
@@ -138,6 +166,30 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     tools:text="Tender description goes here, briefly summarizing scope of work and requirements." />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/uvmsDivider"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Available Plots Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dedicated_plots"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/lvPlots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_plot"/>
+
+
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -169,6 +221,7 @@
                 app:iconGravity="textStart"
                 app:iconTint="@color/uvmsTextPrimaryLight"/>
 
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

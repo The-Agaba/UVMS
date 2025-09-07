@@ -128,7 +128,7 @@ public class TendersFragment extends Fragment {
         errorState.setVisibility(View.GONE);
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
 
-        apiService.getAllTenders().enqueue(new Callback<List<Tender>>() {
+        apiService.getActiveTenders("ACTIVE").enqueue(new Callback<List<Tender>>() {
             @Override
             public void onResponse(Call<List<Tender>> call, Response<List<Tender>> response) {
                 progressBar.setVisibility(View.GONE);

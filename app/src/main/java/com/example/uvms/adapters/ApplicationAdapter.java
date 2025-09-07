@@ -49,8 +49,8 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
                 : "Submitted Contract: None");
 
         holder.tvApprovedContract.setText(item.getApprovedContractPath() != null
-                ? "Approved Contract: " + item.getApprovedContractPath()
-                : "Approved Contract: Awaiting approval");
+                ? "Status " + item.getApprovedContractPath()
+                : "Status: N/A");
 
         // Set status text and color dynamically
         holder.tvStatus.setText(item.getStatus() != null ? item.getStatus() : "PENDING");

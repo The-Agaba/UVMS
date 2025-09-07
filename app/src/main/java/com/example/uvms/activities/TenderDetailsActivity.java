@@ -9,28 +9,40 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.BaseActivity;
 import com.example.uvms.R;
+import com.example.uvms.adapters.PlotAdapter;
+import com.example.uvms.api.PlotApiService;
+import com.example.uvms.clients.RetrofitClient;
+import com.example.uvms.models.Plot;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.chip.Chip;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TenderDetailsActivity extends BaseActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 1001;
-    private TextView tvTitle, tvTenderId, tvDescription, tvPostDate, tvDeadline;
-    private Chip chipCollege;
+    private TextView tvTitle, tvTenderId, tvDescription, tvPostDate, tvDeadline, tvCollege;
     private MaterialButton btnDownload, btnApply;
-    private String contractUrl, tenderTitle, tenderCollege;
+    private String contractUrl, tenderTitle, tenderCollege, tenderDescription, tenderPostDate, tenderDeadline;
     private int tenderId;
 
     @Override
@@ -46,7 +58,7 @@ public class TenderDetailsActivity extends BaseActivity {
 
         // --- Find views ---
         tvTitle = findViewById(R.id.tvTenderTitle);
-        chipCollege = findViewById(R.id.chipTenderCollege);
+        tvCollege = findViewById(R.id.tvCollegeName);
         tvTenderId = findViewById(R.id.tvTenderId);
         tvDescription = findViewById(R.id.tvTenderDescription);
         tvPostDate = findViewById(R.id.tvTenderPostDate);
@@ -54,18 +66,20 @@ public class TenderDetailsActivity extends BaseActivity {
         btnDownload = findViewById(R.id.btnDownloadContract);
         btnApply = findViewById(R.id.btnApplyTender);
 
+        RecyclerView rvPlots = findViewById(R.id.lvPlots);
+
         // --- Get intent extras ---
-        tenderId = getIntent().getIntExtra("tenderId", -1);
-        tenderTitle = getIntent().getStringExtra("tenderTitle");
-        tenderCollege = getIntent().getStringExtra("tenderCollege");
-        String tenderDescription = getIntent().getStringExtra("tenderDescription");
-        String tenderPostDate = getIntent().getStringExtra("tenderPostDate");
-        String tenderDeadline = getIntent().getStringExtra("tenderDeadline");
-        contractUrl = getIntent().getStringExtra("tenderDocUrl");
+        tenderId = getIntent().getIntExtra("tender_id", -1);
+        tenderTitle = getIntent().getStringExtra("tender_title");
+        tenderCollege = getIntent().getStringExtra("college_name");
+        tenderDescription = getIntent().getStringExtra("tender_description");
+        tenderPostDate = getIntent().getStringExtra("tender_post_date");
+        tenderDeadline = getIntent().getStringExtra("tender_deadline");
+        contractUrl = getIntent().getStringExtra("contract_url");
 
         // --- Populate UI ---
         tvTitle.setText(tenderTitle != null ? tenderTitle : "N/A");
-        chipCollege.setText(tenderCollege != null ? tenderCollege : "N/A");
+        tvCollege.setText(tenderCollege != null ? tenderCollege : "N/A");
         tvTenderId.setText(tenderId != -1 ? "UDOM/ICT/" + tenderId : "N/A");
         tvDescription.setText(tenderDescription != null ? tenderDescription : "N/A");
         tvPostDate.setText(tenderPostDate != null ? "Posted on: " + tenderPostDate : "N/A");
@@ -74,6 +88,30 @@ public class TenderDetailsActivity extends BaseActivity {
         // --- Button Listeners ---
         btnDownload.setOnClickListener(v -> downloadContract());
         btnApply.setOnClickListener(v -> openApplyTenderActivity());
+
+        // --- Setup Plots RecyclerView ---
+        List<Plot> plotList = new ArrayList<>();
+        PlotAdapter plotAdapter = new PlotAdapter(this, plotList, plot -> {
+            // Optional: handle plot click if needed
+        });
+        rvPlots.setLayoutManager(new LinearLayoutManager(this));
+        rvPlots.setAdapter(plotAdapter);
+
+        // --- Fetch plots for this tender ---
+        PlotApiService plotApi = RetrofitClient.getPlotService(this);
+        plotApi.getPlotsByTender(tenderId).enqueue(new Callback<List<Plot>>() {
+            @Override
+            public void onResponse(Call<List<Plot>> call, Response<List<Plot>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    plotAdapter.updateData(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Plot>> call, Throwable t) {
+                Toast.makeText(TenderDetailsActivity.this, "Failed to fetch plots", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void downloadContract() {
@@ -82,7 +120,6 @@ public class TenderDetailsActivity extends BaseActivity {
             return;
         }
 
-        // Check storage permission for Android < 10
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -91,7 +128,7 @@ public class TenderDetailsActivity extends BaseActivity {
                 return;
             }
         }
-        // Download contract
+
         try {
             Uri uri = Uri.parse(contractUrl);
             DownloadManager.Request request = new DownloadManager.Request(uri);

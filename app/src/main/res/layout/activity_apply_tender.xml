@@ -2,115 +2,170 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/uvmsBackgroundLight">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/uvmsBackgroundLight"
+    android:id="@+id/activity_apply_tender">
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:spacing="16dp"
+        android:padding="6dp">
 
+        <!-- Top AppBar -->
+        <RelativeLayout
+            android:id="@+id/customTopNav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="25dp"
+            android:padding="12dp"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/bottom_round_borders">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTenderTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp"
+                    tools:text="Supply of Laboratory Equipment" />
+
+                <TextView
+                    android:id="@+id/tvCollegeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/college"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@color/uvmsBackgroundLight"
-        android:elevation="0.5dp"
-        android:clipToPadding="false"
-        android:layout_margin="8dp"
+        android:background="@color/uvmsSurfaceLight"
         android:gravity="center_vertical"
-        android:divider="@color/uvmsDivider"
-        android:showDividers="middle">
+        android:layout_marginTop="6dp"
+        android:clipToPadding="false"
+        android:elevation="0.5dp">
 
-        <!-- Header -->
+        <!-- Instructions -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tender Application Form"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:text="Apply for this tender by selecting a plot, uploading your proposal and contract PDFs."
             android:textColor="@color/uvmsTextPrimaryLight"
-            android:gravity="center"
+            android:textSize="16sp"
             android:padding="8dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="16dp"/>
 
-        <!-- Company Name -->
-        <EditText
-            android:id="@+id/etCompanyName"
+        <!-- Vendor info -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company Name *"
-            android:padding="12dp"
-            android:background="@color/uvmsSurfaceLight"
-            android:textColor="@color/uvmsTextPrimaryLight"
-            android:textColorHint="@color/uvmsTextSecondaryLight"
-            android:layout_marginBottom="10dp" />
-
-        <!-- Contact Person -->
-        <EditText
-            android:id="@+id/etContactPerson"
+            android:text="Company Name:"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvCompanyName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contact Person *"
-            android:padding="12dp"
-            android:background="@color/uvmsSurfaceLight"
-            android:textColor="@color/uvmsTextPrimaryLight"
-            android:textColorHint="@color/uvmsTextSecondaryLight"
-            android:layout_marginBottom="10dp" />
-
-        <!-- Email -->
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email Address *"
-            android:inputType="textEmailAddress"
-            android:padding="12dp"
-            android:background="@color/uvmsSurfaceLight"
-            android:textColor="@color/uvmsTextPrimaryLight"
-            android:textColorHint="@color/uvmsTextSecondaryLight"
-            android:layout_marginBottom="10dp" />
-
-        <!-- Proposal -->
-        <EditText
-            android:id="@+id/etProposal"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:hint="Proposal / Bid Details *"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:padding="12dp"
-            android:background="@color/uvmsSurfaceLight"
-            android:textColor="@color/uvmsTextPrimaryLight"
-            android:textColorHint="@color/uvmsTextSecondaryLight"
-            android:layout_marginBottom="10dp" />
-
-        <!-- Upload Document -->
-        <Button
-            android:id="@+id/btnUploadDoc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Required Document"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/uvmsAccentCyan"
-            android:textColor="@color/uvmsTextPrimaryDark" />
+            android:padding="6dp"
+            android:background="@color/uvmsSurfaceDark"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
-            android:id="@+id/tvSelectedDoc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No document selected"
-            android:textSize="14sp"
-            android:textColor="@color/uvmsTextSecondaryDark"
-            android:layout_marginTop="6dp" />
+            android:text="Contact Person:"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvContactPerson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:background="@color/uvmsSurfaceDark"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:layout_marginBottom="8dp"/>
 
-        <!-- Submit Button -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:background="@color/uvmsSurfaceDark"
+            android:textColor="@color/uvmsTextPrimaryDark"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Plot selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Plot:"
+            android:textStyle="bold"/>
+        <Spinner
+            android:id="@+id/spinnerPlots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Proposal upload -->
+        <Button
+            android:id="@+id/btnUploadProposal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Proposal (PDF)"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/uvmsAccentCyan"/>
+        <TextView
+            android:id="@+id/tvProposalFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No file selected"
+            android:textColor="@color/uvmsTextSecondaryDark"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Contract upload -->
+        <Button
+            android:id="@+id/btnUploadContract"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Contract (PDF)"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/uvmsAccentCyan"/>
+        <TextView
+            android:id="@+id/tvContractFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No file selected"
+            android:textColor="@color/uvmsTextSecondaryDark"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Submit button -->
         <Button
             android:id="@+id/btnSubmitApplication"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit Application"
-            android:layout_marginTop="20dp"
             android:backgroundTint="@color/colorAccent"
             android:textColor="@color/uvmsTextPrimaryDark"
-            android:padding="12dp" />
+            android:padding="12dp"/>
+
+    </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

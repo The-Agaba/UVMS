@@ -1,13 +1,14 @@
 package com.example.uvms.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uvms.R;
 import com.example.uvms.models.Plot;
 
 import java.util.List;
@@ -31,25 +32,19 @@ public class PlotAdapter extends RecyclerView.Adapter<PlotAdapter.PlotViewHolder
     @NonNull
     @Override
     public PlotViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Using a simple TextView as item
-        TextView tv = new TextView(context);
-        tv.setPadding(24, 24, 24, 24);
-        tv.setTextSize(16f);
-        tv.setLayoutParams(new RecyclerView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        return new PlotViewHolder(tv);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_plot, parent, false);
+        return new PlotViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PlotViewHolder holder, int position) {
         Plot plot = plotList.get(position);
-        String info = plot.getPlotNumber() + " - " + plot.getLocationDescription() +
-                " (" + (plot.isAvailable() ? "Available" : "Not Available") + ")";
-        holder.textView.setText(info);
 
-        holder.textView.setOnClickListener(v -> listener.onPlotClick(plot));
+        holder.tvPlotNumber.setText(plot.getPlotNumber());
+        holder.tvPlotLocation.setText(plot.getLocationDescription());
+        holder.tvPlotAvailability.setText(plot.isAvailable() ? "Available" : "Not Available");
+
+        holder.itemView.setOnClickListener(v -> listener.onPlotClick(plot));
     }
 
     @Override
@@ -63,12 +58,14 @@ public class PlotAdapter extends RecyclerView.Adapter<PlotAdapter.PlotViewHolder
         notifyDataSetChanged();
     }
 
-    public static class PlotViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+    static class PlotViewHolder extends RecyclerView.ViewHolder {
+        TextView tvPlotNumber, tvPlotLocation, tvPlotAvailability;
 
         public PlotViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = (TextView) itemView;
+            tvPlotNumber = itemView.findViewById(R.id.tvPlotNumber);
+            tvPlotLocation = itemView.findViewById(R.id.tvPlotLocation);
+            tvPlotAvailability = itemView.findViewById(R.id.tvPlotAvailability);
         }
     }
 }
