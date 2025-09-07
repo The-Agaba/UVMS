@@ -29,7 +29,7 @@ public class Admin implements Serializable {
     @SerializedName("is_active")
     private boolean isActive;
 
-    // ✅ Optional: If backend later adds collegeId, you can uncomment
+    //  If backend later adds collegeId, you can uncomment
     // private Integer collegeId;
 
     // Getters and setters

@@ -1,29 +1,37 @@
 package com.example.uvms.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
-import com.example.uvms.adapters.LicenseAdapter;
+import com.example.uvms.adapters.ContractAdapter;
+import com.example.uvms.api.LicenseApiService;
+import com.example.uvms.api.PlotApiService;
 import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.models.License;
+import com.example.uvms.models.Plot;
 
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,15 +40,14 @@ import retrofit2.Response;
 public class ContractFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private LinearLayout emptyView;
-    private TextView emptyMessage;
-    private SearchView searchView;
+    private ContractAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView emptyView;
 
-    private LicenseAdapter adapter;
-    private final List<License> licenseList = new ArrayList<>();
-    private final List<License> filteredList = new ArrayList<>();
-
-    private int vendorId = 1; // default, can be overridden by arguments
+    private LicenseApiService licenseService;
+    private PlotApiService plotService;
+    private String loggedInEmail;
+    private final Map<Integer, Plot> plotMap = new HashMap<>();
 
     @Nullable
     @Override
@@ -50,128 +57,126 @@ public class ContractFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_contract, container, false);
 
-        // Get vendorId from arguments if provided
-        if (getArguments() != null) {
-            vendorId = getArguments().getInt("vendor_id", 1);
-        }
+        // Initialize UI
+        recyclerView = view.findViewById(R.id.recyclerViewContracts);
+        progressBar = view.findViewById(R.id.progressBar);
+        emptyView = view.findViewById(R.id.emptyView);
 
-        // Initialize views
-        recyclerView = view.findViewById(R.id.rv_contracts);
-        emptyView = view.findViewById(R.id.empty_contracts);
-        emptyMessage = emptyView.findViewById(R.id.emptyMessage);
-        searchView = view.findViewById(R.id.search_contracts);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new LicenseAdapter(getContext(), filteredList, license -> {
-            // Do nothing on click
-        });
+        // Initialize adapter with Activity context for PDF dialogs
+        adapter = new ContractAdapter(requireActivity(), new ArrayList<>(), license ->
+                Toast.makeText(getContext(),
+                        "Clicked: " + license.getLicenseNumber(),
+                        Toast.LENGTH_SHORT).show()
+        );
         recyclerView.setAdapter(adapter);
 
-        setupSearchView();
-        fetchContracts();
+        // Get logged-in user email
+        SharedPreferences prefs = requireContext()
+                .getSharedPreferences("uvms_prefs", Context.MODE_PRIVATE);
+        loggedInEmail = prefs.getString("user_email", null);
+        Log.d("ContractFragment", "Logged-in email: " + loggedInEmail);
+
+        // Initialize API services
+        licenseService = RetrofitClient.getLicenseService(requireContext());
+        plotService = RetrofitClient.getPlotService(requireContext());
+
+        // Fetch data
+        fetchPlots();
 
         return view;
     }
 
-    /** Setup SearchView for live filtering */
-    private void setupSearchView() {
-        searchView.setQueryHint(getString(R.string.search_contracts));
-        searchView.setIconifiedByDefault(false);
+    /** Fetch all plots and store in a map for quick lookup */
+    private void fetchPlots() {
+        progressBar.setVisibility(View.VISIBLE);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        plotService.getAllPlots().enqueue(new Callback<List<Plot>>() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterContracts(query);
-                return true;
+            public void onResponse(@NonNull Call<List<Plot>> call, @NonNull Response<List<Plot>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Plot plot : response.body()) {
+                        plotMap.put(plot.getPlotId(), plot);
+                    }
+                    fetchLicenses(); // Fetch licenses after plots are loaded
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                    showErrorDialog("Failed to load plots. Response code: " + response.code());
+                }
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                filterContracts(newText);
-                return true;
+            public void onFailure(@NonNull Call<List<Plot>> call, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                showErrorDialog("Network error loading plots: " + t.getMessage());
             }
         });
     }
 
-    /** Filter contracts by search query */
-    private void filterContracts(String query) {
-        filteredList.clear();
-        if (query == null || query.isEmpty()) {
-            filteredList.addAll(licenseList);
-        } else {
-            String lowerQuery = query.toLowerCase();
-            for (License license : licenseList) {
-                if (license.getSafeString(license.getLicenseNumber(), "")
-                        .toLowerCase().contains(lowerQuery)) {
-                    filteredList.add(license);
+    /** Fetch licenses, filter by user and active status, attach plots */
+    private void fetchLicenses() {
+        licenseService.getLicenses().enqueue(new Callback<List<License>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<License>> call, @NonNull Response<List<License>> response) {
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<License> allLicenses = response.body();
+
+                    // Filter active licenses
+                    List<License> activeLicenses = allLicenses.stream()
+                            .filter(License::isActive)
+                            .collect(Collectors.toList());
+
+                    // Filter licenses belonging to logged-in user
+                    List<License> userLicenses = activeLicenses.stream()
+                            .filter(l -> l.getVendor() != null && l.getVendor().getEmail() != null)
+                            .filter(l -> l.getVendor().getEmail().equalsIgnoreCase(loggedInEmail))
+                            .collect(Collectors.toList());
+
+                    // Attach Plot objects to each License's Application
+                    for (License license : userLicenses) {
+                        if (license.getApplication() != null && license.getApplication().getPlotId() != null) {
+                            int plotId = license.getApplication().getPlotId();
+                            if (plotMap.containsKey(plotId)) {
+                                license.getApplication().setPlot(plotMap.get(plotId));
+                            }
+                        }
+                    }
+
+                    if (userLicenses.isEmpty()) {
+                        emptyView.setVisibility(View.VISIBLE);
+                        emptyView.setText(activeLicenses.isEmpty() ? "No active licenses found." : "No licenses found for you.");
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter.updateData(userLicenses);
+                    }
+
+                } else {
+                    showErrorDialog("Failed to load licenses. Response code: " + response.code());
                 }
             }
-        }
-        adapter.updateData(filteredList);
-        toggleEmptyView(filteredList.isEmpty(), filteredList.isEmpty() ? "No contracts found" : null);
+
+            @Override
+            public void onFailure(@NonNull Call<List<License>> call, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                showErrorDialog("Network or API error: " + t.getMessage());
+            }
+        });
     }
 
-    /** Show/hide empty view with optional message */
-    private void toggleEmptyView(boolean isEmpty, @Nullable String message) {
-        recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    /** Show a simple alert dialog for errors */
+    private void showErrorDialog(String message) {
+        if (getContext() == null) return;
 
-        if (isEmpty && message != null) {
-            emptyMessage.setText(message);
-        }
-    }
-
-    /** Fetch contracts from API filtered by vendor ID */
-    private void fetchContracts() {
-        // Get the API service
-        RetrofitClient.getLicenseService(requireContext())
-                .getLicenses()
-                .enqueue(new Callback<List<License>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<License>> call,
-                                           @NonNull Response<List<License>> response) {
-                        if (!isAdded()) return;
-
-                        licenseList.clear();
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            for (License license : response.body()) {
-                                if (license.getVendor() != null && license.getVendor().getVendorId() == vendorId) {
-                                    licenseList.add(license);
-                                }
-
-                            }
-
-                            filterContracts(searchView.getQuery().toString());
-
-                            // No contracts at all
-                            if (licenseList.isEmpty()) {
-                                toggleEmptyView(true, "No contracts found");
-                            }
-
-                        } else if (response.code() == 401 || response.code() == 403) {
-                            toggleEmptyView(true, "Unauthorized. Please login.");
-                        } else {
-                            toggleEmptyView(true, "Failed to load contracts.");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<License>> call,
-                                          @NonNull Throwable t) {
-                        if (!isAdded()) return;
-
-                        String message;
-                        if (t instanceof SocketTimeoutException) {
-                            message = "Request timed out. Please try again.";
-                        } else if (t instanceof UnknownHostException) {
-                            message = "No internet connection. Please check your network.";
-                        } else {
-                            message = "Failed to load contracts.";
-                        }
-
-                        toggleEmptyView(true, message);
-                    }
-                });
+        new AlertDialog.Builder(getContext())
+                .setTitle("Error")
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }

@@ -11,10 +11,10 @@ public class License implements Serializable {
     private int licenseId;
 
     @SerializedName("application")
-    private Application application; // now full Application object
+    private Application application; // Full Application object
 
     @SerializedName("vendor")
-    private Vendor vendor; // now full Vendor object
+    private Vendor vendor; // Full Vendor object
 
     @SerializedName("licenseNumber")
     @Nullable
@@ -38,13 +38,29 @@ public class License implements Serializable {
     @SerializedName("renewalRequests")
     private List<Integer> renewalRequests;
 
-    // Track expansion for RecyclerView
+    // Track expansion state (e.g., RecyclerView)
     private boolean expanded = false;
 
-    // Computed status for UI
+    // Computed / override status for UI
     private String status;
 
+    // --- Constructors ---
     public License() {}
+
+    public License(int licenseId, Application application, Vendor vendor,
+                   @Nullable String licenseNumber, @Nullable String issueDate,
+                   @Nullable String expiryDate, @Nullable String licenseFilePath,
+                   boolean isActive, List<Integer> renewalRequests) {
+        this.licenseId = licenseId;
+        this.application = application;
+        this.vendor = vendor;
+        this.licenseNumber = licenseNumber;
+        this.issueDate = issueDate;
+        this.expiryDate = expiryDate;
+        this.licenseFilePath = licenseFilePath;
+        this.isActive = isActive;
+        this.renewalRequests = renewalRequests;
+    }
 
     // --- Getters ---
     public int getLicenseId() { return licenseId; }
@@ -57,6 +73,13 @@ public class License implements Serializable {
     public boolean isActive() { return isActive; }
     public List<Integer> getRenewalRequests() { return renewalRequests; }
     public boolean isExpanded() { return expanded; }
+
+    // Vendor helper
+    public String getVendorFullName() {
+        return vendor != null
+                ? vendor.getFirstName() + " " + vendor.getLastName()
+                : "-";
+    }
 
     // --- Setters ---
     public void setLicenseId(int licenseId) { this.licenseId = licenseId; }
@@ -71,20 +94,19 @@ public class License implements Serializable {
     public void setExpanded(boolean expanded) { this.expanded = expanded; }
     public void setStatus(String status) { this.status = status; }
 
-    // --- Helper methods ---
+    // --- Helpers ---
     public String getStatus() {
         if (status != null) return status;
         return isActive ? "ACTIVE" : "EXPIRED";
     }
 
     public int getStatusColor() {
-        String s = getStatus().toUpperCase();
-        switch (s) {
-            case "ACTIVE": return 0xFF4CAF50;
-            case "EXPIRED": return 0xFFF44336;
-            case "PENDING": return 0xFFFF9800;
-            case "REJECTED": return 0xFF9E9E9E;
-            default: return 0xFF2196F3;
+        switch (getStatus().toUpperCase()) {
+            case "ACTIVE": return 0xFF4CAF50;   // Green
+            case "EXPIRED": return 0xFFF44336;  // Red
+            case "PENDING": return 0xFFFF9800;  // Orange
+            case "REJECTED": return 0xFF9E9E9E; // Grey
+            default: return 0xFF2196F3;         // Blue (default)
         }
     }
 
