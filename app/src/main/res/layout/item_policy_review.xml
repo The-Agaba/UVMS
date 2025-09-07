@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/uvmsTextPrimaryLight"
         android:layout_marginBottom="4dp" />
 
     <!-- Policy Content with preview -->
@@ -25,7 +25,7 @@
         android:maxLines="3"
         android:scrollHorizontally="false"
         android:layout_marginBottom="8dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/uvmsTextPrimaryLight" />
 
     <!-- Policy Scope -->
     <TextView
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="@color/uvmsTextPrimaryLight"
         android:layout_marginBottom="2dp" />
 
     <!-- Posted By -->
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="@color/uvmsTextPrimaryLight"
         android:layout_marginBottom="2dp" />
 
     <!-- College ID (optional) -->
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="@color/uvmsTextPrimaryLight"
         android:layout_marginBottom="2dp"
         android:visibility="gone" />
 
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="@color/uvmsTextPrimaryLight"
         android:layout_marginTop="4dp" />
 
 </LinearLayout>

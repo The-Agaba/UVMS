@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:layout_marginBottom="12dp"
     android:background="@color/uvmsBackgroundLight"
     tools:context=".fragments.HomeFragment">
 
@@ -22,7 +23,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/uvmsTextPrimaryLight"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="8dp" />
 
         <!-- Horizontal ScrollView for License Cards -->
         <HorizontalScrollView
@@ -94,8 +95,8 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/uvmsTextSecondaryLight"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp" />
 
 
         <!-- GridLayout for Quick Actions -->

@@ -28,6 +28,7 @@ import com.example.uvms.adapters.LicenseAdapter;
 import com.example.uvms.api.LicenseApiService;
 import com.example.uvms.clients.RetrofitClient;
 import com.example.uvms.models.License;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     private CardView failedCard;
     private LinearLayout licenseStatusContainer;
     private View activeQuickActionCard;
+    private MaterialButton btnRequestRenewal; // ✅ global renewal button
 
     @Nullable
     @Override
@@ -56,12 +58,18 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Initialize views
         loader = view.findViewById(R.id.loaderView);
         recyclerLicense = view.findViewById(R.id.recyclerLicense);
         quickActionsGrid = view.findViewById(R.id.quickActionsGrid);
         failedCard = view.findViewById(R.id.license_card_failed);
         licenseStatusContainer = view.findViewById(R.id.license_container);
+        btnRequestRenewal = view.findViewById(R.id.btn_request_renewal);
 
+        // Start disabled by default
+        btnRequestRenewal.setEnabled(false);
+
+        // Setup RecyclerView
         recyclerLicense.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         licenseAdapter = new LicenseAdapter(requireContext(), new ArrayList<>(), license -> {
             if (!isAdded()) return;
@@ -74,12 +82,20 @@ public class HomeFragment extends Fragment {
         });
         recyclerLicense.setAdapter(licenseAdapter);
 
+        // Global renewal button action
+        btnRequestRenewal.setOnClickListener(v ->
+                Toast.makeText(requireContext(),
+                        "Renewal request submitted for expired licenses.",
+                        Toast.LENGTH_SHORT).show()
+        );
+
         setupQuickActions();
         fetchLicensesFromApi();
 
         return view;
     }
 
+    // Setup quick action cards
     private void setupQuickActions() {
         QuickAction[] quickActions = {
                 new QuickAction("View Policies", getString(R.string.desc_view_policies), R.drawable.ic_policy_view),
@@ -102,6 +118,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Handle quick action clicks
     private void handleActionClick(String actionTitle, View clickedCard) {
         Map<String, Fragment> actionMap = new HashMap<>();
         actionMap.put("View Policies", new PoliciesFragment());
@@ -134,6 +151,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Highlight selected quick action
     private void highlightQuickAction(View clickedCard) {
         if (activeQuickActionCard != null) {
             activeQuickActionCard.setBackgroundResource(R.drawable.bg_quick_action_normal);
@@ -142,6 +160,7 @@ public class HomeFragment extends Fragment {
         activeQuickActionCard = clickedCard;
     }
 
+    // Fetch licenses from API
     private void fetchLicensesFromApi() {
         loader.setVisibility(View.VISIBLE);
         Drawable d = loader.getDrawable();
@@ -157,7 +176,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<License> allLicenses = response.body();
 
-                    // ✅ Get logged-in email from SharedPreferences
+                    // Get logged-in email
                     String loggedInEmail = requireContext()
                             .getSharedPreferences("uvms_prefs", getContext().MODE_PRIVATE)
                             .getString("user_email", null);
@@ -177,15 +196,18 @@ public class HomeFragment extends Fragment {
                         failedCard.setVisibility(View.GONE);
                         licenseAdapter.updateData(myLicenses);
                         updateLicenseStatusCards(myLicenses);
+                        updateRenewalButton(myLicenses); // ✅ control button
                     } else {
                         failedCard.setVisibility(View.VISIBLE);
                         updateLicenseStatusCards(null);
+                        btnRequestRenewal.setEnabled(false);
                         Toast.makeText(requireContext(), "No licenses found for your account", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     failedCard.setVisibility(View.VISIBLE);
                     updateLicenseStatusCards(null);
+                    btnRequestRenewal.setEnabled(false);
                 }
             }
 
@@ -194,10 +216,12 @@ public class HomeFragment extends Fragment {
                 loader.setVisibility(View.GONE);
                 failedCard.setVisibility(View.VISIBLE);
                 updateLicenseStatusCards(null);
+                btnRequestRenewal.setEnabled(false);
             }
         });
     }
 
+    // Update license status cards
     private void updateLicenseStatusCards(List<License> licenses) {
         licenseStatusContainer.removeAllViews();
         Map<String, Integer> statusSummary = new HashMap<>();
@@ -232,6 +256,19 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // Enable global renewal button if there is at least one EXPIRED license
+    private void updateRenewalButton(List<License> licenses) {
+        boolean hasExpired = false;
+        for (License l : licenses) {
+            if ("EXPIRED".equalsIgnoreCase(l.getStatus())) {
+                hasExpired = true;
+                break;
+            }
+        }
+        btnRequestRenewal.setEnabled(hasExpired);
+    }
+
+    // Helper class for quick actions
     private static class QuickAction {
         private final String title, subtitle;
         private final int iconRes;

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
@@ -75,12 +76,22 @@ public class HomeActivity extends BaseActivity {
 
         // Handle system insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            v.setPadding(
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).right,
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
-            );
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Main container: left, right, bottom only
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+
+            // Custom top bar: respect status bar height
+            View topBar = findViewById(R.id.customTopNav);
+            if (topBar != null) {
+                topBar.setPadding(
+                        topBar.getPaddingLeft(),
+                        systemBars.top,
+                        topBar.getPaddingRight(),
+                        topBar.getPaddingBottom()
+                );
+            }
+
             return insets;
         });
 
@@ -105,7 +116,9 @@ public class HomeActivity extends BaseActivity {
         tx.replace(R.id.mainContainer, fragment, tag);
 
         boolean isBottomNavFragment = bottomNavMap.containsValue(fragment.getClass());
-        if (addToBackStack || isBottomNavFragment) tx.addToBackStack(tag);
+        if (addToBackStack || isBottomNavFragment) {
+            tx.addToBackStack(tag);
+        }
 
         tx.setReorderingAllowed(true);
         tx.commit();
@@ -144,8 +157,9 @@ public class HomeActivity extends BaseActivity {
             boolean isBottom = bottomNavMap.containsValue(current.getClass());
             bottomNavigationView.setVisibility(isBottom ? View.VISIBLE : View.GONE);
 
-            for (int i = 0; i < bottomNavigationView.getMenu().size(); i++)
+            for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
                 bottomNavigationView.getMenu().getItem(i).setChecked(false);
+            }
 
             if (isBottom) {
                 for (Map.Entry<Integer, Class<? extends Fragment>> entry : bottomNavMap.entrySet()) {
@@ -197,12 +211,13 @@ public class HomeActivity extends BaseActivity {
     public void updateNotificationBadge(int unreadCount) {
         if (notificationBadge == null) return;
         notificationBadge.setVisibility(unreadCount > 0 ? View.VISIBLE : View.GONE);
-        if (unreadCount > 0) notificationBadge.setText(String.valueOf(unreadCount));
+        if (unreadCount > 0) {
+            notificationBadge.setText(String.valueOf(unreadCount));
+        }
     }
 
     public void updateNotificationBadgeFromApi() {
         int vendorId = getCurrentVendorId();
-
 
         if (vendorId == -1 || notificationApiService == null) return;
 
@@ -211,7 +226,9 @@ public class HomeActivity extends BaseActivity {
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 int unreadCount = 0;
                 if (response.isSuccessful() && response.body() != null) {
-                    for (Notification n : response.body()) if (!n.isRead()) unreadCount++;
+                    for (Notification n : response.body()) {
+                        if (!n.isRead()) unreadCount++;
+                    }
                 }
                 updateNotificationBadge(unreadCount);
             }

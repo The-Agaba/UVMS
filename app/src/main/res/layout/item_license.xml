@@ -39,7 +39,7 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
             android:text="@string/license_status_active"
-            android:textColor="@color/uvmsBackgroundDark"
+            android:textColor="@color/uvmsTextPrimaryLight"
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

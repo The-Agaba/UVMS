@@ -1,7 +1,6 @@
 package com.example.uvms.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,9 @@ import java.util.Locale;
 
 public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseViewHolder> {
 
-    private Context context;
-    private List<License> licenseList;
-    private OnItemClickListener listener;
+    private final Context context;
+    private final List<License> licenseList;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(License license);
@@ -48,6 +47,8 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
     public void onBindViewHolder(@NonNull LicenseViewHolder holder, int position) {
         License license = licenseList.get(position);
 
+        if (license == null) return;
+
         // License ID
         holder.tvLicenseId.setText(license.getSafeString(license.getLicenseNumber(), "N/A"));
 
@@ -55,30 +56,21 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         String status = license.getSafeString(license.getStatus(), "EXPIRED").toUpperCase();
         holder.tvLicenseStatus.setText(status);
 
-        // Status color
-        int statusColor;
-        switch (status) {
-            case "ACTIVE": statusColor = context.getColor(R.color.green); break;
-            case "EXPIRED": statusColor = context.getColor(R.color.red); break;
-            case "PENDING": statusColor = context.getColor(R.color.yellow); break;
-            case "REJECTED": statusColor = context.getColor(R.color.gray); break;
-            default: statusColor = context.getColor(R.color.gray); break;
-        }
+        // Status color mapping
+        int statusColor = getStatusColor(status);
 
-        // Bubble
+        // Status bubble & text
         holder.statusBubble.setBackgroundColor(statusColor);
-
-        // Status Text color
-        holder.tvLicenseStatus.setTextColor(context.getColor(R.color.uvmsBackgroundDark));
+        holder.tvLicenseStatus.setTextColor(statusColor);
 
         // Dates
         holder.tvIssuedDate.setText(formatDate(license.getIssueDate()));
         holder.tvExpiryDate.setText(formatDate(license.getExpiryDate()));
 
-        // Renewal button visibility
-        holder.btnRequestRenewal.setVisibility(license.isExpanded() ? View.VISIBLE : View.GONE);
+        // Always show renewal button
+        holder.btnRequestRenewal.setVisibility(View.VISIBLE);
 
-        // Click → open detail fragment
+        // Card click → open detail fragment
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(license);
         });
@@ -98,7 +90,9 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
 
     public void updateData(List<License> newList) {
         licenseList.clear();
-        licenseList.addAll(newList);
+        if (newList != null) {
+            licenseList.addAll(newList);
+        }
         notifyDataSetChanged();
     }
 
@@ -119,7 +113,18 @@ public class LicenseAdapter extends RecyclerView.Adapter<LicenseAdapter.LicenseV
         }
     }
 
-    // Format ISO -> "Sep 05, 2025"
+    // --- Helpers ---
+
+    private int getStatusColor(String status) {
+        switch (status) {
+            case "ACTIVE": return context.getColor(R.color.green);
+            case "EXPIRED": return context.getColor(R.color.red);
+            case "PENDING": return context.getColor(R.color.yellow);
+            case "REJECTED": return context.getColor(R.color.gray);
+            default: return context.getColor(R.color.gray);
+        }
+    }
+
     private String formatDate(String isoDate) {
         if (isoDate == null || isoDate.isEmpty()) return "-";
         try {

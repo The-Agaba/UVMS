@@ -1,98 +1,101 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@color/uvmsGradientEnd">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- Static Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="3dp"
-        android:elevation="4dp"
-        android:background="@drawable/bottom_round_borders"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Top AppBar -->
-        <RelativeLayout
-            android:id="@+id/customTopNav"
+        <!-- Static Top Bar -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="25dp"
-             android:padding="12dp"
-            android:paddingHorizontal="16dp"
-            android:background="@drawable/bottom_round_borders">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:elevation="4dp"
+            android:paddingTop="20dp"
+            android:background="@drawable/bottom_round_borders"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <!-- Top AppBar -->
+            <RelativeLayout
+                android:id="@+id/customTopNav"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:paddingTop="25dp"
+                android:padding="12dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bottom_round_borders">
 
-                <TextView
-                    android:id="@+id/navTitle"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome, Collin"
-                    android:textColor="@color/uvmsBlueDark"
-                    android:textStyle="bold"
-                    android:textSize="20sp"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/navTitle_desc"
+                    <TextView
+                        android:id="@+id/navTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome, Collin"
+                        android:textColor="@color/uvmsBlueDark"
+                        android:textStyle="bold"
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:id="@+id/navTitle_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textColor="@color/uvmsBackgroundDark"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description"
-                    android:textColor="@color/uvmsBackgroundDark"
-                    android:textSize="15sp"/>
-            </LinearLayout>
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="notification_icon"
-                >
+                    android:contentDescription="notification_icon">
 
-                <!-- Your main ImageView -->
-                <ImageView
-                    android:id="@+id/navNotificationIcon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="Notification_Icon"
-                    android:src="@drawable/ic_notification"
-                    app:tint="@color/nav_item_color" />
+                    <!-- Main Icon -->
+                    <ImageView
+                        android:id="@+id/navNotificationIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:contentDescription="Notification_Icon"
+                        android:src="@drawable/ic_notification"
+                        app:tint="@color/nav_item_color" />
 
-                <!-- Badge TextView -->
-                <TextView
-                    android:id="@+id/badge"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="top|end"
-                    android:background="@drawable/badge_color"
-                    android:textColor="@android:color/white"
-                    android:textSize="10sp"
-                    android:gravity="center"
-                    android:visibility="gone"/>
-            </FrameLayout>
+                    <!-- Badge -->
+                    <TextView
+                        android:id="@+id/badge"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:background="@drawable/badge_color"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+                </FrameLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Space between TopBar and Fragment container -->
 
 
-
-        </RelativeLayout>
-
-
+        <!-- Fragment container -->
+        <FrameLayout
+            android:id="@+id/mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
-
-    <!-- Fragment container (fills remaining space) -->
-    <FrameLayout
-        android:id="@+id/mainContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="72dp"
-        android:background="@color/uvmsGradientEnd"/>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -104,10 +107,10 @@
         android:background="@drawable/wavy"
         app:menu="@menu/bottom_nav"
         app:labelVisibilityMode="labeled"
-        app:itemIconSize="24dp"
+        app:itemIconSize="20dp"
         app:itemPaddingTop="2dp"
         app:itemPaddingBottom="3dp"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_selected"/>
-
 </FrameLayout>
+

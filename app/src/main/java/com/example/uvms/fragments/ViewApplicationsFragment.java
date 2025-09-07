@@ -33,6 +33,7 @@ public class ViewApplicationsFragment extends Fragment {
     private RecyclerView recyclerApplications;
     private LinearLayout emptyView;
     private TabLayout tabStatus;
+    private View progressLoader;
 
     private ApplicationAdapter adapter;
     private List<Application> allApplications = new ArrayList<>();
@@ -46,6 +47,7 @@ public class ViewApplicationsFragment extends Fragment {
         recyclerApplications = view.findViewById(R.id.recyclerApplications);
         emptyView = view.findViewById(R.id.empty_applications);
         tabStatus = view.findViewById(R.id.tab_status);
+        progressLoader = view.findViewById(R.id.progress_loader);
 
         adapter = new ApplicationAdapter(getContext(), new ArrayList<>());
         recyclerApplications.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -83,7 +85,7 @@ public class ViewApplicationsFragment extends Fragment {
         ApplicationApiService api = RetrofitClient.getInstance(requireContext())
                 .create(ApplicationApiService.class);
 
-        Call<List<Application>> call = api.getApplications(); // You may need to add this GET method
+        Call<List<Application>> call = api.getApplications();
         call.enqueue(new Callback<List<Application>>() {
             @Override
             public void onResponse(Call<List<Application>> call, Response<List<Application>> response) {
@@ -123,11 +125,12 @@ public class ViewApplicationsFragment extends Fragment {
     private void showEmpty(boolean show) {
         emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerApplications.setVisibility(show ? View.GONE : View.VISIBLE);
+        progressLoader.setVisibility(View.GONE);
     }
 
     private void showLoading(boolean loading) {
-        // Optionally, show a ProgressBar (add in layout) or disable interaction
-        // For simplicity, we'll just hide/show recycler
+        progressLoader.setVisibility(loading ? View.VISIBLE : View.GONE);
         recyclerApplications.setVisibility(loading ? View.GONE : View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
     }
 }

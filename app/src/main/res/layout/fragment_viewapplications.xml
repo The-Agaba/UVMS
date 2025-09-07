@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/backgroundLight"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,9 +13,11 @@
         android:id="@+id/tab_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/uvmsGradientEnd"
         app:tabIndicatorColor="@color/uvmsBluePrimary"
-        app:tabSelectedTextColor="@color/uvmsBluePrimary"
-        app:tabTextColor="@color/uvmsBlueLight"/>
+        app:tabTextColor="@color/uvmsAccentLightBlue"/>
+
+
 
     <!-- FrameLayout for RecyclerView + empty view -->
     <FrameLayout
@@ -29,7 +31,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            android:visibility="gone"/>
+
+        <!-- Loading Spinner -->
+        <ProgressBar
+            android:id="@+id/progress_loader"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <!-- Empty view -->
         <LinearLayout
@@ -49,6 +61,6 @@
                 android:textSize="16sp"/>
 
         </LinearLayout>
-
     </FrameLayout>
+
 </LinearLayout>
