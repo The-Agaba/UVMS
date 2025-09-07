@@ -97,7 +97,7 @@ public class LicenseDetailFragment extends Fragment {
             if (filePath == null || filePath.trim().isEmpty()) {
                 tvFile.setVisibility(View.GONE);
             } else {
-                tvFile.setVisibility(View.VISIBLE);
+                tvFile.setVisibility(View.GONE);
                 tvFile.setText("File: " + filePath);
             }
         }

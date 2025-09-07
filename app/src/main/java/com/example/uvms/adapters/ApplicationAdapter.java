@@ -44,18 +44,14 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         // Format date
         holder.tvDate.setText("Submitted on: " + formatDate(item.getApplicationDate()));
 
-        holder.tvSubmittedContract.setText(item.getSubmittedContractPath() != null
-                ? "Submitted Contract: " + item.getSubmittedContractPath()
-                : "Submitted Contract: None");
+        // Plot info
+        holder.tvPlot.setText(item.getPlotInfo());
 
-        holder.tvApprovedContract.setText(item.getApprovedContractPath() != null
-                ? "Status " + item.getApprovedContractPath()
-                : "Status: N/A");
-
-        // Set status text and color dynamically
-        holder.tvStatus.setText(item.getStatus() != null ? item.getStatus() : "PENDING");
+        // Status with dynamic color
+        String status = item.getStatus() != null ? item.getStatus().toUpperCase(Locale.ROOT) : "PENDING";
+        holder.tvStatus.setText(status);
         int statusColor;
-        switch (holder.tvStatus.getText().toString().toUpperCase(Locale.ROOT)) {
+        switch (status) {
             case "APPROVED":
                 statusColor = context.getColor(R.color.uvmsSuccessGreen);
                 break;
@@ -66,6 +62,20 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
                 statusColor = context.getColor(R.color.uvmsAccentCyan); // PENDING or unknown
         }
         holder.tvStatus.setTextColor(statusColor);
+
+        // Hide Submitted Contract
+        holder.tvSubmittedContract.setVisibility(View.GONE);
+
+        // Approved Contract logic
+        if (item.getApprovedContractPath() != null) {
+            holder.tvApprovedContract.setText("View Approved Contract");
+            holder.tvApprovedContract.setTextColor(context.getColor(R.color.uvmsAccentCyan));
+            holder.tvApprovedContract.setOnClickListener(v -> openContract(item.getApprovedContractPath()));
+        } else {
+            holder.tvApprovedContract.setText("Approved Contract: None");
+            holder.tvApprovedContract.setTextColor(context.getColor(R.color.uvmsTextSecondaryLight));
+            holder.tvApprovedContract.setOnClickListener(null);
+        }
     }
 
     @Override
@@ -82,7 +92,6 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     private String formatDate(String isoDate) {
         if (isoDate == null) return "N/A";
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault());
-        // ✅ Wrap EAT in quotes so it’s treated as text
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy • HH:mm 'EAT'", Locale.getDefault());
         try {
             Date date = inputFormat.parse(isoDate);
@@ -93,8 +102,13 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         }
     }
 
+    private void openContract(String path) {
+        // Placeholder: implement contract viewing/downloading logic
+        // For example, open a WebView, download manager, or external PDF viewer
+    }
+
     static class ApplicationViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAppId, tvDate, tvStatus, tvSubmittedContract, tvApprovedContract;
+        TextView tvAppId, tvDate, tvStatus, tvSubmittedContract, tvApprovedContract, tvPlot;
 
         public ApplicationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,6 +117,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvSubmittedContract = itemView.findViewById(R.id.tvSubmittedContract);
             tvApprovedContract = itemView.findViewById(R.id.tvApprovedContract);
+            tvPlot = itemView.findViewById(R.id.tvPlot);
         }
     }
 }
