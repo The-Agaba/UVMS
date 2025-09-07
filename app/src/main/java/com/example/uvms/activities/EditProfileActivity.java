@@ -2,8 +2,10 @@ package com.example.uvms.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -42,8 +44,18 @@ public class EditProfileActivity extends AppCompatActivity {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.editProfile), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                android.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars()).toPlatformInsets();
+
+                // 🔹 Replace systemBars.top with a fixed padding (e.g. 24dp)
+                int topPadding = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        0, // you can adjust this value
+                        v.getResources().getDisplayMetrics()
+                );
+
+                v.setPadding(systemBars.left, topPadding, systemBars.right, systemBars.bottom);
+            }
             return insets;
         });
 

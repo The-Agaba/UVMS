@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -63,10 +64,19 @@ public class ApplyTenderActivity extends BaseActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_apply_tender), (v, insets) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 android.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars()).toPlatformInsets();
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+
+                // 🔹 Replace systemBars.top with a fixed padding (e.g. 24dp)
+                int topPadding = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        0, // you can adjust this value
+                        v.getResources().getDisplayMetrics()
+                );
+
+                v.setPadding(systemBars.left, topPadding, systemBars.right, systemBars.bottom);
             }
             return insets;
         });
+
 
         // --- Initialize views ---
         tvCompanyName = findViewById(R.id.tvCompanyName);

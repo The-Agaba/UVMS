@@ -1,62 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/uvmsBackgroundLight"
-    android:id="@+id/activity_apply_tender">
+    android:id="@+id/activity_apply_tender"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <!-- 🔹 Static Top Bar -->
+    <RelativeLayout
+        android:id="@+id/customTopNav"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:spacing="16dp"
-        android:padding="6dp">
+        android:paddingTop="25dp"
+        android:padding="12dp"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/bottom_round_borders"
+        android:elevation="4dp">
 
-        <!-- Top AppBar -->
-        <RelativeLayout
-            android:id="@+id/customTopNav"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="25dp"
-            android:padding="12dp"
-            android:paddingHorizontal="16dp"
-            android:background="@drawable/bottom_round_borders">
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvTenderTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp"
+                tools:text="Supply of Laboratory Equipment" />
 
-                <TextView
-                    android:id="@+id/tvTenderTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="6dp"
-                    tools:text="Supply of Laboratory Equipment" />
+            <TextView
+                android:id="@+id/tvCollegeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/college" />
+        </LinearLayout>
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvCollegeName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/college"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
+    <!-- 🔹 Scrollable Content Below Top Bar -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:clipToPadding="false"
+    android:padding="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/uvmsSurfaceLight"
-        android:gravity="center_vertical"
-        android:layout_marginTop="6dp"
-        android:clipToPadding="false"
-        android:elevation="0.5dp">
+        android:spacing="16dp"
+        android:padding="6dp">
 
         <!-- Instructions -->
         <TextView
@@ -79,8 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="6dp"
-            android:background="@color/uvmsSurfaceDark"
-            android:textColor="@color/uvmsTextPrimaryDark"
+            android:textColor="@color/textLight"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -93,8 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="6dp"
-            android:background="@color/uvmsSurfaceDark"
-            android:textColor="@color/uvmsTextPrimaryDark"
+            android:textColor="@color/textLight"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -107,8 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="6dp"
-            android:background="@color/uvmsSurfaceDark"
-            android:textColor="@color/uvmsTextPrimaryDark"
+            android:textColor="@color/textLight"
             android:layout_marginBottom="16dp"/>
 
         <!-- Plot selection -->
@@ -164,8 +157,7 @@
             android:backgroundTint="@color/colorAccent"
             android:textColor="@color/uvmsTextPrimaryDark"
             android:padding="12dp"/>
-
-    </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
+
+    </FrameLayout>

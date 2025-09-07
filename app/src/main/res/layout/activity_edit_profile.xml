@@ -8,12 +8,14 @@
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:paddingTop="2dp"
+
         android:id="@+id/topAppBarEdit"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@drawable/bottom_round_borders"
         app:title="Edit Profile"
+        android:paddingTop="22dp"
+        android:paddingBottom="10dp"
         app:titleTextColor="@color/uvmsTextPrimaryLight"
         app:navigationIcon="@drawable/ic_arrow_back"/>
 

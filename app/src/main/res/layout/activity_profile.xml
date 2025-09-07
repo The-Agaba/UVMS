@@ -9,7 +9,7 @@
 
     <!-- Top App Bar with Back Button -->
     <com.google.android.material.appbar.MaterialToolbar
-        android:layout_marginTop="2dp"
+
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +20,8 @@
         app:titleTextColor="@color/uvmsBackgroundDark"
         android:tooltipText="@string/tooltip_profile"
         app:contentInsetStart="0dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="10dp"
         tools:targetApi="26" />
 
     <ScrollView

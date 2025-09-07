@@ -8,6 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/uvmsGradientEnd"
         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar">
 
         <!-- Search + Quick filters row -->
@@ -17,8 +18,7 @@
             android:orientation="vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:background="@color/uvmsGradientEnd"
-            android:paddingBottom="8dp">
+            >
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
