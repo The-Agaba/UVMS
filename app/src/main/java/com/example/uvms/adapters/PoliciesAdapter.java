@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uvms.R;
 import com.example.uvms.models.Policy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,20 +36,19 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
         notifyDataSetChanged();
     }
 
-    // Filter by search query and category
-    public void filter(String query, String category) {
+    // Filter by search query and scope
+    public void filter(String query, String scope) {
         List<Policy> filteredList = new ArrayList<>();
 
         for (Policy policy : originalPolicies) {
             boolean matchesQuery = query == null || query.isEmpty() ||
-                    policy.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                    policy.getContent().toLowerCase().contains(query.toLowerCase());
+                    (policy.getTitle() != null && policy.getTitle().toLowerCase().contains(query.toLowerCase())) ||
+                    (policy.getContent() != null && policy.getContent().toLowerCase().contains(query.toLowerCase()));
 
-            boolean matchesCategory = category.equalsIgnoreCase("All") ||
-                    (policy.getCategory() != null &&
-                            policy.getCategory().equalsIgnoreCase(category));
+            boolean matchesScope = scope == null || scope.equalsIgnoreCase("All") ||
+                    (policy.getScope() != null && policy.getScope().equalsIgnoreCase(scope));
 
-            if (matchesQuery && matchesCategory) {
+            if (matchesQuery && matchesScope) {
                 filteredList.add(policy);
             }
         }
@@ -72,22 +72,15 @@ public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.Policy
 
         holder.titleTextView.setText(policy.getTitle());
 
-        // Show short content if not expanded
         int previewLength = 100;
-        if (!policy.isExpanded() && policy.getContent().length() > previewLength) {
-            String shortText = policy.getContent().substring(0, previewLength) + "... Read More";
-            holder.contentTextView.setText(shortText);
+        if (!policy.isExpanded() && policy.getContent() != null && policy.getContent().length() > previewLength) {
+            holder.contentTextView.setText(policy.getContent().substring(0, previewLength) + "... Read More");
         } else {
             holder.contentTextView.setText(policy.getContent() + (policy.isExpanded() ? " Read Less" : ""));
         }
 
-        holder.scopeTextView.setText("Scope: " + policy.getScope());
-
-        if (policy.getAdminId() != null) {
-            holder.postedByTextView.setText("Posted by ID: " + policy.getAdminId());
-        } else {
-            holder.postedByTextView.setText("Posted by: N/A");
-        }
+        holder.scopeTextView.setText("Scope: " + (policy.getScope() != null ? policy.getScope() : "N/A"));
+        holder.postedByTextView.setText("Posted by ID: " + (policy.getAdminId() != null ? policy.getAdminId() : "N/A"));
 
         if (policy.getCollegeId() != null) {
             holder.collegeIdTextView.setVisibility(View.VISIBLE);

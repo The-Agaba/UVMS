@@ -8,7 +8,6 @@
     android:layout_marginVertical="8dp"
     app:cardElevation="5dp"
     app:cardCornerRadius="16dp"
-
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -37,10 +36,8 @@
             android:id="@+id/tv_license_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:padding="3dp"
             android:text="@string/license_status_active"
             android:textColor="@color/uvmsBackgroundDark"
             android:textSize="11sp"
@@ -55,8 +52,7 @@
             android:layout_marginEnd="5dp"
             android:background="@drawable/status_background"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_license_status"
-            />
+            app:layout_constraintEnd_toStartOf="@id/tv_license_status" />
 
         <!-- Issued Date Label -->
         <TextView
@@ -111,29 +107,26 @@
         <!-- Renewal Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_request_renewal"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:text="@string/request_renewal"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:textColor="@color/uvmsTextPrimaryLight"
+            android:enabled="false"
+            android:clickable="false"
+            android:focusable="false"
             app:icon="@drawable/ic_contract_renewal"
             app:iconGravity="textEnd"
             app:iconPadding="4dp"
             app:iconTint="@color/uvmsTextPrimaryLight"
             app:backgroundTint="@color/uvmsAccentCyan"
             app:rippleColor="@color/uvmsSurfaceDark"
-            android:visibility="gone"
-            android:focusable="false"
-            android:clickable="true"
-            app:layout_constraintTop_toBottomOf="@id/tv_issued_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_expiry_date"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>

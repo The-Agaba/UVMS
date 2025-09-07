@@ -31,7 +31,9 @@ import com.google.android.material.chip.ChipGroup;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -98,7 +100,35 @@ public class PoliciesFragment extends Fragment {
                 return true;
             }
         });
+    }
 
+    private void populateScopeChips(List<Policy> policies) {
+        filterChipGroup.removeAllViews();
+
+        // Add "All" chip first
+        Chip allChip = new Chip(getContext());
+        allChip.setText("All");
+        allChip.setCheckable(true);
+        allChip.setChecked(true);
+        filterChipGroup.addView(allChip);
+
+        // Collect unique scopes
+        Set<String> uniqueScopes = new HashSet<>();
+        for (Policy policy : policies) {
+            if (policy.getScope() != null) {
+                uniqueScopes.add(policy.getScope());
+            }
+        }
+
+        // Add a chip for each scope
+        for (String scope : uniqueScopes) {
+            Chip chip = new Chip(getContext());
+            chip.setText(scope);
+            chip.setCheckable(true);
+            filterChipGroup.addView(chip);
+        }
+
+        // Set listener to update filtering
         filterChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             Chip selectedChip = group.findViewById(checkedId);
             currentCategory = (selectedChip != null) ? selectedChip.getText().toString() : "All";
@@ -130,6 +160,9 @@ public class PoliciesFragment extends Fragment {
                     } else {
                         adapter.updateData(policies);
                         hideEmptyState();
+
+                        // populate chips dynamically
+                        populateScopeChips(policies);
                     }
                 } else {
                     showRetryState("We couldn’t load the policies. Please try again.");
@@ -140,7 +173,6 @@ public class PoliciesFragment extends Fragment {
             public void onFailure(@NonNull Call<List<Policy>> call, @NonNull Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
 
-                // Log for debugging but don’t show raw exception to user
                 t.printStackTrace();
 
                 String message;

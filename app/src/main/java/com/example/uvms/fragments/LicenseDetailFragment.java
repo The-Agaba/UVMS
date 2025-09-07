@@ -51,26 +51,33 @@ public class LicenseDetailFragment extends Fragment {
             tvLicenseNumber.setText(license.getSafeString(license.getLicenseNumber(), "N/A"));
 
             // Vendor info
+            Vendor vendor = license.getVendor();
             TextView tvVendorName = view.findViewById(R.id.tvVendorName);
             TextView tvVendorTIN = view.findViewById(R.id.tvVendorTIN);
-            Vendor vendor = license.getVendor();
+            TextView tvVendorPhone = view.findViewById(R.id.tvVendorPhone);
+            TextView tvVendorCompany = view.findViewById(R.id.tvVendorCompany);
+           TextView tvVendorBusinessType = view.findViewById(R.id.tvVendorBusinessType);
+
             if (vendor != null) {
                 tvVendorName.setText("Vendor: " + vendor.getFirstName() + " " + vendor.getLastName());
                 tvVendorTIN.setText("TIN: " + vendor.getTinNumber());
+                tvVendorPhone.setText("Phone: " + vendor.getPhoneNumber());
+                tvVendorCompany.setText("Company: " + vendor.getCompanyName());
+                tvVendorBusinessType.setText("Business Type: " + vendor.getBusinessType());
             } else {
                 tvVendorName.setText("Vendor: N/A");
                 tvVendorTIN.setText("TIN: N/A");
+                tvVendorPhone.setText("Phone: N/A");
+                tvVendorCompany.setText("Company: N/A");
+                tvVendorBusinessType.setText("Business Type: N/A");
             }
 
-            // Application info (optional)
-            TextView tvCollege = view.findViewById(R.id.tvCollegeName);
-            TextView tvTender = view.findViewById(R.id.tvTenderTitle);
+            // Plot info
+            TextView tvPlot = view.findViewById(R.id.tvPlotId);
             if (license.getApplication() != null) {
-                tvCollege.setText("College: N/A"); // you can fetch real college if linked
-                tvTender.setText("Tender: N/A");   // you can fetch real tender if linked
+                tvPlot.setText("Plot ID: " + license.getApplication().getPlotId());
             } else {
-                tvCollege.setText("College: N/A");
-                tvTender.setText("Tender: N/A");
+                tvPlot.setText("Plot ID: N/A");
             }
 
             // License Status

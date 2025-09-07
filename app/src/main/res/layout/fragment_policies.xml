@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -34,38 +35,14 @@
                 android:queryHint="@string/SearchPolicy_hint"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Filter Chips -->
+            <!-- Filter Chips (populated dynamically) -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/filterChipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/license"
-                    android:checked="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFood"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/vendor" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipSafety"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/student" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipQuality"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/research" />
-            </com.google.android.material.chip.ChipGroup>
+                android:layout_marginBottom="16dp"
+                app:singleSelection="true"
+                app:selectionRequired="true" />
 
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView

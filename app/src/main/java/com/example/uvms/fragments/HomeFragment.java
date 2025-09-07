@@ -155,9 +155,34 @@ public class HomeFragment extends Fragment {
                 if (!isAdded()) return;
 
                 if (response.isSuccessful() && response.body() != null) {
-                    failedCard.setVisibility(View.GONE);
-                    licenseAdapter.updateData(response.body());
-                    updateLicenseStatusCards(response.body());
+                    List<License> allLicenses = response.body();
+
+                    // ✅ Get logged-in email from SharedPreferences
+                    String loggedInEmail = requireContext()
+                            .getSharedPreferences("uvms_prefs", getContext().MODE_PRIVATE)
+                            .getString("user_email", null);
+
+                    // Filter licenses for this user
+                    List<License> myLicenses = new ArrayList<>();
+                    if (loggedInEmail != null) {
+                        for (License license : allLicenses) {
+                            if (license.getVendor() != null &&
+                                    loggedInEmail.equalsIgnoreCase(license.getVendor().getEmail())) {
+                                myLicenses.add(license);
+                            }
+                        }
+                    }
+
+                    if (!myLicenses.isEmpty()) {
+                        failedCard.setVisibility(View.GONE);
+                        licenseAdapter.updateData(myLicenses);
+                        updateLicenseStatusCards(myLicenses);
+                    } else {
+                        failedCard.setVisibility(View.VISIBLE);
+                        updateLicenseStatusCards(null);
+                        Toast.makeText(requireContext(), "No licenses found for your account", Toast.LENGTH_SHORT).show();
+                    }
+
                 } else {
                     failedCard.setVisibility(View.VISIBLE);
                     updateLicenseStatusCards(null);
