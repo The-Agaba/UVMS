@@ -1,5 +1,7 @@
 package com.example.uvms.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,8 @@ public class ViewApplicationsFragment extends Fragment {
     private ApplicationAdapter adapter;
     private List<Application> allApplications = new ArrayList<>();
 
+    private int loggedInVendorId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,6 +56,15 @@ public class ViewApplicationsFragment extends Fragment {
         adapter = new ApplicationAdapter(getContext(), new ArrayList<>());
         recyclerApplications.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerApplications.setAdapter(adapter);
+
+        // --- SAFELY get logged-in vendor ID ---
+        SharedPreferences prefs = requireContext().getSharedPreferences("uvms_prefs", Context.MODE_PRIVATE);
+        String vendorIdStr = prefs.getString("user_id", "-1"); // read as String
+        try {
+            loggedInVendorId = Integer.parseInt(vendorIdStr); // parse to int
+        } catch (NumberFormatException e) {
+            loggedInVendorId = -1; // fallback if parsing fails
+        }
 
         setupTabs();
         fetchApplications();
@@ -71,11 +84,8 @@ public class ViewApplicationsFragment extends Fragment {
                 filterApplications(tab.getText().toString());
             }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) { }
+            @Override public void onTabUnselected(TabLayout.Tab tab) { }
+            @Override public void onTabReselected(TabLayout.Tab tab) { }
         });
     }
 
@@ -109,11 +119,17 @@ public class ViewApplicationsFragment extends Fragment {
     }
 
     private void filterApplications(String status) {
+        // Filter applications by vendor ID
+        List<Application> vendorApplications = allApplications.stream()
+                .filter(app -> app.getVendorId() == loggedInVendorId)
+                .collect(Collectors.toList());
+
+        // Filter by status if needed
         List<Application> filtered;
         if ("ALL".equalsIgnoreCase(status)) {
-            filtered = allApplications;
+            filtered = vendorApplications;
         } else {
-            filtered = allApplications.stream()
+            filtered = vendorApplications.stream()
                     .filter(app -> status.equalsIgnoreCase(app.getStatus()))
                     .collect(Collectors.toList());
         }
