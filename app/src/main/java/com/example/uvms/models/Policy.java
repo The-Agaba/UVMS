@@ -20,7 +20,7 @@ public class Policy {
     private Integer collegeId; // nullable
 
     @SerializedName("admin")
-    private Integer adminId; // simplified: store just the ID
+    private Integer adminId;
 
     @SerializedName("datePosted")
     private String datePosted;

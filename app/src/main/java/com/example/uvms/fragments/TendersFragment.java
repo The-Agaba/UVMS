@@ -104,7 +104,7 @@ public class TendersFragment extends Fragment {
                         Log.d("CollegeMap", "Loaded colleges: " + collegeMap.toString());
 
                     }
-                    // ✅ update adapter with fresh college map
+                    // update adapter with fresh college map
                     adapter.setCollegeMap(collegeMap);
                     fetchTenders();
                 } else {

@@ -19,7 +19,6 @@ public class Pdf_Util {
 
     /**
      * Opens a "Save As" dialog for the user to choose PDF location.
-     * The calling Activity must handle onActivityResult.
      */
     public static void promptSavePdf(Activity activity, String suggestedFileName) {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -29,13 +28,7 @@ public class Pdf_Util {
         activity.startActivityForResult(intent, REQUEST_CODE_CREATE_PDF);
     }
 
-    /**
-     * Call this after the user picks a location from SAF to actually save the PDF.
-     *
-     * @param context  Any context
-     * @param view     The view to render as PDF
-     * @param uri      The Uri returned by SAF
-     */
+
     public static void saveViewToUri(Context context, View view, Uri uri) {
         // A4 page size
         int pageWidth = 595;

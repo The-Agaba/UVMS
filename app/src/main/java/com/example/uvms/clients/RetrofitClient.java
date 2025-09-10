@@ -23,7 +23,6 @@ public class RetrofitClient {
     private static Retrofit retrofitWithToken;
     private static Retrofit retrofitWithoutToken;
 
-    /** -------------------- Retrofit WITH token -------------------- */
     public static Retrofit getInstance(Context context) {
         if (retrofitWithToken == null) {
             OkHttpClient client = new OkHttpClient.Builder()
@@ -80,7 +79,6 @@ public class RetrofitClient {
         return getInstance(context).create(CollegeApiService.class);
     }
 
-    // ✅ Added PlotApiService getter
     public static PlotApiService getPlotService(Context context) {
         return getInstance(context).create(PlotApiService.class);
     }

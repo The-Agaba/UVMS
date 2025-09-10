@@ -103,8 +103,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     }
 
     private void openContract(String path) {
-        // Placeholder: implement contract viewing/downloading logic
-        // For example, open a WebView, download manager, or external PDF viewer
+
     }
 
     static class ApplicationViewHolder extends RecyclerView.ViewHolder {

@@ -16,7 +16,7 @@ import java.util.List;
 public class PoliciesAdapter extends RecyclerView.Adapter<PoliciesAdapter.PolicyViewHolder> {
 
     private List<Policy> policyList;        // current displayed list
-    private List<Policy> originalPolicies;  // full backup list
+    private List<Policy> originalPolicies;
 
     public PoliciesAdapter(List<Policy> policies) {
         this.policyList = policies != null ? policies : new ArrayList<>();

@@ -12,11 +12,10 @@ public class College implements Serializable {
     @SerializedName("college_name")
     private String collegeName;
 
-    // Tenders are IDs (numbers) in your API
+
     @SerializedName("tenders")
     private List<Integer> tenderIds;
 
-    // Policies are also IDs (numbers)
     @SerializedName("policies")
     private List<Integer> policyIds;
 

@@ -26,20 +26,20 @@ public class Splash_ScreenActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
 
-        // Apply system bars padding
+        // system bars padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Start logo animation if available
+        // Start logo animation
         ImageView logo = findViewById(R.id.logo);
         if (logo != null && logo.getDrawable() instanceof AnimatedVectorDrawable) {
             ((AnimatedVectorDrawable) logo.getDrawable()).start();
         }
 
-        // Delay and navigate based on login status
+
         new Handler().postDelayed(() -> {
             SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);

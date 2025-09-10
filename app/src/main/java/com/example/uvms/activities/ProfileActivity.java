@@ -52,7 +52,7 @@ public class ProfileActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 android.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars()).toPlatformInsets();
 
-                // 🔹 Replace systemBars.top with a fixed padding (e.g. 24dp)
+
                 int topPadding = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
                         0, // you can adjust this value

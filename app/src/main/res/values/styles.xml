@@ -16,6 +16,20 @@
         <item name="cardCornerRadius">12dp</item>
     </style>
 
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/textinput_stroke_colors</item>
+        <item name="hintTextColor">@color/textinput_hint_colors</item>
+        <item name="helperTextTextColor">@color/uvmsTextSecondaryLight</item>
+        <item name="android:textColorHint">@color/textLight</item>
+        <item name="android:textColor">@color/uvmsTextPrimaryLight</item>
+    </style>
+
+    <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textColor">@color/uvmsTextPrimaryLight</item>
+        <item name="android:textColorHint">@color/textLight</item>
+    </style>
+
+
     <style name="Btn.Primary" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/uvmsBackgroundLight</item>
         <item name="backgroundTint">@color/uvmsTextPrimaryDark</item>

@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     private CardView failedCard;
     private LinearLayout licenseStatusContainer;
     private View activeQuickActionCard;
-    private MaterialButton btnRequestRenewal; // ✅ global renewal button
+    private MaterialButton btnRequestRenewal; // global renewal button
 
     @Nullable
     @Override
@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment {
                         failedCard.setVisibility(View.GONE);
                         licenseAdapter.updateData(myLicenses);
                         updateLicenseStatusCards(myLicenses);
-                        updateRenewalButton(myLicenses); // ✅ control button
+                        updateRenewalButton(myLicenses); // control button
                     } else {
                         failedCard.setVisibility(View.VISIBLE);
                         updateLicenseStatusCards(null);

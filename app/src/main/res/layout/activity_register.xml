@@ -60,8 +60,6 @@
             android:padding="20dp">
 
             <!-- Subtitle -->
-
-            <!-- First Name -->
             <TextView
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
@@ -72,6 +70,7 @@
                 android:textColor="@color/uvmsTextSecondaryLight"
                 android:textSize="16sp" />
 
+            <!-- First Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/firstNameInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -136,6 +135,23 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Confirm Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirm_passwordInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:startIconDrawable="@drawable/ic_lock">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/confirm_password"
+                    android:inputType="textPassword"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- Phone Number -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phoneInputLayout"
@@ -193,7 +209,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:startIconDrawable="@drawable/ic_location"
-                app:hintEnabled="true"
                 android:hint="@string/hint_business_address"
                 app:boxBackgroundMode="outline">
 
@@ -204,7 +219,6 @@
                     android:inputType="textMultiLine"
                     android:gravity="top|start"/>
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <!-- Business Type Dropdown -->
             <TextView
@@ -229,7 +243,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_register"
-
                 android:backgroundTint="@color/uvmsAccentCyan"
                 android:elevation="8dp"
                 android:layout_marginTop="24dp"

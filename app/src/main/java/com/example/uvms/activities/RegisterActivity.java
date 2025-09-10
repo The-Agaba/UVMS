@@ -38,8 +38,8 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, passwordLayout,
-            phoneLayout, companyLayout, tinLayout, addressLayout;
-    private TextInputEditText etFirstName, etLastName, etEmail, etPassword,
+            confirmPasswordLayout, phoneLayout, companyLayout, tinLayout, addressLayout;
+    private TextInputEditText etFirstName, etLastName, etEmail, etPassword, etConfirmPassword,
             etPhone, etCompanyName, etTin, etAddress;
     private Spinner spinnerBusinessType;
     private MaterialButton btnRegister;
@@ -73,6 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
         lastNameLayout = findViewById(R.id.lastNameInputLayout);
         emailLayout = findViewById(R.id.emailInputLayout);
         passwordLayout = findViewById(R.id.passwordInputLayout);
+        confirmPasswordLayout = findViewById(R.id.confirm_passwordInputLayout);
         phoneLayout = findViewById(R.id.phoneInputLayout);
         companyLayout = findViewById(R.id.companyNameInputLayout);
         tinLayout = findViewById(R.id.tinInputLayout);
@@ -82,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
         etLastName = findViewById(R.id.etLastName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
         etPhone = findViewById(R.id.etPhone);
         etCompanyName = findViewById(R.id.etCompanyName);
         etTin = findViewById(R.id.etTin);
@@ -94,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         defaultIcon = btnRegister.getIcon();
         passwordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+        confirmPasswordLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
     }
 
     private void setupSpinner() {
@@ -126,21 +129,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void submitRegistration() {
         String firstName = Objects.requireNonNull(etFirstName.getText()).toString().trim();
-        String lastName = Objects.requireNonNull(etLastName.getText()).toString();
-        String email = Objects.requireNonNull(etEmail.getText()).toString();
+        String lastName = Objects.requireNonNull(etLastName.getText()).toString().trim();
+        String email = Objects.requireNonNull(etEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(etPassword.getText()).toString();
-        String phone = Objects.requireNonNull(etPhone.getText()).toString();
-        String companyName = Objects.requireNonNull(etCompanyName.getText()).toString();
-        String tin = Objects.requireNonNull(etTin.getText()).toString();
-        String address = Objects.requireNonNull(etAddress.getText()).toString();
+        String confirmPassword = Objects.requireNonNull(etConfirmPassword.getText()).toString();
+        String phone = Objects.requireNonNull(etPhone.getText()).toString().trim();
+        String companyName = Objects.requireNonNull(etCompanyName.getText()).toString().trim();
+        String tin = Objects.requireNonNull(etTin.getText()).toString().trim();
+        String address = Objects.requireNonNull(etAddress.getText()).toString().trim();
         String businessType = spinnerBusinessType.getSelectedItem().toString();
 
-        if (!validateForm(firstName, lastName, email, password, phone, companyName, tin, address, businessType)) {
+        if (!validateForm(firstName, lastName, email, password, confirmPassword,
+                phone, companyName, tin, address, businessType)) {
             resetRegisterButton();
             return;
         }
 
-        RegisterRequest request = new RegisterRequest(firstName, lastName, email, password, phone, companyName, tin, address, businessType);
+        RegisterRequest request = new RegisterRequest(firstName, lastName, email, password,
+                phone, companyName, tin, address, businessType);
 
         registerService.registerVendor(request).enqueue(new Callback<RegisterResponse>() {
             @Override
@@ -177,7 +183,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // --- Save more fields after registration ---
     private void saveUserToPrefs(RegisterResponse.VendorData vendor) {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -189,10 +194,8 @@ public class RegisterActivity extends AppCompatActivity {
         editor.putString("user_company_name", vendor.getCompanyName());
         editor.putString("user_tin_number", vendor.getTinNumber());
         editor.putBoolean("user_is_active", vendor.isActive());
-
-        // Add defaults for missing fields
-        editor.putString("user_phone_number", ""); // Registration response missing phone
-        editor.putString("business_type", ""); // Add if available in API response later
+        editor.putString("user_phone_number", "");
+        editor.putString("business_type", "");
         editor.putString("user_business_address", "");
         editor.putString("user_created_at", "");
 
@@ -206,12 +209,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateForm(String firstName, String lastName, String email, String password,
-                                 String phone, String companyName, String tin, String address, String businessType) {
+                                 String confirmPassword, String phone, String companyName, String tin,
+                                 String address, String businessType) {
         boolean isValid = true;
+
         firstNameLayout.setError(null);
         lastNameLayout.setError(null);
         emailLayout.setError(null);
         passwordLayout.setError(null);
+        confirmPasswordLayout.setError(null);
         phoneLayout.setError(null);
         companyLayout.setError(null);
         tinLayout.setError(null);
@@ -219,16 +225,23 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (firstName.isEmpty()) { firstNameLayout.setError("First name is required"); isValid = false; }
         if (lastName.isEmpty()) { lastNameLayout.setError("Last name is required"); isValid = false; }
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) { emailLayout.setError("Valid Email is required"); isValid = false; }
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailLayout.setError("Valid Email is required"); isValid = false;
+        }
         if (password.isEmpty()) { passwordLayout.setError("Password is required"); isValid = false; }
         else if (password.length() < 8) { passwordLayout.setError("Password must be at least 8 characters"); isValid = false; }
         else if (!password.matches(".*[a-zA-Z].*")) { passwordLayout.setError("Password must contain at least one letter"); isValid = false; }
         else if (!password.matches(".*\\d.*")) { passwordLayout.setError("Password must contain at least one number"); isValid = false; }
+
+        if (confirmPassword.isEmpty()) { confirmPasswordLayout.setError("Confirm password is required"); isValid = false; }
+        else if (!confirmPassword.equals(password)) { confirmPasswordLayout.setError("Passwords do not match"); isValid = false; }
+
         if (phone.isEmpty()) { phoneLayout.setError("Phone number is required"); isValid = false; }
         if (companyName.isEmpty()) { companyLayout.setError("Company name is required"); isValid = false; }
         if (tin.isEmpty()) { tinLayout.setError("TIN is required"); isValid = false; }
         if (address.isEmpty()) { addressLayout.setError("Address is required"); isValid = false; }
         if (businessType.equals("Select type")) { Toast.makeText(this, "Select business type", Toast.LENGTH_SHORT).show(); isValid = false; }
+
         return isValid;
     }
 
