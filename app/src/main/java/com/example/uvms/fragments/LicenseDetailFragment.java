@@ -1,5 +1,7 @@
 package com.example.uvms.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.uvms.R;
 import com.example.uvms.models.License;
-import com.example.uvms.models.Vendor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,27 +51,26 @@ public class LicenseDetailFragment extends Fragment {
             TextView tvLicenseNumber = view.findViewById(R.id.tvLicenseNumber);
             tvLicenseNumber.setText(license.getSafeString(license.getLicenseNumber(), "N/A"));
 
-            // Vendor info
-            Vendor vendor = license.getVendor();
+            // Vendor info from SharedPreferences
+            SharedPreferences prefs = requireContext().getSharedPreferences("uvms_prefs", Context.MODE_PRIVATE);
+            String firstName = prefs.getString("user_first_name", "N/A");
+            String lastName = prefs.getString("user_last_name", "N/A");
+            String tin = prefs.getString("user_tin_number", "N/A");
+            String phone = prefs.getString("user_phone_number", "N/A");
+            String company = prefs.getString("user_company_name", "N/A");
+            String businessType = prefs.getString("business_type", "N/A");
+
             TextView tvVendorName = view.findViewById(R.id.tvVendorName);
             TextView tvVendorTIN = view.findViewById(R.id.tvVendorTIN);
             TextView tvVendorPhone = view.findViewById(R.id.tvVendorPhone);
             TextView tvVendorCompany = view.findViewById(R.id.tvVendorCompany);
-           TextView tvVendorBusinessType = view.findViewById(R.id.tvVendorBusinessType);
+            TextView tvVendorBusinessType = view.findViewById(R.id.tvVendorBusinessType);
 
-            if (vendor != null) {
-                tvVendorName.setText("Vendor: " + vendor.getFirstName() + " " + vendor.getLastName());
-                tvVendorTIN.setText("TIN: " + vendor.getTinNumber());
-                tvVendorPhone.setText("Phone: " + vendor.getPhoneNumber());
-                tvVendorCompany.setText("Company: " + vendor.getCompanyName());
-                tvVendorBusinessType.setText("Business Type: " + vendor.getBusinessType());
-            } else {
-                tvVendorName.setText("Vendor: N/A");
-                tvVendorTIN.setText("TIN: N/A");
-                tvVendorPhone.setText("Phone: N/A");
-                tvVendorCompany.setText("Company: N/A");
-                tvVendorBusinessType.setText("Business Type: N/A");
-            }
+            tvVendorName.setText("Vendor: " + firstName + " " + lastName);
+            tvVendorTIN.setText("TIN: " + tin);
+            tvVendorPhone.setText("Phone: " + phone);
+            tvVendorCompany.setText("Company: " + company);
+            tvVendorBusinessType.setText("Business Type: " + businessType);
 
             // Plot info
             TextView tvPlot = view.findViewById(R.id.tvPlotId);
@@ -97,7 +97,7 @@ public class LicenseDetailFragment extends Fragment {
             if (filePath == null || filePath.trim().isEmpty()) {
                 tvFile.setVisibility(View.GONE);
             } else {
-                tvFile.setVisibility(View.GONE);
+                tvFile.setVisibility(View.VISIBLE);
                 tvFile.setText("File: " + filePath);
             }
         }

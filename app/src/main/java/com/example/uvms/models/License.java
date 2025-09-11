@@ -11,10 +11,11 @@ public class License implements Serializable {
     private int licenseId;
 
     @SerializedName("application")
-    private Application application; // Full Application object
+    private Application application;
 
+    // Can be full Vendor object or numeric ID
     @SerializedName("vendor")
-    private Vendor vendor; // Full Vendor object
+    private Object vendorRaw;
 
     @SerializedName("licenseNumber")
     @Nullable
@@ -38,75 +39,84 @@ public class License implements Serializable {
     @SerializedName("renewalRequests")
     private List<Integer> renewalRequests;
 
-    // Track expansion state (e.g., RecyclerView)
     private boolean expanded = false;
-
-    // Computed / override status for UI
     private String status;
 
-    // --- Constructors ---
     public License() {}
 
-    public License(int licenseId, Application application, Vendor vendor,
-                   @Nullable String licenseNumber, @Nullable String issueDate,
-                   @Nullable String expiryDate, @Nullable String licenseFilePath,
-                   boolean isActive, List<Integer> renewalRequests) {
-        this.licenseId = licenseId;
-        this.application = application;
-        this.vendor = vendor;
-        this.licenseNumber = licenseNumber;
-        this.issueDate = issueDate;
-        this.expiryDate = expiryDate;
-        this.licenseFilePath = licenseFilePath;
-        this.isActive = isActive;
-        this.renewalRequests = renewalRequests;
-    }
-
-    // --- Getters ---
+    // --- Getters & Setters ---
     public int getLicenseId() { return licenseId; }
-    public Application getApplication() { return application; }
-    public Vendor getVendor() { return vendor; }
-    @Nullable public String getLicenseNumber() { return licenseNumber; }
-    @Nullable public String getIssueDate() { return issueDate; }
-    @Nullable public String getExpiryDate() { return expiryDate; }
-    @Nullable public String getLicenseFilePath() { return licenseFilePath; }
-    public boolean isActive() { return isActive; }
-    public List<Integer> getRenewalRequests() { return renewalRequests; }
-    public boolean isExpanded() { return expanded; }
-
-    // Vendor helper
-    public String getVendorFullName() {
-        return vendor != null
-                ? vendor.getFirstName() + " " + vendor.getLastName()
-                : "-";
-    }
-
-    // --- Setters ---
     public void setLicenseId(int licenseId) { this.licenseId = licenseId; }
+
+    public Application getApplication() { return application; }
     public void setApplication(Application application) { this.application = application; }
-    public void setVendor(Vendor vendor) { this.vendor = vendor; }
+
+    public Object getVendorRaw() { return vendorRaw; }
+    public void setVendorRaw(Object vendorRaw) { this.vendorRaw = vendorRaw; }
+
+    @Nullable
+    public String getLicenseNumber() { return licenseNumber; }
     public void setLicenseNumber(@Nullable String licenseNumber) { this.licenseNumber = licenseNumber; }
+
+    @Nullable
+    public String getIssueDate() { return issueDate; }
     public void setIssueDate(@Nullable String issueDate) { this.issueDate = issueDate; }
+
+    @Nullable
+    public String getExpiryDate() { return expiryDate; }
     public void setExpiryDate(@Nullable String expiryDate) { this.expiryDate = expiryDate; }
+
+    @Nullable
+    public String getLicenseFilePath() { return licenseFilePath; }
     public void setLicenseFilePath(@Nullable String licenseFilePath) { this.licenseFilePath = licenseFilePath; }
+
+    public boolean isActive() { return isActive; }
     public void setActive(boolean active) { isActive = active; }
+
+    public List<Integer> getRenewalRequests() { return renewalRequests; }
     public void setRenewalRequests(List<Integer> renewalRequests) { this.renewalRequests = renewalRequests; }
+
+    public boolean isExpanded() { return expanded; }
     public void setExpanded(boolean expanded) { this.expanded = expanded; }
+
+    public String getStatus() {
+        return status != null ? status : (isActive ? "ACTIVE" : "EXPIRED");
+    }
     public void setStatus(String status) { this.status = status; }
 
-    // --- Helpers ---
-    public String getStatus() {
-        if (status != null) return status;
-        return isActive ? "ACTIVE" : "EXPIRED";
+    // --- Robust vendor access ---
+    @Nullable
+    public Vendor getVendor() {
+        if (vendorRaw instanceof Vendor) return (Vendor) vendorRaw;
+        return null;
     }
 
+    @Nullable
+    public Integer getVendorId() {
+        if (vendorRaw == null) return null;
+
+        // Full Vendor object
+        if (vendorRaw instanceof Vendor) return ((Vendor) vendorRaw).getVendorId();
+
+        // Numeric vendor ID, could be Integer, Long, Double, etc.
+        if (vendorRaw instanceof Number) return ((Number) vendorRaw).intValue();
+
+        return null;
+    }
+
+    public String getVendorFullName() {
+        Vendor v = getVendor();
+        return v != null ? v.getFirstName() + " " + v.getLastName() : "-";
+    }
+
+    // --- UI helpers ---
     public int getStatusColor() {
         switch (getStatus().toUpperCase()) {
             case "ACTIVE": return 0xFF4CAF50;   // Green
             case "EXPIRED": return 0xFFF44336;  // Red
             case "PENDING": return 0xFFFF9800;  // Orange
             case "REJECTED": return 0xFF9E9E9E; // Grey
-            default: return 0xFF2196F3;         // Blue (default)
+            default: return 0xFF2196F3;         // Blue
         }
     }
 

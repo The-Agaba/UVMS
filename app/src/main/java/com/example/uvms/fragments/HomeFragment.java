@@ -1,10 +1,13 @@
 package com.example.uvms.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -166,6 +169,7 @@ public class HomeFragment extends Fragment {
         Drawable d = loader.getDrawable();
         if (d instanceof Animatable) ((Animatable) d).start();
 
+
         LicenseApiService apiService = RetrofitClient.getInstance(requireContext()).create(LicenseApiService.class);
         apiService.getLicenses().enqueue(new Callback<List<License>>() {
             @Override
@@ -175,28 +179,32 @@ public class HomeFragment extends Fragment {
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<License> allLicenses = response.body();
+                    Log.d("DEBUG", "Total licenses from server: " + allLicenses.size());
 
-                    // Get logged-in email
-                    String loggedInEmail = requireContext()
-                            .getSharedPreferences("uvms_prefs", getContext().MODE_PRIVATE)
-                            .getString("user_email", null);
+                    // Get logged-in vendor ID
+                    SharedPreferences prefs = requireContext().getSharedPreferences("uvms_prefs", Context.MODE_PRIVATE);
+                    String vendorIdStr = prefs.getString("user_id", "-1");
+                    int loggedInVendorId = Integer.parseInt(vendorIdStr);
 
-                    // Filter licenses for this user
+
+                    // Filter licenses for this vendor
                     List<License> myLicenses = new ArrayList<>();
-                    if (loggedInEmail != null) {
+                    if (loggedInVendorId != -1) {
                         for (License license : allLicenses) {
-                            if (license.getVendor() != null &&
-                                    loggedInEmail.equalsIgnoreCase(license.getVendor().getEmail())) {
+                            Integer licenseVendorId = license.getVendorId();
+                            if (licenseVendorId != null && licenseVendorId == loggedInVendorId) {
                                 myLicenses.add(license);
                             }
                         }
                     }
 
+                    Log.d("DEBUG", "Filtered licenses for vendor: " + myLicenses.size());
+
                     if (!myLicenses.isEmpty()) {
                         failedCard.setVisibility(View.GONE);
                         licenseAdapter.updateData(myLicenses);
                         updateLicenseStatusCards(myLicenses);
-                        updateRenewalButton(myLicenses); // control button
+                        updateRenewalButton(myLicenses);
                     } else {
                         failedCard.setVisibility(View.VISIBLE);
                         updateLicenseStatusCards(null);
@@ -205,9 +213,7 @@ public class HomeFragment extends Fragment {
                     }
 
                 } else {
-                    failedCard.setVisibility(View.VISIBLE);
-                    updateLicenseStatusCards(null);
-                    btnRequestRenewal.setEnabled(false);
+                    handleApiError(response);
                 }
             }
 
@@ -217,9 +223,28 @@ public class HomeFragment extends Fragment {
                 failedCard.setVisibility(View.VISIBLE);
                 updateLicenseStatusCards(null);
                 btnRequestRenewal.setEnabled(false);
+                Log.e("ERROR", "Failed to fetch licenses", t);
+                Toast.makeText(requireContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void handleApiError(Response<List<License>> response) {
+        failedCard.setVisibility(View.VISIBLE);
+        updateLicenseStatusCards(null);
+        btnRequestRenewal.setEnabled(false);
+        String errorMsg = "Failed to fetch licenses.";
+        try {
+            if (response.errorBody() != null) {
+                errorMsg = response.errorBody().string();
+            }
+        } catch (Exception e) {
+            Log.e("ERROR", "Error reading errorBody", e);
+        }
+        Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+
 
     // Update license status cards
     private void updateLicenseStatusCards(List<License> licenses) {
